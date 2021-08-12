@@ -140,7 +140,7 @@ def ix_get_quota(group, gid):
 def convert_size(size):
     if (size == 0):
         return '0B'
-    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
+    size_name = ("B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB")
     i = int(math.floor(math.log(size,1024)))
     p = math.pow(1024,i)
     s = round(size/p,2)
