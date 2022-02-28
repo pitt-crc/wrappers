@@ -16,7 +16,7 @@ Options:
 import dataset
 from docopt import docopt
 
-arguments = docopt(__doc__, version='crc-sus.py version 0.0.1')
+arguments = docopt(__doc__, version='crc-sus.py version 0.0.2')
 
 # Connect to the database and get the table with proposal service units
 db = dataset.connect('sqlite:////ihome/crc/bank/crc_bank.db')
