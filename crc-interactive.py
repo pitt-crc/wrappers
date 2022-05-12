@@ -33,7 +33,7 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-# Define default command line options
+# Parse command line options and set defaults
 arguments = docopt(__doc__, version='crc-interactive.py version 0.0.1')
 arguments.setdefault('--time', 1)
 arguments.setdefault('--num-nodes', 1)
@@ -90,7 +90,7 @@ try:
     arguments['--mem'] = check_integer_argument(arguments, '--mem')
 
     # Check walltime is between limits
-    if not (arguments['--time'] >= 1 and arguments['--time'] <= 12):
+    if not (1 <= arguments['--time'] <= 12):
         exit("ERROR: {} is not in 1 <= time <= 12... exiting".format(arguments['--time']))
 
     # Build up the srun arguments
@@ -134,12 +134,7 @@ try:
     except OSError:
         pass
 
-    # set echo
-    if arguments['--print-command']:
-        echo = True
-
-    else:
-        echo = False
+    echo = bool(arguments['--print-command'])
 
     # Run the commands
     if arguments['--smp']:
