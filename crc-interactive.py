@@ -33,7 +33,12 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
+# Define default command line options
 arguments = docopt(__doc__, version='crc-interactive.py version 0.0.1')
+arguments.setdefault('--time', 1)
+arguments.setdefault('--num-nodes', 1)
+arguments.setdefault('--num-cores', 1)
+arguments.setdefault('--num-gpus', 0)
 
 
 def check_integer_argument(arguments, key):
@@ -73,19 +78,6 @@ def run_command_fg(command, echo=False):
 
 
 try:
-    # Set defaults if necessary
-    if not arguments['--time']:
-        arguments['--time'] = 1
-
-    if not arguments['--num-nodes']:
-        arguments['--num-nodes'] = 1
-
-    if not arguments['--num-cores']:
-        arguments['--num-cores'] = 1
-
-    if not arguments['--num-gpus']:
-        arguments['--num-gpus'] = 0
-
     # Make sure GPU has default of 1
     if arguments["--gpu"] and arguments["--num-gpus"] == 0:
         arguments["--num-gpus"] = 1
