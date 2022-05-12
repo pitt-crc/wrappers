@@ -13,6 +13,9 @@ Options:
     -v --version                    Print the version of crc-proposal-end.py
 """
 
+import dataset
+from docopt import docopt
+
 
 # Test:
 # 1. Make sure item exists
@@ -20,9 +23,6 @@ def check_item_in_table(table, account):
     if table.find_one(account=account) is None:
         exit("ERROR: The account: {0} doesn't appear to exist".format(account))
 
-
-import dataset
-from docopt import docopt
 
 # The magical mystical docopt line
 arguments = docopt(__doc__, version='crc-proposal-end.py version 0.0.1')

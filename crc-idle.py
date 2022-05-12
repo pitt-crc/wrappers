@@ -16,6 +16,11 @@ Options:
     -p --partition <partition>      Use a specific partition
 """
 
+from shlex import split
+from subprocess import Popen, PIPE
+
+from docopt import docopt
+
 
 def run_command(command):
     sp = Popen(split(command), stdout=PIPE, stderr=PIPE)
@@ -125,11 +130,6 @@ def cpu_logic(cluster, partition):
         cpu_based_empty_cores(cluster, CLUSTERS[cluster])
 
 
-from shlex import split
-from subprocess import Popen, PIPE
-
-from docopt import docopt
-
 arguments = docopt(__doc__, version="crc-idle.py version 0.0.1")
 
 CLUSTERS = {
@@ -143,7 +143,7 @@ CLUSTERS = {
 # ===============
 # 1. If no clusters specified, print all clusters
 if not any(
-    [arguments["--smp"], arguments["--gpu"], arguments["--mpi"], arguments["--htc"]]
+        [arguments["--smp"], arguments["--gpu"], arguments["--mpi"], arguments["--htc"]]
 ):
     arguments["--smp"] = True
     arguments["--gpu"] = True
