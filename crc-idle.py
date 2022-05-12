@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-""" crc-idle.py -- Find empty cores and GPUs
+"""crc-idle.py -- Find empty cores and GPUs
 Usage:
     crc-idle.py [-hv]
     crc-idle.py [-hv] (-s | -g | -m | -i | -d) [-p <partition>]
@@ -15,6 +15,11 @@ Options:
     -v --version                    Print the version of crc-idle.py
     -p --partition <partition>      Use a specific partition
 """
+
+from shlex import split
+from subprocess import Popen, PIPE
+
+from docopt import docopt
 
 
 def run_command(command):
@@ -125,10 +130,6 @@ def cpu_logic(cluster, partition):
         cpu_based_empty_cores(cluster, CLUSTERS[cluster])
 
 
-from docopt import docopt
-from subprocess import Popen, PIPE
-from shlex import split
-
 arguments = docopt(__doc__, version="crc-idle.py version 0.0.1")
 
 CLUSTERS = {
@@ -142,7 +143,7 @@ CLUSTERS = {
 # ===============
 # 1. If no clusters specified, print all clusters
 if not any(
-    [arguments["--smp"], arguments["--gpu"], arguments["--mpi"], arguments["--htc"]]
+        [arguments["--smp"], arguments["--gpu"], arguments["--mpi"], arguments["--htc"]]
 ):
     arguments["--smp"] = True
     arguments["--gpu"] = True

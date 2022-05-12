@@ -1,12 +1,12 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-sinfo.py -- An sinfo Slurm helper
+"""crc-sinfo.py -- An sinfo Slurm helper
 Usage:
     crc-sinfo.py [-hv]
 
 Options:
     -h --help                       Print this screen and exit
     -v --version                    Print the version of crc-sinfo.py
-'''
+"""
 
 try:
     # Some imports functions and libraries

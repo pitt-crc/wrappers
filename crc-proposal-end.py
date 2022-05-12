@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-proposal-end.py -- Get SUs from crc-bank.db
+"""crc-proposal-end.py -- Get SUs from crc-bank.db
 Usage:
     crc-proposal-end.py <account> 
     crc-proposal-end.py -h | --help
@@ -11,7 +11,10 @@ Positional Arguments:
 Options:
     -h --help                       Print this screen and exit
     -v --version                    Print the version of crc-proposal-end.py
-'''
+"""
+
+import dataset
+from docopt import docopt
 
 
 # Test:
@@ -20,10 +23,6 @@ def check_item_in_table(table, account):
     if table.find_one(account=account) is None:
         exit("ERROR: The account: {0} doesn't appear to exist".format(account))
 
-
-import dataset
-from docopt import docopt
-from datetime import timedelta
 
 # The magical mystical docopt line
 arguments = docopt(__doc__, version='crc-proposal-end.py version 0.0.1')

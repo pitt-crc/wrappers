@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-interactive.py -- An interactive Slurm helper
+"""crc-interactive.py -- An interactive Slurm helper
 Usage:
     crc-interactive.py (-s | -g | -m | -i | -d) [-hvzo] [-t <time>] [-n <num-nodes>]
         [-p <partition>] [-c <num-cores>] [-u <num-gpus>] [-r <res-name>]
@@ -26,7 +26,7 @@ Options:
     -f --feature <feature>          Specify a feature, e.g. `ti` for GPUs
     -z --print-command              Simply print the command to be run
     -o --openmp                     Run using OpenMP style submission
-'''
+"""
 
 
 def check_integer_argument(arguments, key):
@@ -54,6 +54,7 @@ def run_command(command, echo=False):
         sp = Popen(split(command), stdout=PIPE, stderr=PIPE)
         return sp.communicate()
 
+
 def run_command_fg(command, echo=False):
     if echo:
         print(command)
@@ -61,6 +62,7 @@ def run_command_fg(command, echo=False):
     else:
         sp = Popen(split(command))
         return sp.communicate()
+
 
 try:
     # Some imports functions and libraries

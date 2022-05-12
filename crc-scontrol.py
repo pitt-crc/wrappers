@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-scontrol.py -- An scontrol Slurm helper
+"""crc-scontrol.py -- An scontrol Slurm helper
 Usage:
     crc-scontrol.py (-c <cluster> | -p <partition>) [-hv]
 
@@ -10,7 +10,7 @@ Positional Arguments:
 Options:
     -h --help                       Print this screen and exit
     -v --version                    Print the version of crc-scontrol.py
-'''
+"""
 
 
 def print_command(command):
@@ -37,6 +37,7 @@ def print_node(cluster):
     cluster_dict = run_command_dict("scontrol -M {} show partition {}".format(cluster, arguments['--partition']))
     node = choice(run_command("scontrol show hostname {}".format(cluster_dict['Nodes'])))
     print_command("scontrol -M {} show node {}".format(cluster, node))
+
 
 try:
     # Some imports functions and libraries
@@ -68,6 +69,6 @@ try:
             print_node("htc")
         else:
             print("Error: I don't recognize partition: {}".format(arguments['--partition']))
-            
+
 except KeyboardInterrupt:
     exit('Interrupt detected! exiting...')

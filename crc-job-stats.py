@@ -1,6 +1,6 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-from subprocess import Popen, PIPE
 from os import environ
+from subprocess import Popen, PIPE
 
 
 def print_item(name):
@@ -38,11 +38,11 @@ if "SLURM_JOB_ID" in environ:
 
     # Print it all out
     for item in ["SubmitTime", "EndTime", "RunTime", "JobId", "TRES", "Partition", "NodeList", "Command", "StdOut"]:
-         #if item == "Gres":
-         #    if job_info[item] != "(null)":
-         #       print_item(item)
-         #else:
-            print_item(item)
+        # if item == "Gres":
+        #    if job_info[item] != "(null)":
+        #       print_item(item)
+        # else:
+        print_item(item)
 
     print("More information:")
     print("    - `sacct -M {} -j {} -S {} -E {}`".format(environ['SLURM_CLUSTER_NAME'], job_info["JobId"], job_info["SubmitTime"], job_info["EndTime"]))
