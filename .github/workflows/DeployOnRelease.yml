@@ -1,8 +1,9 @@
-name: Run Tests
+name: Deploy new code
 
 on:
   workflow_dispatch:
   release:
+    types: [published]
 
 jobs:
   fetch_code_on_production:
@@ -12,5 +13,8 @@ jobs:
     steps:
       - name: Checkout source
         run: |
+            GITHASH=$(git rev-parse --short "$GITHUB_SHA")
+            echo "Updateing to hash $GITHASH"
             cd /ihome/crc/wrappers
-            git pull
+            git fetch
+            git checkout $GITHASH
