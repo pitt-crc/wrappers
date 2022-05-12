@@ -13,7 +13,7 @@ jobs:
       - name: Update code from GitHub
         run: |
             GITHASH=$(git rev-parse --short "$GITHUB_SHA")
-            echo "Updateing to hash $GITHASH"
+            echo "Updating to hash $GITHASH"
             cd /ihome/crc/wrappers
             git fetch
             git checkout $GITHASH
