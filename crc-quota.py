@@ -17,27 +17,27 @@ Options:
 # TODO: Add -a, --admin option for admins to check full filesystem size/usage
 # TODO: add -v, --verbose option for showing additional quota information
 
-import sys
-import math
 import json
-from docopt import docopt
-from subprocess import Popen, PIPE
+import math
+import sys
 from shlex import split
+from subprocess import Popen, PIPE
+
+from docopt import docopt
 
 
 class Quota:
     """Class to represent a quota"""
+
     def __init__(self, name, id, size_used, size_limit):
         self.name = name
         self.id = id
         self.size_used = size_used
         self.size_limit = size_limit
 
-
     def __str__(self):
         return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format( \
-                self.name, self.id, self.size_used, self.size_limit)
-
+            self.name, self.id, self.size_used, self.size_limit)
 
     def __repr__(self):
         return "<{} instance at {}: {}>".format(self.__class__, id(self), self.__dict__)
@@ -45,34 +45,34 @@ class Quota:
 
 class BeegfsQuota(Quota):
     """Class to represent a BeeGFS quota"""
+
     def __init__(self, name, id, size_used, size_limit, chunk_used, chunk_limit):
         self.name = name
-	self.id = id
-	self.size_used = size_used
-	self.size_limit = size_limit
-	self.chunk_used = chunk_used
-	self.chunk_limit = chunk_limit
-
+        self.id = id
+        self.size_used = size_used
+        self.size_limit = size_limit
+        self.chunk_used = chunk_used
+        self.chunk_limit = chunk_limit
 
     def __str__(self):
         return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}, Chunk Files Used: {}, Chunk File Limit: {}".format( \
-		self.name, self.id, self.size_used, self.size_limit, self.chunk_used, self.chunk_limit)
+            self.name, self.id, self.size_used, self.size_limit, self.chunk_used, self.chunk_limit)
 
 
 class IhomeQuota(Quota):
     """Class to represent an iHome quota"""
+
     def __init__(self, name, id, size_used, size_limit, inodes, physical):
         self.name = name
-	self.id = id
-	self.size_used = size_used
-	self.size_limit = size_limit
-	self.inodes = inodes
-	self.physical = physical
-
+        self.id = id
+        self.size_used = size_used
+        self.size_limit = size_limit
+        self.inodes = inodes
+        self.physical = physical
 
     def __str__(self):
         return "Name: {}, ID: {}, Logical Bytes Used: {}, Byte Limit: {}, Num Files: {}, Physical Bytes Used: {}".format( \
-		self.name, self.id, self.size_used, self.size_limit, self.inodes, self.physical)
+            self.name, self.id, self.size_used, self.size_limit, self.inodes, self.physical)
 
 
 def beegfs_get_quota_from_gid(group):
@@ -84,27 +84,27 @@ def beegfs_get_quota_from_gid(group):
     else:
         quota_out, quota_err = run_command("beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group))
         result = quota_out.splitlines()[1].split(',')
-	return BeegfsQuota(result[0], result[1], result[2], result[3], result[4], result[5])
+        return BeegfsQuota(result[0], result[1], result[2], result[3], result[4], result[5])
 
 
 def zfs_get_quota_from_gid(group, gid):
     zfs1_quota = run_command("df /zfs1/{}".format(group))[0].strip()
     zfs1_quota = zfs1_quota.splitlines()
-		
+
     if len(zfs1_quota) == 0:
         zfs1_quota = None
     else:
-    	result = zfs1_quota[1].split()
-        zfs1_quota = Quota(group, gid, int(result[2]) * 1024, int(result[1]) * 1024) 
+        result = zfs1_quota[1].split()
+        zfs1_quota = Quota(group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
 
     zfs2_quota = run_command("df /zfs2/{}".format(group))[0].strip()
     zfs2_quota = zfs2_quota.splitlines()
-		
+
     if len(zfs2_quota) == 0:
         zfs2_quota = None
     else:
-    	result = zfs2_quota[1].split()
-        zfs2_quota = Quota(group, gid, int(result[2]) * 1024, int(result[1]) * 1024) 
+        result = zfs2_quota[1].split()
+        zfs2_quota = Quota(group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
 
     return zfs1_quota, zfs2_quota
 
@@ -118,8 +118,8 @@ def ihome_get_quota_from_uid(user, uid):
 
     for item in data["quotas"]:
         if item["persona"] is not None:
-    	    if item["persona"]["id"] == persona:
-    	        return IhomeQuota(user, uid, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
+            if item["persona"]["id"] == persona:
+                return IhomeQuota(user, uid, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
 
     return None
 
@@ -141,10 +141,10 @@ def convert_size(size):
     if (size == 0):
         return '0B'
     size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-    i = int(math.floor(math.log(size,1024)))
-    p = math.pow(1024,i)
-    s = round(size/p,2)
-    return '%s %s' % (s,size_name[i])
+    i = int(math.floor(math.log(size, 1024)))
+    p = math.pow(1024, i)
+    s = round(size / p, 2)
+    return '%s %s' % (s, size_name[i])
 
 
 def run_command(command):
@@ -212,7 +212,7 @@ def main():
         if arguments['--verbose'] is True:
             print("-> ix: {}".format(ix_quota))
         else:
-            print("-> ix: {} / {}".format(convert_size(float(ix_quota.size_used)), convert_size(float(ix_quota.size_limit))))  
+            print("-> ix: {} / {}".format(convert_size(float(ix_quota.size_used)), convert_size(float(ix_quota.size_limit))))
 
 
 if __name__ == "__main__":

@@ -38,6 +38,7 @@ def print_node(cluster):
     node = choice(run_command("scontrol show hostname {}".format(cluster_dict['Nodes'])))
     print_command("scontrol -M {} show node {}".format(cluster, node))
 
+
 try:
     # Some imports functions and libraries
     from docopt import docopt
@@ -68,6 +69,6 @@ try:
             print_node("htc")
         else:
             print("Error: I don't recognize partition: {}".format(arguments['--partition']))
-            
+
 except KeyboardInterrupt:
     exit('Interrupt detected! exiting...')

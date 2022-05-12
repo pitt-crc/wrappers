@@ -125,9 +125,10 @@ def cpu_logic(cluster, partition):
         cpu_based_empty_cores(cluster, CLUSTERS[cluster])
 
 
-from docopt import docopt
-from subprocess import Popen, PIPE
 from shlex import split
+from subprocess import Popen, PIPE
+
+from docopt import docopt
 
 arguments = docopt(__doc__, version="crc-idle.py version 0.0.1")
 

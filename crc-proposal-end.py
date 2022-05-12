@@ -23,7 +23,6 @@ def check_item_in_table(table, account):
 
 import dataset
 from docopt import docopt
-from datetime import timedelta
 
 # The magical mystical docopt line
 arguments = docopt(__doc__, version='crc-proposal-end.py version 0.0.1')

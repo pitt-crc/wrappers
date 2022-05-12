@@ -54,6 +54,7 @@ def run_command(command, echo=False):
         sp = Popen(split(command), stdout=PIPE, stderr=PIPE)
         return sp.communicate()
 
+
 def run_command_fg(command, echo=False):
     if echo:
         print(command)
@@ -61,6 +62,7 @@ def run_command_fg(command, echo=False):
     else:
         sp = Popen(split(command))
         return sp.communicate()
+
 
 try:
     # Some imports functions and libraries
