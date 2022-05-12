@@ -1,0 +1,16 @@
+name: Run Tests
+
+on:
+  workflow_dispatch:
+  release:
+
+jobs:
+  fetch_code_on_production:
+    name: Fetch new code on production
+    runs-on: self-hosted
+    
+    steps:
+      - name: Checkout source
+        run: |
+            cd /ihome/crc/wrappers
+            git pull
