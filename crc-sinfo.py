@@ -8,10 +8,11 @@ Options:
     -v --version                    Print the version of crc-sinfo.py
 """
 
+from os import system
+
+from docopt import docopt
+
 try:
-    # Some imports functions and libraries
-    from docopt import docopt
-    from os import system
 
     arguments = docopt(__doc__, version='crc-sinfo.py version 0.0.1')
 

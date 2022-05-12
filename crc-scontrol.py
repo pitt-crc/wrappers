@@ -12,6 +12,12 @@ Options:
     -v --version                    Print the version of crc-scontrol.py
 """
 
+from random import choice
+from shlex import split
+from subprocess import Popen, PIPE
+
+from docopt import docopt
+
 
 def print_command(command):
     sp = Popen(split(command), stdout=PIPE)
@@ -40,12 +46,6 @@ def print_node(cluster):
 
 
 try:
-    # Some imports functions and libraries
-    from docopt import docopt
-    from subprocess import Popen, PIPE
-    from shlex import split
-    from random import choice
-
     arguments = docopt(__doc__, version='crc-scontrol.py version 0.0.1')
 
     smp_partitions = ['smp', 'high-mem', "legacy"]
