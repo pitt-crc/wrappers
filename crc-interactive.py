@@ -38,7 +38,11 @@ arguments = docopt(__doc__, version='crc-interactive.py version 0.0.1')
 arguments.setdefault('--time', 1)
 arguments.setdefault('--num-nodes', 1)
 arguments.setdefault('--num-cores', 1)
-arguments.setdefault('--num-gpus', 0)
+if arguments["--gpu"]:
+    arguments.setdefault('--num-gpus', 1)
+
+else:
+    arguments.setdefault('--num-gpus', 0)
 
 
 def check_integer_argument(arguments, key):
@@ -61,29 +65,16 @@ def add_to_srun_args(srun_args, srun_dict, arguments, item):
     return srun_args
 
 
-def run_command(command, echo=False):
+def run_command(command, stdout=None, stderr=None, echo=False):
     print(command)
     if echo:
         print(command)
 
     else:
-        return Popen(split(command), stdout=PIPE, stderr=PIPE).communicate()
-
-
-def run_command_fg(command, echo=False):
-    print(command)
-    if echo:
-        print(command)
-
-    else:
-        return Popen(split(command)).communicate()
+        return Popen(split(command), stdout=stdout, stderr=stderr).communicate()
 
 
 try:
-    # Make sure GPU has default of 1
-    if arguments["--gpu"] and arguments["--num-gpus"] == 0:
-        arguments["--num-gpus"] = 1
-
     # Check the integer arguments
     arguments['--time'] = check_integer_argument(arguments, '--time')
     arguments['--num-nodes'] = check_integer_argument(arguments, '--num-nodes')
@@ -129,7 +120,7 @@ try:
 
     # Add --x11 flag?
     try:
-        x11_out, x11_err = run_command("xset q")
+        x11_out, x11_err = run_command("xset q", stdout=PIPE, stderr=PIPE)
         if len(x11_err) == 0:
             srun_args += ' --x11 '
 
@@ -140,25 +131,25 @@ try:
 
     # Run the commands
     if arguments['--smp']:
-        run_command_fg("srun -M smp {} --pty bash".format(srun_args), echo)
+        run_command("srun -M smp {} --pty bash".format(srun_args), echo)
 
     elif arguments['--gpu']:
-        run_command_fg('srun -M gpu {} --pty bash'.format(srun_args), echo)
+        run_command('srun -M gpu {} --pty bash'.format(srun_args), echo)
 
     elif arguments['--mpi']:
         if (not arguments['--partition'] == 'compbio') and arguments['--num-nodes'] < 2:
             exit('Error: You must use more than 1 node on the MPI cluster')
 
-        run_command_fg('srun -M mpi {} --pty bash'.format(srun_args), echo)
+        run_command('srun -M mpi {} --pty bash'.format(srun_args), echo)
 
     elif arguments['--invest']:
         if not arguments['--partition']:
             exit("Error: You must specify a partition when using the Investor cluster")
 
-        run_command_fg('srun -M invest {} --pty bash'.format(srun_args), echo)
+        run_command('srun -M invest {} --pty bash'.format(srun_args), echo)
 
     elif arguments['--htc']:
-        run_command_fg("srun -M htc {} --pty bash".format(srun_args), echo)
+        run_command("srun -M htc {} --pty bash".format(srun_args), echo)
 
 except KeyboardInterrupt:
     exit('Interrupt detected! exiting...')
