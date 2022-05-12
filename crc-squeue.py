@@ -11,11 +11,11 @@ Options:
     -w --watch                      Updates information every 10 seconds
 """
 
-try:
-    # Some imports functions and libraries
-    from docopt import docopt
-    from os import system, environ
+from os import system, environ
 
+from docopt import docopt
+
+try:
     # Useful variables to reduce duplication
     user = "-u {0}".format(environ['USER'])
     squeue = "squeue -M all"

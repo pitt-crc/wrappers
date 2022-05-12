@@ -13,14 +13,14 @@ Options:
     -v --version                    Print the version of crc-scancel.py
 """
 
-try:
-    # Some imports functions and libraries
-    from docopt import docopt
-    from os import environ
-    from subprocess import Popen, PIPE
-    from readchar import readchar
-    from sys import stdout
+from os import environ
+from subprocess import Popen, PIPE
+from sys import stdout
 
+from docopt import docopt
+from readchar import readchar
+
+try:
     # Magical mystical docopt
     arguments = docopt(__doc__, version='crc-scancel.py version 0.0.1')
 
