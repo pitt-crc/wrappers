@@ -62,6 +62,7 @@ def add_to_srun_args(srun_args, srun_dict, arguments, item):
 
 
 def run_command(command, echo=False):
+    print(command)
     if echo:
         print(command)
 
@@ -70,6 +71,7 @@ def run_command(command, echo=False):
 
 
 def run_command_fg(command, echo=False):
+    print(command)
     if echo:
         print(command)
 
