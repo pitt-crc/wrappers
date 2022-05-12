@@ -36,7 +36,7 @@ class Quota:
         self.size_limit = size_limit
 
     def __str__(self):
-        return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format( \
+        return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format(
             self.name, self.id, self.size_used, self.size_limit)
 
     def __repr__(self):
@@ -55,7 +55,7 @@ class BeegfsQuota(Quota):
         self.chunk_limit = chunk_limit
 
     def __str__(self):
-        return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}, Chunk Files Used: {}, Chunk File Limit: {}".format( \
+        return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}, Chunk Files Used: {}, Chunk File Limit: {}".format(
             self.name, self.id, self.size_used, self.size_limit, self.chunk_used, self.chunk_limit)
 
 
@@ -71,7 +71,7 @@ class IhomeQuota(Quota):
         self.physical = physical
 
     def __str__(self):
-        return "Name: {}, ID: {}, Logical Bytes Used: {}, Byte Limit: {}, Num Files: {}, Physical Bytes Used: {}".format( \
+        return "Name: {}, ID: {}, Logical Bytes Used: {}, Byte Limit: {}, Num Files: {}, Physical Bytes Used: {}".format(
             self.name, self.id, self.size_used, self.size_limit, self.inodes, self.physical)
 
 
