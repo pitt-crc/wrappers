@@ -1,4 +1,4 @@
-name: Deploy new code
+name: Deploy to production
 
 on:
   workflow_dispatch:
@@ -6,12 +6,12 @@ on:
     types: [published]
 
 jobs:
-  fetch_code_on_production:
-    name: Fetch new code on production
+  update_code_production:
+    name: Update code on production
     runs-on: self-hosted
     
     steps:
-      - name: Checkout source
+      - name: Update code from GitHub
         run: |
             GITHASH=$(git rev-parse --short "$GITHUB_SHA")
             echo "Updateing to hash $GITHASH"
