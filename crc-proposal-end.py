@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-proposal-end.py -- Get SUs from crc-bank.db
+"""crc-proposal-end.py -- Get SUs from crc-bank.db
 Usage:
     crc-proposal-end.py <account> 
     crc-proposal-end.py -h | --help
@@ -11,7 +11,7 @@ Positional Arguments:
 Options:
     -h --help                       Print this screen and exit
     -v --version                    Print the version of crc-proposal-end.py
-'''
+"""
 
 
 # Test:

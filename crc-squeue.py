@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-sqeueue.py -- An squeue Slurm helper
+"""crc-sqeueue.py -- An squeue Slurm helper
 Usage:
     crc-squeue.py [-hvasw]
 
@@ -9,7 +9,7 @@ Options:
     -a --all                        Show all jobs
     -s --start                      Add the approximate start time
     -w --watch                      Updates information every 10 seconds
-'''
+"""
 
 try:
     # Some imports functions and libraries

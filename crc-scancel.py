@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-scancel.py -- An scancel Slurm helper
+"""crc-scancel.py -- An scancel Slurm helper
 Usage:
     crc-scancel.py (-h | --help)
     crc-scancel.py (-v | --version)
@@ -11,7 +11,7 @@ Positional Arguments:
 Options:
     -h --help                       Print this screen and exit
     -v --version                    Print the version of crc-scancel.py
-'''
+"""
 
 try:
     # Some imports functions and libraries

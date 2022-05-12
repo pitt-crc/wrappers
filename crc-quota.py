@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-'''crc-quota.py
+"""crc-quota.py
 Usage:
     crc-quota.py
     crc-quota.py -u <USER> | --user <USER> [-v | --verbose]
@@ -12,7 +12,7 @@ Options:
     -v --verbose                Verbose quota output                    
     -h --help                   Print this screen and exit
     --version                   Print the version of crc-quota.py
-'''
+"""
 
 # TODO: Add -a, --admin option for admins to check full filesystem size/usage
 # TODO: add -v, --verbose option for showing additional quota information

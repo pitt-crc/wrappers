@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-''' crc-scontrol.py -- An scontrol Slurm helper
+"""crc-scontrol.py -- An scontrol Slurm helper
 Usage:
     crc-scontrol.py (-c <cluster> | -p <partition>) [-hv]
 
@@ -10,7 +10,7 @@ Positional Arguments:
 Options:
     -h --help                       Print this screen and exit
     -v --version                    Print the version of crc-scontrol.py
-'''
+"""
 
 
 def print_command(command):

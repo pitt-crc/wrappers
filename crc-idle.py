@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-""" crc-idle.py -- Find empty cores and GPUs
+"""crc-idle.py -- Find empty cores and GPUs
 Usage:
     crc-idle.py [-hv]
     crc-idle.py [-hv] (-s | -g | -m | -i | -d) [-p <partition>]
