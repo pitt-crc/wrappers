@@ -36,6 +36,8 @@ from docopt import docopt
 
 __VERSION__ = '0.0.2'
 
+# IMPORTANT: Remember to update the module docstring when changing global values
+
 MINIMUM_MPI_NODES = 2  # Minimum limit on requested MPI nodes
 MINIMUM_TIME = 1  # Minimum limit on requested time in hours
 MAXIMUM_TIME = 12  # Maximum limit on requested time in hours
@@ -51,12 +53,14 @@ DEFAULT_ARGUMENTS = {
 
 
 def set_default_args(arguments, **default_values):
-    """Parse arguments from the command line and return them as a dictionary
+    """Set default values for parsed arguments
 
-    Includes default values for any unspecified values
+    Args:
+        arguments: A dictionary of parsed command line arguments
+        **default_values: Argument names and their default values
 
     Returns:
-        A dictionary of parsed arguments from the command line
+        A copy of the ``arguments`` argument updated with default values
     """
 
     # Set default value for unspecified arguments
@@ -75,7 +79,7 @@ def set_default_args(arguments, **default_values):
 
 
 def validate_arguments(arguments):
-    """Exit the application if command-line parsed_args are invalid
+    """Exit the application if command-line arguments are invalid
 
     Args:
         arguments: A dictionary of parsed command line parsed_args
@@ -108,7 +112,16 @@ def run_command(command, stdout=None, stderr=None):
 
 
 def create_srun_command(arguments):
-    # Map command line parsed_args from application to srun parsed_args
+    """Create an ``srun`` command based on parsed commandline arguments
+
+    Args:
+        arguments: A dictionary of parsed command line parsed_args
+
+    Return:
+        The equivalent ``srun`` command as a string
+    """
+
+    # Map arguments from the parent application to equivalent srun arguments
     srun_dict = {
         '--partition': '--partition={}',
         '--num-nodes': '--nodes={}',
@@ -122,6 +135,7 @@ def create_srun_command(arguments):
         "--num-cores": "--cpus-per-task={}" if arguments["--openmp"] else "--ntasks-per-node={}"
     }
 
+    # Build a string of srun arguments
     srun_args = ' --export=ALL'
     for app_arg, srun_arg in srun_dict.items():
         arg_value = arguments[app_arg]
@@ -131,7 +145,7 @@ def create_srun_command(arguments):
     if (arguments['--gpu'] or arguments['--invest']) and arguments['--num-gpus']:
         srun_args += ' ' + srun_dict['--num-gpus'].format(arguments['--num-gpus'])
 
-     # Add --x11 flag?
+    # Add the --x11 flag only if X11 is working
     try:
         x11_out, x11_err = run_command("xset q", stdout=PIPE, stderr=PIPE)
         if not x11_err:
