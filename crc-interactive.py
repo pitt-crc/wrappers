@@ -106,6 +106,17 @@ def add_to_srun_args(srun_args, srun_dict, arguments, item):
 
 
 def run_command(command, stdout=None, stderr=None):
+    """Execute a child program in a new process
+
+    Args:
+        command: The command to execute in the subprocess
+        stdout: Optionally route STDOUT from the child process
+        stderr: Optionally route STDERR from the child process
+
+    Returns:
+        The child application as a ``Popen`` instance
+    """
+
     return Popen(split(command), stdout=stdout, stderr=stderr).communicate()
 
 
