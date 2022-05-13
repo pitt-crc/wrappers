@@ -34,7 +34,13 @@ from subprocess import Popen, PIPE
 from docopt import docopt
 
 __VERSION__ = '0.0.2'
+
+# Max/min limits on requested resources
 MINIMUM_MPI_NODES = 2
+
+# Limits on requested time in hours
+MINIMUM_TIME = 1
+MAXIMUM_TIME = 12
 
 
 def parse_args():
@@ -82,8 +88,8 @@ def validate_arguments(arguments):
     """
 
     # Check wall time is between limits
-    if not (1 <= arguments['--time'] <= 12):
-        exit("ERROR: {} is not in 1 <= time <= 12... exiting".format(arguments['--time']))
+    if not (MINIMUM_TIME <= arguments['--time'] <= MAXIMUM_TIME):
+        exit("ERROR: {} is not in {} <= time <= {}... exiting".format(arguments['--time'], MINIMUM_TIME, MAXIMUM_TIME))
 
     if arguments['--mpi'] and (not arguments['--partition'] == 'compbio') and arguments['--num-nodes'] < MINIMUM_MPI_NODES:
         exit('Error: You must use more than 1 node on the MPI cluster')
