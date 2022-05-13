@@ -66,11 +66,11 @@ def set_default_args(arguments, **default_values):
     # Set default value for unspecified arguments
     arguments = deepcopy(arguments)
     for arg_name, default in default_values.items():
-        command_line_value = arguments[arg_name]
-        arguments.setdefault(arg_name, command_line_value)
+        if arguments[arg_name] is None:
+            arguments[arg_name] = default
 
         try:
-            arguments[arg_name]
+            int(arguments[arg_name])
 
         except ValueError:
             print("WARNING: {0} should have been an integer, setting {0} to 1 hr".format(arg_name))
@@ -132,19 +132,20 @@ def create_srun_command(arguments):
         '--account': '--account={}',
         '--license': '--licenses={}',
         '--feature': '--constraint={}',
-        '--num-gpus': '--gres=gpu:{}',
-        "--num-cores": "--cpus-per-task={}" if arguments["--openmp"] else "--ntasks-per-node={}"
+        '--num-cores': "--cpus-per-task={}" if arguments["--openmp"] else "--ntasks-per-node={}"
     }
 
     # Build a string of srun arguments
-    srun_args = ' --export=ALL'
-    for app_arg, srun_arg in srun_dict.items():
-        arg_value = arguments[app_arg]
+    srun_args = ''
+    for app_arg_name, srun_arg_name in srun_dict.items():
+        arg_value = arguments[app_arg_name]
         if arg_value:
-            srun_args += ' ' + srun_arg.format(arg_value)
+            srun_args += ' ' + srun_arg_name.format(arg_value)
 
     if (arguments['--gpu'] or arguments['--invest']) and arguments['--num-gpus']:
-        srun_args += ' ' + srun_dict['--num-gpus'].format(arguments['--num-gpus'])
+        srun_args += ' ' + '--gres=gpu:{}'.format(arguments['--num-gpus'])
+
+    srun_args += ' --export=ALL'
 
     # Add the --x11 flag only if X11 is working
     try:
@@ -155,15 +156,15 @@ def create_srun_command(arguments):
     except OSError:
         pass
 
-    cluster_names = ('--smp', '--gpu', '--mpi', '--invest', '--htc')
-    cluster_to_run = next(cluster for cluster in cluster_names if arguments.get(cluster))
+    cluster_names = ('smp', 'gpu', 'mpi', 'invest', 'htc')
+    cluster_to_run = next(cluster for cluster in cluster_names if arguments.get('--' + cluster))
     return "srun -M {} {} --pty bash".format(cluster_to_run, srun_args)
 
 
 if __name__ == '__main__':
     _args_with_defaults = set_default_args(_arguments, **DEFAULT_ARGUMENTS)
-    validate_arguments(_arguments)
-    srun_command = create_srun_command(_arguments)
+    validate_arguments(_args_with_defaults)
+    srun_command = create_srun_command(_args_with_defaults)
 
     if _arguments['--print-command']:
         print(srun_command)
