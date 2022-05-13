@@ -28,6 +28,7 @@ Options:
     -o --openmp                     Run using OpenMP style submission
 """
 
+from copy import deepcopy
 from shlex import split
 from subprocess import Popen, PIPE
 
@@ -39,8 +40,17 @@ MINIMUM_MPI_NODES = 2  # Minimum limit on requested MPI nodes
 MINIMUM_TIME = 1  # Minimum limit on requested time in hours
 MAXIMUM_TIME = 12  # Maximum limit on requested time in hours
 
+_arguments = docopt(__doc__, version='{} version {}'.format(__file__, __VERSION__))
+DEFAULT_ARGUMENTS = {
+    '--time': 1,
+    '--num-nodes': 1,
+    '--num-cores': 1,
+    '--mem': 1,
+    '--num-gpus': 1 if _arguments["--gpu"] else 0
+}
 
-def parse_args():
+
+def set_default_args(arguments, **default_values):
     """Parse arguments from the command line and return them as a dictionary
 
     Includes default values for any unspecified values
@@ -49,17 +59,8 @@ def parse_args():
         A dictionary of parsed arguments from the command line
     """
 
-    arguments = docopt(__doc__, version='{} version {}'.format(__file__, __VERSION__))
-
-    default_values = {
-        '--time': 1,
-        '--num-nodes': 1,
-        '--num-cores': 1,
-        '--mem': 1,
-        '--num-gpus': 1 if arguments["--gpu"] else 0
-    }
-
     # Set default value for unspecified arguments
+    arguments = deepcopy(arguments)
     for arg_name, default in default_values.items():
         command_line_value = arguments[arg_name]
 
@@ -74,10 +75,10 @@ def parse_args():
 
 
 def validate_arguments(arguments):
-    """Exit the application if command-line arguments are invalid
+    """Exit the application if command-line parsed_args are invalid
 
     Args:
-        arguments: A dictionary of parsed command line arguments
+        arguments: A dictionary of parsed command line parsed_args
     """
 
     # Check wall time is between limits
@@ -107,7 +108,7 @@ def run_command(command, stdout=None, stderr=None):
 
 
 def create_srun_command(arguments):
-    # Map command line arguments from application to srun arguments
+    # Map command line parsed_args from application to srun parsed_args
     srun_dict = {
         '--partition': '--partition={}',
         '--num-nodes': '--nodes={}',
@@ -121,7 +122,7 @@ def create_srun_command(arguments):
         "--num-cores": "--cpus-per-task={}" if arguments["--openmp"] else "--ntasks-per-node={}"
     }
 
-    srun_args = ''
+    srun_args = ' --export=ALL'
     for app_arg, srun_arg in srun_dict.items():
         arg_value = arguments[app_arg]
         if arg_value:
@@ -130,9 +131,7 @@ def create_srun_command(arguments):
     if (arguments['--gpu'] or arguments['--invest']) and arguments['--num-gpus']:
         srun_args += ' ' + srun_dict['--num-gpus'].format(arguments['--num-gpus'])
 
-    srun_args += ' --export=ALL'
-
-    # Add --x11 flag?
+     # Add --x11 flag?
     try:
         x11_out, x11_err = run_command("xset q", stdout=PIPE, stderr=PIPE)
         if not x11_err:
@@ -147,7 +146,7 @@ def create_srun_command(arguments):
 
 
 if __name__ == '__main__':
-    _arguments = parse_args()
+    _args_with_defaults = set_default_args(_arguments, **DEFAULT_ARGUMENTS)
     validate_arguments(_arguments)
     srun_command = create_srun_command(_arguments)
 
@@ -155,8 +154,8 @@ if __name__ == '__main__':
         print(srun_command)
         exit()
 
-    # try:
-    #    run_command(srun_command)
+    try:
+        run_command(srun_command)
 
-#    except KeyboardInterrupt:
-#       exit('Interrupt detected! exiting...')
+    except KeyboardInterrupt:
+        exit('Interrupt detected! exiting...')
