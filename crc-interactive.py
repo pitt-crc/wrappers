@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 """crc-interactive.py -- An interactive Slurm helper
 Usage:
     crc-interactive.py (-s | -g | -m | -i | -d) [-hvzo] [-t <time>] [-n <num-nodes>]
@@ -34,7 +34,7 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-__VERSION__ = '0.0.2'
+__VERSION__ = '0.1.0'
 
 # IMPORTANT: Remember to update the module docstring when changing global values
 
