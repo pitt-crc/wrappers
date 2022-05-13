@@ -67,11 +67,12 @@ def set_default_args(arguments, **default_values):
     arguments = deepcopy(arguments)
     for arg_name, default in default_values.items():
         command_line_value = arguments[arg_name]
+        arguments.setdefault(arg_name, command_line_value)
 
         try:
-            int(command_line_value)
+            arguments[arg_name]
 
-        except (ValueError, TypeError):
+        except ValueError:
             print("WARNING: {0} should have been an integer, setting {0} to 1 hr".format(arg_name))
             arguments[arg_name] = default
 
