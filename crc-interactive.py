@@ -91,10 +91,10 @@ def validate_arguments(arguments):
         exit("ERROR: {} is not in {} <= time <= {}... exiting".format(arguments['--time'], MINIMUM_TIME, MAXIMUM_TIME))
 
     if arguments['--mpi'] and (not arguments['--partition'] == 'compbio') and arguments['--num-nodes'] < MINIMUM_MPI_NODES:
-        exit('Error: You must use more than 1 node on the MPI cluster')
+        exit('ERROR: You must use at least {} node when using the MPI cluster'.format(MINIMUM_MPI_NODES))
 
     if arguments['--invest'] and not arguments['--partition']:
-        exit("Error: You must specify a partition when using the Investor cluster")
+        exit("ERROR: You must specify a partition when using the Investor cluster")
 
 
 def run_command(command, stdout=None, stderr=None):
@@ -142,6 +142,7 @@ def create_srun_command(arguments):
         if arg_value:
             srun_args += ' ' + srun_arg_name.format(arg_value)
 
+    # The --gres argument in srun needs some special handling so is missing from the above dict
     if (arguments['--gpu'] or arguments['--invest']) and arguments['--num-gpus']:
         srun_args += ' ' + '--gres=gpu:{}'.format(arguments['--num-gpus'])
 
