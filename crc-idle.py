@@ -16,12 +16,13 @@ Options:
     -p --partition <partition>      Use a specific partition
 """
 
+from os.path import basename
 from shlex import split
 from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-__version__ = '0.1.0'
+__VERSION__ = '0.2.0'
 
 CLUSTER_PARTITIONS = {
     "smp": ["smp", "high-mem", "legacy"],
@@ -30,6 +31,7 @@ CLUSTER_PARTITIONS = {
     "htc": ["htc"],
 }
 
+# Either ``cores`` or ``GPUs`` depending on the cluster type
 CLUSTER_TYPES = {
     "smp": 'cores',
     "gpu": 'GPUs',
@@ -77,19 +79,20 @@ def print_partition_summary(cluster, partition, unit):
     print('')
 
 
-arguments = docopt(__doc__, version="crc-idle.py version {}".format(__version__))
+if __name__ == '__main__':
+    arguments = docopt(__doc__, version='{} version {}'.format(basename(__file__), __VERSION__))
 
-# Check which clusters to print idle resources for. Default to all clusters.
-clusters = tuple(clus for clus in CLUSTER_PARTITIONS if arguments['--' + clus])
-if not clusters:
-    clusters = tuple(CLUSTER_PARTITIONS)
+    # Check which clusters to print idle resources for. Default to all clusters.
+    clusters = tuple(clus for clus in CLUSTER_PARTITIONS if arguments['--' + clus])
+    if not clusters:
+        clusters = tuple(CLUSTER_PARTITIONS)
 
-# Check if we need to print for a single partition
-partition = arguments['--partition']
-if partition and arguments['--partition'] not in CLUSTER_PARTITIONS[clusters[0]]:
-    exit("Error: Partition {} doesnt exist for cluster {}".format(partition, clusters[0]))
+    # Check if we need to print for a single partition
+    partition = arguments['--partition']
+    if partition and arguments['--partition'] not in CLUSTER_PARTITIONS[clusters[0]]:
+        exit("Error: Partition {} doesnt exist for cluster {}".format(partition, clusters[0]))
 
-for cluster in clusters:
-    partitions_to_print = [partition] if partition else CLUSTER_PARTITIONS[cluster]
-    for partition in partitions_to_print:
-        print_partition_summary(cluster, partition, CLUSTER_TYPES[cluster])
+    for cluster in clusters:
+        partitions_to_print = [partition] if partition else CLUSTER_PARTITIONS[cluster]
+        for partition in partitions_to_print:
+            print_partition_summary(cluster, partition, CLUSTER_TYPES[cluster])
