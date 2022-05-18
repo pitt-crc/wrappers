@@ -30,6 +30,13 @@ CLUSTER_PARTITIONS = {
     "htc": ["htc"],
 }
 
+CLUSTER_TYPES = {
+    "smp": 'cores',
+    "gpu": 'GPUs',
+    "mpi": 'cores',
+    "htc": 'cores'
+}
+
 
 def print_partition_summary(cluster, partition, unit):
     """Print a summary of idle resources in a single partition
@@ -79,14 +86,10 @@ if not clusters:
 
 # Check if we need to print for a single partition
 partition = arguments['--partition']
-if partition:
-    if len(clusters) > 1:
-        exit("You cannot request a partition when specifying multiple clusters")
-
-    elif arguments['--partition'] not in CLUSTER_PARTITIONS[clusters[0]]:
-        exit("Error: Partition {} doesnt exist for cluster {}".format(partition, clusters[0]))
+if partition and arguments['--partition'] not in CLUSTER_PARTITIONS[clusters[0]]:
+    exit("Error: Partition {} doesnt exist for cluster {}".format(partition, clusters[0]))
 
 for cluster in clusters:
     partitions_to_print = [partition] if partition else CLUSTER_PARTITIONS[cluster]
     for partition in partitions_to_print:
-        print_partition_summary(cluster, partition)
+        print_partition_summary(cluster, partition, CLUSTER_TYPES[cluster])
