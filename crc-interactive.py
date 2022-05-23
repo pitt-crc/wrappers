@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3.6 -E
 """crc-interactive.py -- An interactive Slurm helper
 Usage:
     crc-interactive.py (-s | -g | -m | -i | -d) [-hvzo] [-t <time>] [-n <num-nodes>]
