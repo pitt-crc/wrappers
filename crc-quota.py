@@ -23,6 +23,8 @@ from subprocess import Popen, PIPE
 from docopt import docopt
 
 
+from _version import __version__
+
 class Quota:
     """Class to represent a quota"""
 
@@ -150,7 +152,7 @@ def run_command(command):
 
 
 def main():
-    arguments = docopt(__doc__, version='crc-quota.py version 0.0.2')
+    arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
 
     if arguments['--user'] is None:
         USER = run_command("id -un")[0].strip()

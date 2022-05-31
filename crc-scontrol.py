@@ -18,6 +18,8 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
+from _version import __version__
+
 
 def print_command(command):
     sp = Popen(split(command), stdout=PIPE)
@@ -46,7 +48,7 @@ def print_node(cluster):
 
 
 try:
-    arguments = docopt(__doc__, version='crc-scontrol.py version 0.0.1')
+    arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
 
     smp_partitions = ['smp', 'high-mem', "legacy"]
     gpu_partitions = ['gtx1080', 'titanx', 'titan', 'k40']

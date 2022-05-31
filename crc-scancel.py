@@ -20,9 +20,11 @@ from sys import stdout
 from docopt import docopt
 from readchar import readchar
 
+from _version import __version__
+
 try:
     # Magical mystical docopt
-    arguments = docopt(__doc__, version='crc-scancel.py version 0.0.1')
+    arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
 
     # Job exists on any of the clusters?
     output = {}

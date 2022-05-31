@@ -15,6 +15,8 @@ from os import system, environ
 
 from docopt import docopt
 
+from _version import __version__
+
 try:
     # Useful variables to reduce duplication
     user = "-u {0}".format(environ['USER'])
@@ -25,7 +27,7 @@ try:
     output_user_format_start = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R %.20S'"
     output_all_format_start = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.20R %.20S'"
 
-    arguments = docopt(__doc__, version='crc-squeue.py version 0.0.1')
+    arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
 
     if arguments['--all'] and arguments['--start'] and arguments['--watch']:
         system("{0} {1} {2}".format(squeue, watch, output_all_format_start))

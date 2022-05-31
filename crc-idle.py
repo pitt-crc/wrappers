@@ -21,6 +21,8 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
+from _version import __version__
+
 
 def run_command(command):
     sp = Popen(split(command), stdout=PIPE, stderr=PIPE)
@@ -130,7 +132,7 @@ def cpu_logic(cluster, partition):
         cpu_based_empty_cores(cluster, CLUSTERS[cluster])
 
 
-arguments = docopt(__doc__, version="crc-idle.py version 0.0.1")
+arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
 
 CLUSTERS = {
     "smp": ["smp", "high-mem", "legacy"],
