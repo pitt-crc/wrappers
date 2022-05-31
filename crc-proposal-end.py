@@ -13,8 +13,14 @@ Options:
     -v --version                    Print the version of crc-proposal-end.py
 """
 
+from os import path
+
 import dataset
 from docopt import docopt
+
+from _version import __version__
+
+__app_name__ = path.basename(__file__)
 
 
 # Test:
@@ -25,7 +31,7 @@ def check_item_in_table(table, account):
 
 
 # The magical mystical docopt line
-arguments = docopt(__doc__, version='crc-proposal-end.py version 0.0.1')
+arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
 # Connect to the database and get the limits table
 # Absolute path ////

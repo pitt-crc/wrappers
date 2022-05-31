@@ -12,11 +12,16 @@ Options:
     -v --version                    Print the version of crc-scontrol.py
 """
 
+from os import path
 from random import choice
 from shlex import split
 from subprocess import Popen, PIPE
 
 from docopt import docopt
+
+from _version import __version__
+
+__app_name__ = path.basename(__file__)
 
 
 def print_command(command):
@@ -46,7 +51,7 @@ def print_node(cluster):
 
 
 try:
-    arguments = docopt(__doc__, version='crc-scontrol.py version 0.0.1')
+    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
     smp_partitions = ['smp', 'high-mem', "legacy"]
     gpu_partitions = ['gtx1080', 'titanx', 'titan', 'k40']

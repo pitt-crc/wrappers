@@ -22,7 +22,9 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-__VERSION__ = '0.2.0'
+from _version import __version__
+
+__app_name__ = basename(__file__)
 
 # Default partitions to print if not specified by user
 CLUSTER_PARTITIONS = {
@@ -80,7 +82,7 @@ def print_partition_summary(cluster, partition, unit):
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='{} version {}'.format(basename(__file__), __VERSION__))
+    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
     # Check which clusters to print idle resources for. Default to all clusters.
     clusters = tuple(clus for clus in CLUSTER_PARTITIONS if arguments['--' + clus])

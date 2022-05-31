@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6 -E
+#!/usr/bin/python -E
 """crc-interactive.py -- An interactive Slurm helper
 Usage:
     crc-interactive.py (-s | -g | -m | -i | -d) [-hvzo] [-t <time>] [-n <num-nodes>]
@@ -29,12 +29,15 @@ Options:
 """
 
 from copy import deepcopy
+from os import path
 from shlex import split
 from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-__VERSION__ = '0.1.0'
+from _version import __version__
+
+__app_name__ = path.basename(__file__)
 
 # IMPORTANT: Remember to update the module docstring when changing global values
 
@@ -42,7 +45,7 @@ MINIMUM_MPI_NODES = 2  # Minimum limit on requested MPI nodes
 MINIMUM_TIME = 1  # Minimum limit on requested time in hours
 MAXIMUM_TIME = 12  # Maximum limit on requested time in hours
 
-_arguments = docopt(__doc__, version='{} version {}'.format(__file__, __VERSION__))
+_arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 DEFAULT_ARGUMENTS = {
     '--time': 1,
     '--num-nodes': 1,
