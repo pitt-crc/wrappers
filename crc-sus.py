@@ -13,12 +13,16 @@ Options:
     -v --version                    Print the version of crc-sus.py
 """
 
+from os import path
+
 import dataset
 from docopt import docopt
 
 from _version import __version__
 
-arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
+__app_name__ = path.basename(__file__)
+
+arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
 # Connect to the database and get the table with proposal service units
 db = dataset.connect('sqlite:////ihome/crc/bank/crc_bank.db')

@@ -16,12 +16,15 @@ Options:
     -p --partition <partition>      Use a specific partition
 """
 
+from os import path
 from shlex import split
 from subprocess import Popen, PIPE
 
 from docopt import docopt
 
 from _version import __version__
+
+__app_name__ = path.basename(__file__)
 
 
 def run_command(command):
@@ -132,7 +135,7 @@ def cpu_logic(cluster, partition):
         cpu_based_empty_cores(cluster, CLUSTERS[cluster])
 
 
-arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
+arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
 CLUSTERS = {
     "smp": ["smp", "high-mem", "legacy"],

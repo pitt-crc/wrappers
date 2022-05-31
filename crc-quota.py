@@ -17,13 +17,16 @@ Options:
 import json
 import math
 import sys
+from os import path
 from shlex import split
 from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-
 from _version import __version__
+
+__app_name__ = path.basename(__file__)
+
 
 class Quota:
     """Class to represent a quota"""
@@ -152,7 +155,7 @@ def run_command(command):
 
 
 def main():
-    arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
+    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
     if arguments['--user'] is None:
         USER = run_command("id -un")[0].strip()

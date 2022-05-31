@@ -29,6 +29,7 @@ Options:
 """
 
 from copy import deepcopy
+from os import path
 from shlex import split
 from subprocess import Popen, PIPE
 
@@ -36,13 +37,15 @@ from docopt import docopt
 
 from _version import __version__
 
+__app_name__ = path.basename(__file__)
+
 # IMPORTANT: Remember to update the module docstring when changing global values
 
 MINIMUM_MPI_NODES = 2  # Minimum limit on requested MPI nodes
 MINIMUM_TIME = 1  # Minimum limit on requested time in hours
 MAXIMUM_TIME = 12  # Maximum limit on requested time in hours
 
-_arguments = docopt(__doc__, version='{} version {}'.format(__file__, __version__))
+_arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 DEFAULT_ARGUMENTS = {
     '--time': 1,
     '--num-nodes': 1,
