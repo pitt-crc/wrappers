@@ -24,6 +24,7 @@ from docopt import docopt
 
 __VERSION__ = '0.2.0'
 
+# Default partitions to print if not specified by user
 CLUSTER_PARTITIONS = {
     "smp": ["smp", "high-mem", "legacy"],
     "gpu": ["gtx1080", "titanx", "k40", "v100"],
@@ -31,6 +32,7 @@ CLUSTER_PARTITIONS = {
     "htc": ["htc"],
 }
 
+# The type of resource available on a cluster
 # Either ``cores`` or ``GPUs`` depending on the cluster type
 CLUSTER_TYPES = {
     "smp": 'cores',
@@ -71,12 +73,10 @@ def print_partition_summary(cluster, partition, unit):
     print("=" * len(clus_par_str))
 
     for idle in sorted(core_dict.keys()):
-        print("{0:3d} nodes w/ {1:3d} idle {2}".format(core_dict[idle], idle, unit))
+        print("{0:3d} nodes w/ {1:3d} idle {2}\n".format(core_dict[idle], idle, unit))
 
     if not core_dict:
-        print(" No idle resources")
-
-    print('')
+        print(" No idle resources\n")
 
 
 if __name__ == '__main__':
@@ -87,12 +87,7 @@ if __name__ == '__main__':
     if not clusters:
         clusters = tuple(CLUSTER_PARTITIONS)
 
-    # Check if we need to print for a single partition
-    partition = arguments['--partition']
-    if partition and partition not in CLUSTER_PARTITIONS[clusters[0]]:
-        exit("Error: Partition {} doesnt exist for cluster {}".format(partition, clusters[0]))
-
     for cluster in clusters:
-        partitions_to_print = [partition] if partition else CLUSTER_PARTITIONS[cluster]
-        for p in partitions_to_print:
-            print_partition_summary(cluster, p, CLUSTER_TYPES[cluster])
+        partitions_to_print = [arguments['--partition']] if arguments['--partition'] else CLUSTER_PARTITIONS[cluster]
+        for partition in partitions_to_print:
+            print_partition_summary(cluster, partition, CLUSTER_TYPES[cluster])
