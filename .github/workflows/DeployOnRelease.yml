@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Update code from GitHub
         run: |
-            GITHASH=$(git rev-parse --short "$GITHUB_SHA")
-            echo "Updating to hash $GITHASH"
+            TAG=$(git describe --tags --abbrev=0)
+            echo "Updating to hash $TAG"
             cd /ihome/crc/wrappers
             git fetch
-            git checkout $GITHASH
+            git checkout tags/$TAG
