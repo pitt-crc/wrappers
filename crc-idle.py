@@ -59,11 +59,11 @@ def print_partition_summary(cluster, partition, unit):
     core_dict = {}
     for line in out:
         node_name, resource_data = line.split(",")
-        num_idle_cores = int(resource_data.split("/")[1])
+        _, idle, _, total = [int(x) for x in resource_data.split("/")]
 
-        if num_idle_cores != 0:
-            core_dict.setdefault(num_idle_cores, 0)
-            core_dict[num_idle_cores] += 1
+        if idle != 0:
+            core_dict.setdefault(idle, 0)
+            core_dict[idle] += 1
 
     # Print results for the current partition
     clus_par_str = "Cluster: {0}, Partition: {1}".format(cluster, partition)
@@ -89,10 +89,10 @@ if __name__ == '__main__':
 
     # Check if we need to print for a single partition
     partition = arguments['--partition']
-    if partition and arguments['--partition'] not in CLUSTER_PARTITIONS[clusters[0]]:
+    if partition and partition not in CLUSTER_PARTITIONS[clusters[0]]:
         exit("Error: Partition {} doesnt exist for cluster {}".format(partition, clusters[0]))
 
     for cluster in clusters:
         partitions_to_print = [partition] if partition else CLUSTER_PARTITIONS[cluster]
-        for partition in partitions_to_print:
-            print_partition_summary(cluster, partition, CLUSTER_TYPES[cluster])
+        for p in partitions_to_print:
+            print_partition_summary(cluster, p, CLUSTER_TYPES[cluster])
