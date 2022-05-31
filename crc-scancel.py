@@ -14,15 +14,20 @@ Options:
 """
 
 from os import environ
+from os import path
 from subprocess import Popen, PIPE
 from sys import stdout
 
 from docopt import docopt
 from readchar import readchar
 
+from _version import __version__
+
+__app_name__ = path.basename(__file__)
+
 try:
     # Magical mystical docopt
-    arguments = docopt(__doc__, version='crc-scancel.py version 0.0.1')
+    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
     # Job exists on any of the clusters?
     output = {}
