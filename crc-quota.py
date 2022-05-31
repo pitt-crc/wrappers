@@ -14,9 +14,6 @@ Options:
     --version                   Print the version of crc-quota.py
 """
 
-# TODO: Add -a, --admin option for admins to check full filesystem size/usage
-# TODO: add -v, --verbose option for showing additional quota information
-
 import json
 import math
 import sys
