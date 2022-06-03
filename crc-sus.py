@@ -61,14 +61,15 @@ class CrcSus(BaseParser):
         string_postfix = '\n '.join(sus_string)
         return '\n'.join((string_prefix, string_postfix))
 
-    def execute(self):
-        """Parse command line arguments and execute the application"""
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
 
-        args = self.parse_args()
-        account_name = args.account
-        account_info = self.get_allocation_info(account_name)
+        Args:
+            args: Namespace of parsed arguments from the command line
+        """
 
-        output_string = self.build_output_string(account_name, **account_info)
+        account_info = self.get_allocation_info(args.account)
+        output_string = self.build_output_string(args.account, **account_info)
         print(output_string)
 
 
