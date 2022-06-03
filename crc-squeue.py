@@ -24,6 +24,11 @@ class CrcSqueue(BaseParser):
         self.add_argument('-w', '--watch', action='store_true', help="updates information every 10 seconds")
 
     def app_logic(self, args):
+        """Logic to evaluate when executing the application
+
+        Args:
+            args: Namespace of parsed arguments from the command line
+        """
 
         # Useful variables for building shell commands
         user = "-u {0}".format(environ['USER'])
