@@ -1,4 +1,5 @@
 """Parent classes for building command line applications."""
+
 import abc
 import sys
 from argparse import ArgumentParser
