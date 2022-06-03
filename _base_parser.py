@@ -1,8 +1,11 @@
+"""Parent classes for building command line applications."""
+
 import sys
 from argparse import ArgumentParser
 
 
 class BaseParser(ArgumentParser):
+    """Base class for building command line applications"""
 
     def __init__(self):
         """Define arguments for the command line interface"""

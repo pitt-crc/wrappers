@@ -30,8 +30,8 @@ class CrcSus(BaseParser):
         """
 
         # Connect to the database and get the table with proposal service units
-        db = dataset.connect(self.banking_db_path)
-        table = db['proposal']
+        database = dataset.connect(self.banking_db_path)
+        table = database['proposal']
 
         # Ensure a proposal exists for the given account
         db_record = table.find_one(account=account)
