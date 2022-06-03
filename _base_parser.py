@@ -14,14 +14,16 @@ class BaseParser(ArgumentParser):
         super(BaseParser, self).__init__()
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
+    @staticmethod
+    def get_semantic_version():
+        with open('version.txt') as version_file:
+            return version_file.readline().strip()
+
     @property
     def app_version(self):
         """Return the application name and version as a string"""
 
-        with open('version.txt') as version_file:
-            version = version_file.readline().strip()
-
-        return '{} version {}'.format(self.prog, version)
+        return '{} version {}'.format(self.prog, self.get_semantic_version())
 
     @abc.abstractmethod
     def app_logic(self, args):
