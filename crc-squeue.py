@@ -19,41 +19,38 @@ class CrcSqueue(BaseParser):
         """Define arguments for the command line interface"""
 
         super(CrcSqueue, self).__init__()
-        self.add_argument('-a', '--all', action='store true', help="show all jobs")
-        self.add_argument('-s', '--start', action='store true', help="add the approximate start time")
-        self.add_argument('-w', '--watch', action='store true', help="updates information every 10 seconds")
+        self.add_argument('-a', '--all', action='store_true', help="show all jobs")
+        self.add_argument('-s', '--start', action='store_true', help="add the approximate start time")
+        self.add_argument('-w', '--watch', action='store_true', help="updates information every 10 seconds")
 
     def app_logic(self, args):
 
         # Useful variables for building shell commands
         user = "-u {0}".format(environ['USER'])
-        squeue = "squeue -M all"
         watch = "-i 10"
 
-        if args.all and args.start and args.watch:
-            command = "{0} {1} {2}".format(squeue, watch, self.output_all_format_start)
+        # Build the base command
+        command_options = ["squeue -M all"]
+        if not args.all:
+            command_options.append(user)
 
-        elif args.all and args.start:
-            command = "{0} {1}".format(squeue, self.output_all_format_start)
+        if args.watch:
+            command_options.append(watch)
 
-        elif args.all and args.watch:
-            command = "{0} {1} {2}".format(squeue, watch, self.output_all_format)
-
-        elif args.start and args.watch:
-            command = "{0} {1} {2} {3}".format(squeue, user, watch, self.output_user_format_start)
+        # Add on the necessary output format
+        if args.all and args.start:
+            command_options.append(self.output_all_format_start)
 
         elif args.all:
-            command = "{0} {1}".format(squeue, self.output_all_format)
+            command_options.append(self.output_all_format)
 
         elif args.start:
-            command = "{0} {1} {2}".format(squeue, user, self.output_user_format_start)
-
-        elif args.watch:
-            command = "{0} {1} {2} {3}".format(squeue, user, watch, self.output_user_format)
+            command_options.append(self.output_user_format_start)
 
         else:
-            command = "{0} {1} {2}".format(squeue, user, self.output_user_format)
+            command_options.append(self.output_user_format)
 
+        command = ' '.join(command_options)
         system(command)
 
 
