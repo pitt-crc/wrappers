@@ -16,6 +16,8 @@ class BaseParser(ArgumentParser):
 
     @staticmethod
     def get_semantic_version():
+        """Return the semantic version number of the application"""
+
         with open('version.txt') as version_file:
             return version_file.readline().strip()
 
