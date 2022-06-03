@@ -22,8 +22,9 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-from _version import __version__
+from _base_parser import BaseParser
 
+__version__ = BaseParser.get_semantic_version()
 __app_name__ = path.basename(__file__)
 
 
