@@ -1,5 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""A simple wrapper around the Slurm squeue command"""
+"""A simple wrapper around the Slurm ``squeue`` command"""
 
 from os import system, environ
 
