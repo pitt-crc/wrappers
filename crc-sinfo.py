@@ -1,28 +1,23 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""crc-sinfo.py -- An sinfo Slurm helper
-Usage:
-    crc-sinfo.py [-hv]
+"""A simple wrapper around the Slurm ``sinfo`` command"""
 
-Options:
-    -h --help                       Print this screen and exit
-    -v --version                    Print the version of crc-sinfo.py
-"""
-
-from os import path
 from os import system
-
-from docopt import docopt
 
 from _base_parser import BaseParser
 
-__version__ = BaseParser.get_semantic_version()
-__app_name__ = path.basename(__file__)
 
-try:
+class CrcSinfo(BaseParser):
+    """Command line application for fetching data from the Slurm ``sinfo`` utility"""
 
-    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
 
-    system("sinfo -M all")
+        Args:
+            args: Parsed command line arguments
+        """
 
-except KeyboardInterrupt:
-    exit('Interrupt detected! exiting...')
+        system("sinfo -M all")
+
+
+if __name__ == '__main__':
+    CrcSinfo().execute()
