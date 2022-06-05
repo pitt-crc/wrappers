@@ -9,7 +9,7 @@ from _base_parser import BaseParser
 class CrcProposalEnd(BaseParser):
     """Command line application for printing an account's proposal end date"""
 
-    db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
+    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -24,8 +24,8 @@ class CrcProposalEnd(BaseParser):
             account: The name of the account
         """
 
-        db = dataset.connect(self.db_path)
-        table = db['proposal']
+        database = dataset.connect(self.banking_db_path)
+        table = database['proposal']
 
         db_record = table.find_one(account=account)
         if db_record is None:
