@@ -29,7 +29,11 @@ class BaseParser(ArgumentParser):
 
     @abc.abstractmethod
     def app_logic(self, args):
-        """Logic to evaluate when executing the application"""
+        """Logic to evaluate when executing the application
+
+        Args:
+            args: Parsed command line arguments
+        """
 
         raise NotImplementedError
 
