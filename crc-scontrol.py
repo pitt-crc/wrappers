@@ -1,33 +1,21 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""crc-scontrol.py -- An scontrol Slurm helper
-Usage:
-    crc-scontrol.py (-c <cluster> | -p <partition>) [-hv]
+"""A simple wrapper around the Slurm ``scontrol`` command"""
 
-Positional Arguments:
-    -c --cluster <cluster>          Print partitions for <cluster>
-    -p --partition <partition>      Prints information about node in <partition>
-
-Options:
-    -h --help                       Print this screen and exit
-    -v --version                    Print the version of crc-scontrol.py
-"""
-
-from os import path
 from random import choice
 from shlex import split
 from subprocess import Popen, PIPE
 
-from docopt import docopt
-
 from _base_parser import BaseParser
-
-__version__ = BaseParser.get_semantic_version()
-__app_name__ = path.basename(__file__)
 
 
 def print_command(command):
     sp = Popen(split(command), stdout=PIPE)
     print(sp.communicate()[0].strip())
+
+
+def run_command(command):
+    sp = Popen(split(command), stdout=PIPE)
+    return sp.communicate()[0].strip().split()
 
 
 def run_command_dict(command):
@@ -40,41 +28,46 @@ def run_command_dict(command):
     return cluster_dict
 
 
-def run_command(command):
-    sp = Popen(split(command), stdout=PIPE)
-    return sp.communicate()[0].strip().split()
+class CrcScontrol(BaseParser):
+    cluster_partitions = {
+        'smp': ['smp', 'high-mem', "legacy"],
+        'gpu': ['gtx1080', 'titanx', 'titan', 'k40'],
+        'mpi': ['opa', 'ib', "opa-high-mem"],
+        'htc': ['htc']
+    }
+
+    def __init__(self):
+        """Define arguments for the command line interface"""
+
+        super(CrcScontrol, self).__init__()
+        self.add_argument('-c', '--cluster', help='print partitions for the given cluster')
+        self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
+
+    @staticmethod
+    def print_node(cluster, partition):
+        cluster_dict = run_command_dict("scontrol -M {} show partition {}".format(cluster, partition))
+        node = choice(run_command("scontrol show hostname {}".format(cluster_dict['Nodes'])))
+        print_command("scontrol -M {} show node {}".format(cluster, node))
+
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
+
+        Args:
+            args: Parsed command line arguments
+        """
+
+        if args.cluster:
+            if args.cluster not in self.cluster_partitions:
+                self.error("Error: I don't recognize cluster: {}".format(args.cluster))
+
+            print_command("scontrol -M {} show partition".format(args.cluster))
+
+        elif args.partition:
+            if args.partition not in self.cluster_partitions[args.cluster]:
+                self.error("Error: I don't recognize partition: {}".format(args.partition))
+
+            self.print_node(args.cluster, args.partition)
 
 
-def print_node(cluster):
-    cluster_dict = run_command_dict("scontrol -M {} show partition {}".format(cluster, arguments['--partition']))
-    node = choice(run_command("scontrol show hostname {}".format(cluster_dict['Nodes'])))
-    print_command("scontrol -M {} show node {}".format(cluster, node))
-
-
-try:
-    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
-
-    smp_partitions = ['smp', 'high-mem', "legacy"]
-    gpu_partitions = ['gtx1080', 'titanx', 'titan', 'k40']
-    mpi_partitions = ['opa', 'ib', "opa-high-mem"]
-    htc_partitions = ['htc']
-
-    if arguments['--cluster']:
-        if arguments['--cluster'] in ['smp', 'gpu', 'mpi', 'htc']:
-            print_command("scontrol -M {} show partition".format(arguments['--cluster']))
-        else:
-            print("Error: I don't recognize cluster: {}".format(arguments['--cluster']))
-    elif arguments['--partition']:
-        if arguments['--partition'] in smp_partitions:
-            print_node("smp")
-        elif arguments['--partition'] in gpu_partitions:
-            print_node("gpu")
-        elif arguments['--partition'] in mpi_partitions:
-            print_node("mpi")
-        elif arguments['--partition'] in htc_partitions:
-            print_node("htc")
-        else:
-            print("Error: I don't recognize partition: {}".format(arguments['--partition']))
-
-except KeyboardInterrupt:
-    exit('Interrupt detected! exiting...')
+if __name__ == '__main__':
+    CrcScontrol().execute()
