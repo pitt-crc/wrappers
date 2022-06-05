@@ -15,6 +15,9 @@ class CrcSqueue(BaseParser):
     output_user_format_start = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R %.20S'"
     output_all_format_start = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.20R %.20S'"
 
+    # Frequency (in seconds) to refresh output when user specifies ``--watch``
+    watch_frequency = 10
+
     def __init__(self):
         """Define arguments for the command line interface"""
 
@@ -30,9 +33,9 @@ class CrcSqueue(BaseParser):
             args: Namespace of parsed arguments from the command line
         """
 
-        # Useful variables for building shell commands
+        # Variables for building shell commands
         user = "-u {0}".format(environ['USER'])
-        watch = "-i 10"
+        watch = "-i {0}".format(self.watch_frequency)
 
         # Build the base command
         command_options = ["squeue -M all"]
