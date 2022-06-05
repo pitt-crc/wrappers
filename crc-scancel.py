@@ -32,8 +32,8 @@ class CrcSCancel(BaseParser):
 
         # Fetch a list of running slurm jobs matching the username and job id
         command = ['squeue', '-h', '-u', user_name, '-j', job_id, '-M', cluster]
-        sp = Popen(command, stdout=PIPE, stderr=PIPE)
-        stdout, stderr = sp.communicate()
+        process = Popen(command, stdout=PIPE, stderr=PIPE)
+        stdout, _ = process.communicate()
 
         # Verify and cancel the running job
         if job_id in stdout:
