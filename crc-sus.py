@@ -65,7 +65,7 @@ class CrcSus(BaseParser):
         """Logic to evaluate when executing the application
 
         Args:
-            args: Namespace of parsed arguments from the command line
+            args: Parsed command line arguments
         """
 
         account_info = self.get_allocation_info(args.account)

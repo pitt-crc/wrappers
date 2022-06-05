@@ -30,7 +30,7 @@ class CrcSqueue(BaseParser):
         """Logic to evaluate when executing the application
 
         Args:
-            args: Namespace of parsed arguments from the command line
+            args: Parsed command line arguments
         """
 
         # Variables for building shell commands
