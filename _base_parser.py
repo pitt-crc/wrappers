@@ -3,6 +3,7 @@
 import abc
 import sys
 from argparse import ArgumentParser
+from subprocess import Popen, PIPE
 
 
 class BaseParser(ArgumentParser):
@@ -36,6 +37,18 @@ class BaseParser(ArgumentParser):
         """
 
         raise NotImplementedError
+
+    @staticmethod
+    def run_command(command):
+        """Run a command in a dedicated shell
+
+        Args:
+            command: The command to execute as a string
+        """
+
+        command_list = command.split()
+        process = Popen(command_list, stdout=PIPE)
+        return process.communicate()
 
     def error(self, message):
         """Print the error message to STDOUT and exit
