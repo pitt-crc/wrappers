@@ -41,7 +41,7 @@ class CrcSCancel(BaseParser):
             if response.lower() == 'y':
                 Popen(['scancel', '-M', cluster, job_id])
 
-        print('')
+            print('')
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
