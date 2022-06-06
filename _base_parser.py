@@ -46,8 +46,10 @@ class BaseParser(ArgumentParser):
             command: The command to execute as a string
         """
 
-        command_list = command.split()
-        process = Popen(command_list, stdout=PIPE)
+        if isinstance(command, str):
+            command = command.split()
+
+        process = Popen(command, stdout=PIPE)
         return process.communicate()
 
     def error(self, message):
