@@ -1,34 +1,15 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``scontrol`` command"""
 
-from random import choice
 from shlex import split
 from subprocess import Popen, PIPE
 
 from _base_parser import BaseParser
 
 
-def print_command(command):
-    sp = Popen(split(command), stdout=PIPE)
-    print(sp.communicate()[0].strip())
-
-
-def run_command(command):
-    sp = Popen(split(command), stdout=PIPE)
-    return sp.communicate()[0].strip().split()
-
-
-def run_command_dict(command):
-    sp = Popen(split(command), stdout=PIPE)
-    out = sp.communicate()[0].strip().split()
-    cluster_dict = {}
-    for op in out:
-        sp = op.split('=')
-        cluster_dict[sp[0]] = sp[1]
-    return cluster_dict
-
-
 class CrcScontrol(BaseParser):
+    """Command line application for fetching data from the Slurm ``scontrol`` utility"""
+
     cluster_partitions = {
         'smp': ['smp', 'high-mem', "legacy"],
         'gpu': ['gtx1080', 'titanx', 'titan', 'k40'],
@@ -40,14 +21,28 @@ class CrcScontrol(BaseParser):
         """Define arguments for the command line interface"""
 
         super(CrcScontrol, self).__init__()
-        self.add_argument('-c', '--cluster', help='print partitions for the given cluster')
+
+        valid_clusters = tuple(self.cluster_partitions)
+        self.add_argument('-c', '--cluster', choices=valid_clusters, help='print partitions for the given cluster')
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
 
     @staticmethod
-    def print_node(cluster, partition):
-        cluster_dict = run_command_dict("scontrol -M {} show partition {}".format(cluster, partition))
-        node = choice(run_command("scontrol show hostname {}".format(cluster_dict['Nodes'])))
-        print_command("scontrol -M {} show node {}".format(cluster, node))
+    def run_command(command):
+        sp = Popen(split(command), stdout=PIPE)
+        return sp.communicate()[0].strip()
+
+    def print_node(self, cluster, partition):
+        command = "scontrol -M {} show partition {}".format(cluster, partition)
+
+        cluster_dict = {}
+        for op in self.run_command(command).split():
+            sp = op.split('=')
+            cluster_dict[sp[0]] = sp[1]
+
+        command_out = self.run_command("scontrol show hostname {}".format(cluster_dict['Nodes']))
+
+        node = command_out.split()[0]
+        print(self.run_command("scontrol -M {} show node {}".format(cluster, node)))
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
@@ -57,12 +52,9 @@ class CrcScontrol(BaseParser):
         """
 
         if args.cluster:
-            if args.cluster not in self.cluster_partitions:
-                self.error("Error: I don't recognize cluster: {}".format(args.cluster))
+            print(self.run_command("scontrol -M {} show partition".format(args.cluster)))
 
-            print_command("scontrol -M {} show partition".format(args.cluster))
-
-        elif args.partition:
+        else:
             if args.partition not in self.cluster_partitions[args.cluster]:
                 self.error("Error: I don't recognize partition: {}".format(args.partition))
 
