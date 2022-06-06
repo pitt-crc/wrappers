@@ -2,7 +2,6 @@
 """A simple wrapper around the Slurm ``scancel`` command"""
 
 from os import environ
-from subprocess import Popen
 
 from readchar import readchar
 
@@ -37,7 +36,7 @@ class CrcSCancel(BaseParser):
         if job_id in stdout:
             response = readchar("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(job_id, cluster))
             if response.lower() == 'y':
-                Popen(['scancel', '-M', cluster, job_id])
+                self.run_command(['scancel', '-M', cluster, job_id])
 
             print('')
 
