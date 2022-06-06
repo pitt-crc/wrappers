@@ -40,6 +40,12 @@ class BaseParser(ArgumentParser):
 
     @staticmethod
     def run_command(command):
+        """Run a command in a dedicated shell
+
+        Args:
+            command: The command to execute as a string
+        """
+
         command_list = command.split()
         process = Popen(command_list, stdout=PIPE)
         return process.communicate()
