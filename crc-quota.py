@@ -1,18 +1,5 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""crc-quota.py
-Usage:
-    crc-quota.py
-    crc-quota.py -u <USER> | --user <USER> [-v | --verbose]
-    crc-quota.py -v | --verbose
-    crc-quota.py -h | --help
-    crc-quota.py --version
-
-Options:
-    -u USER --user USER         
-    -v --verbose                Verbose quota output                    
-    -h --help                   Print this screen and exit
-    --version                   Print the version of crc-quota.py
-"""
+"""Command line utility for checking a user's disk usage"""
 
 import json
 import math
@@ -26,25 +13,23 @@ from _base_parser import BaseParser
 class Quota(object):
     """Class to represent a quota"""
 
-    def __init__(self, name, id, size_used, size_limit):
+    def __init__(self, system, name, id, size_used, size_limit):
         self.name = name
+        self.system = system
         self.id = id
-        self.size_used = size_used
-        self.size_limit = size_limit
+        self.size_used = float(size_used)
+        self.size_limit = float(size_limit)
 
     def __str__(self):
         return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format(
             self.name, self.id, self.size_used, self.size_limit)
-
-    def __repr__(self):
-        return "<{} instance at {}: {}>".format(self.__class__, id(self), self.__dict__)
 
 
 class BeegfsQuota(Quota):
     """Class to represent a BeeGFS quota"""
 
     def __init__(self, name, id, size_used, size_limit, chunk_used, chunk_limit):
-        super(BeegfsQuota, self).__init__(name, id, size_used, size_limit)
+        super(BeegfsQuota, self).__init__('beegfs', name, id, size_used, size_limit)
         self.chunk_used = chunk_used
         self.chunk_limit = chunk_limit
 
@@ -57,7 +42,7 @@ class IhomeQuota(Quota):
     """Class to represent an iHome quota"""
 
     def __init__(self, name, id, size_used, size_limit, inodes, physical):
-        super(IhomeQuota, self).__init__(name, id, size_used, size_limit)
+        super(IhomeQuota, self).__init__('ihome', name, id, size_used, size_limit)
         self.inodes = inodes
         self.physical = physical
 
@@ -87,7 +72,7 @@ def zfs_get_quota_from_gid(group, gid):
         zfs1_quota = None
     else:
         result = zfs1_quota[1].split()
-        zfs1_quota = Quota(group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+        zfs1_quota = Quota('zfs1', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
 
     zfs2_quota = run_command("df /zfs2/{}".format(group))[0].strip()
     zfs2_quota = zfs2_quota.splitlines()
@@ -96,7 +81,7 @@ def zfs_get_quota_from_gid(group, gid):
         zfs2_quota = None
     else:
         result = zfs2_quota[1].split()
-        zfs2_quota = Quota(group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+        zfs2_quota = Quota('zfs2', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
 
     return zfs1_quota, zfs2_quota
 
@@ -124,7 +109,7 @@ def ix_get_quota(group, gid):
         ix_quota = None
     else:
         result = ix_quota[1].split()
-        ix_quota = Quota(group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+        ix_quota = Quota('ix', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
 
     return ix_quota
 
@@ -153,7 +138,7 @@ class CrcQuota(BaseParser):
 
         super(CrcQuota, self).__init__()
         self.add_argument('-u', '--user', default=None, help='username of quota to query')
-        self.add_argument('-v', '--verbose', action='store_true', help='verbose quota output')
+        self.add_argument('--verbose', action='store_true', help='verbose quota output')
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
@@ -198,11 +183,14 @@ class CrcQuota(BaseParser):
             print("If you need additional storage, you can request up to 5TB on BGFS, ZFS or IX!. Contact CRC for more details.")
 
         for quota in (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota):
+            if quota is None:
+                continue
+
             if args.verbose:
-                print("-> {}: {}".format(quota.name, quota))
+                print("-> {}: {}".format(quota.system, quota))
 
             else:
-                print("-> {}: {} / {}".format(quota.name, convert_size(quota.size_used), convert_size(quota.size_limit)))
+                print("-> {}: {} / {}".format(quota.system, convert_size(quota.size_used), convert_size(quota.size_limit)))
 
 
 if __name__ == "__main__":
