@@ -163,29 +163,28 @@ class CrcQuota(BaseParser):
         """
 
         if args.user is None:
-            USER = run_command("id -un")[0].strip()
-            GROUP = run_command("id -gn")[0].strip()
-
-            UID = run_command("id -u")[0].strip()
-            GID = run_command("id -g")[0].strip()
+            user = self.run_command("id -un")
+            group = self.run_command("id -gn")
+            uid = self.run_command("id -u")
+            gid = self.run_command("id -g")
         else:
             if len(run_command("id -un {}".format(args.user))[1]) > 0:
                 sys.exit("I don't know who {} is!".format(args.user))
 
-            USER = run_command("id -un {}".format(args.user))[0].strip()
-            GROUP = run_command("id -gn {}".format(args.user))[0].strip()
+            user = self.run_command("id -un {}".format(args.user))
+            group = self.run_command("id -gn {}".format(args.user))
+            uid = self.run_command("id -u {}".format(args.user))
+            gid = self.run_command("id -g {}".format(args.user))
 
-            UID = run_command("id -u {}".format(args.user))[0].strip()
-            GID = run_command("id -g {}".format(args.user))[0].strip()
+        bgfs_quota = beegfs_get_quota_from_gid(group)
+        zfs1_quota, zfs2_quota = zfs_get_quota_from_gid(group, gid)
+        ihome_quota = ihome_get_quota_from_uid(user, uid)
+        ix_quota = ix_get_quota(group, gid)
 
-        bgfs_quota = beegfs_get_quota_from_gid(GROUP)
-        zfs1_quota, zfs2_quota = zfs_get_quota_from_gid(GROUP, GID)
-        ihome_quota = ihome_get_quota_from_uid(USER, UID)
-        ix_quota = ix_get_quota(GROUP, GID)
-
-        print("User: '{}'".format(USER))
+        print("User: '{}'".format(user))
         if ihome_quota is None:
             print("-> ihome: NONE")
+
         else:
             if args.verbose:
                 print("-> ihome: {}".format(ihome_quota))
@@ -194,37 +193,16 @@ class CrcQuota(BaseParser):
 
         print("")
 
-        print("Group: '{}'".format(GROUP))
-        if zfs1_quota is None and zfs2_quota is None and bgfs_quota is None and ix_quota is None:
+        print("Group: '{}'".format(group))
+        if not any((zfs1_quota, zfs2_quota, bgfs_quota, ix_quota)):
             print("If you need additional storage, you can request up to 5TB on BGFS, ZFS or IX!. Contact CRC for more details.")
 
-        if zfs1_quota is not None:
+        for quota in (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota):
             if args.verbose:
-                print("-> zfs1: {}".format(zfs1_quota))
+                print("-> {}: {}".format(quota.name, quota))
 
             else:
-                print("-> zfs1: {} / {}".format(convert_size(float(zfs1_quota.size_used)), convert_size(float(zfs1_quota.size_limit))))
-
-        if zfs2_quota is not None:
-            if args.verbose:
-                print("-> zfs2: {}".format(zfs2_quota))
-
-            else:
-                print("-> zfs2: {} / {}".format(convert_size(float(zfs2_quota.size_used)), convert_size(float(zfs2_quota.size_limit))))
-
-        if bgfs_quota is not None:
-            if args.verbose:
-                print("-> bgfs: {}".format(bgfs_quota))
-
-            else:
-                print("-> bgfs: {} / {}".format(convert_size(float(bgfs_quota.size_used)), convert_size(float(bgfs_quota.size_limit))))
-
-        if ix_quota is not None:
-            if args.verbose:
-                print("-> ix: {}".format(ix_quota))
-
-            else:
-                print("-> ix: {} / {}".format(convert_size(float(ix_quota.size_used)), convert_size(float(ix_quota.size_limit))))
+                print("-> {}: {} / {}".format(quota.name, convert_size(quota.size_used), convert_size(quota.size_limit)))
 
 
 if __name__ == "__main__":

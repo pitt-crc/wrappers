@@ -49,8 +49,8 @@ class BaseParser(ArgumentParser):
         if isinstance(command, str):
             command = command.split()
 
-        process = Popen(command, stdout=PIPE)
-        return process.communicate()
+        process = Popen(command, stdout=PIPE, stderr=PIPE)
+        return process.communicate()[0].strip()
 
     def error(self, message):
         """Print the error message to STDOUT and exit
