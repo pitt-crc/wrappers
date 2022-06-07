@@ -4,10 +4,16 @@
 import json
 import math
 import sys
+from os import path
 from shlex import split
 from subprocess import Popen, PIPE
 
 from _base_parser import BaseParser
+
+from _base_parser import BaseParser
+
+__version__ = BaseParser.get_semantic_version()
+__app_name__ = path.basename(__file__)
 
 
 class Quota(object):
