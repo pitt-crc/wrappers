@@ -31,6 +31,7 @@ class CrcSCancel(BaseParser):
         """
 
         # Fetch a list of running slurm jobs matching the username and job id
+        job_id = str(job_id)
         command = ['squeue', '-h', '-u', user_name, '-j', job_id, '-M', cluster]
         process = Popen(command, stdout=PIPE, stderr=PIPE)
         stdout, _ = process.communicate()
