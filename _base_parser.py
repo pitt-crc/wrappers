@@ -14,7 +14,7 @@ class CommonSettings(object):
     cluster_partitions = {
         'smp': ['smp', 'high-mem', "legacy"],
         'gpu': ['gtx1080', 'titanx', 'titan', 'k40'],
-        'mpi': ['opa', 'ib', "opa-high-mem"],
+        'mpi': ['mpi', 'opa', 'ib', "opa-high-mem"],
         'htc': ['htc']
     }
 
