@@ -3,6 +3,7 @@
 import abc
 import sys
 from argparse import ArgumentParser
+from os import path
 from subprocess import Popen, PIPE
 
 
@@ -19,7 +20,8 @@ class BaseParser(ArgumentParser):
     def get_semantic_version():
         """Return the semantic version number of the application"""
 
-        with open('version.txt') as version_file:
+        resolved_path = path.abspath('version.txt')
+        with open(resolved_path) as version_file:
             return version_file.readline().strip()
 
     @property
