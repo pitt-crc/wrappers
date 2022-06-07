@@ -22,7 +22,7 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-from _base_parser import BaseParser
+from _base_parser import BaseParser, CommonSettings
 
 __version__ = BaseParser.get_semantic_version()
 __app_name__ = path.basename(__file__)
@@ -138,12 +138,7 @@ def cpu_logic(cluster, partition):
 
 arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
-CLUSTERS = {
-    "smp": ["smp", "high-mem", "legacy"],
-    "gpu": ["gtx1080", "titanx", "k40", "v100"],
-    "mpi": ["opa", "opa-high-mem", "ib"],
-    "htc": ["htc"],
-}
+CLUSTERS = CommonSettings.cluster_partitions
 
 # Arguments Check
 # ===============

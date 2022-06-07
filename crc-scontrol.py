@@ -1,18 +1,11 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``scontrol`` command"""
 
-from _base_parser import BaseParser
+from _base_parser import BaseParser, CommonSettings
 
 
-class CrcScontrol(BaseParser):
+class CrcScontrol(BaseParser, CommonSettings):
     """Command line application for fetching data from the Slurm ``scontrol`` utility"""
-
-    cluster_partitions = {
-        'smp': ['smp', 'high-mem', "legacy"],
-        'gpu': ['gtx1080', 'titanx', 'titan', 'k40'],
-        'mpi': ['opa', 'ib', "opa-high-mem"],
-        'htc': ['htc']
-    }
 
     def __init__(self):
         """Define arguments for the command line interface"""

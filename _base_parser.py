@@ -7,6 +7,18 @@ from os import path
 from subprocess import Popen, PIPE
 
 
+class CommonSettings(object):
+    """Parent class for adding common settings to a command line application"""
+
+    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
+    cluster_partitions = {
+        'smp': ['smp', 'high-mem', "legacy"],
+        'gpu': ['gtx1080', 'titanx', 'titan', 'k40'],
+        'mpi': ['opa', 'ib', "opa-high-mem"],
+        'htc': ['htc']
+    }
+
+
 class BaseParser(ArgumentParser):
     """Base class for building command line applications"""
 

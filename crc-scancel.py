@@ -5,13 +5,11 @@ from os import environ
 
 from readchar import readchar
 
-from _base_parser import BaseParser
+from _base_parser import BaseParser, CommonSettings
 
 
-class CrcSCancel(BaseParser):
+class CrcSCancel(BaseParser, CommonSettings):
     """Command line application for canceling the user's running slurm jobs"""
-
-    clusters = ['smp', 'gpu', 'mpi', 'htc', 'invest']
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -48,7 +46,7 @@ class CrcSCancel(BaseParser):
         """
 
         user = environ['USER']
-        for cluster in self.clusters:
+        for cluster in self.cluster_partitions:
             self.cancel_job_on_cluster(user, cluster, args.job_id)
 
 
