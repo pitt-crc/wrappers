@@ -1,104 +1,10 @@
 #!/usr/bin/python -E
-"""crc-interactive.py -- An interactive Slurm helper
-Usage:
-    crc-interactive.py (-s | -g | -m | -i | -d) [-hvzo] [-t <time>] [-n <num-nodes>]
-        [-p <partition>] [-c <num-cores>] [-u <num-gpus>] [-r <res-name>]
-        [-b <memory>] [-a <account>] [-l <license>] [-f <feature>]
+"""A simple wrapper around the Slurm ``srun`` command"""
 
-Positional Arguments:
-    -s --smp                        Interactive job on smp cluster
-    -g --gpu                        Interactive job on gpu cluster
-    -m --mpi                        Interactive job on mpi cluster
-    -i --invest                     Interactive job on invest cluster
-    -d --htc                        Interactive job on htc cluster
-Options:
-    -h --help                       Print this screen and exit
-    -v --version                    Print the version of crc-interactive.py
-    -t --time <time>                Run time in hours, 1 <= time <= 12 [default: 1]
-    -n --num-nodes <num-nodes>      Number of nodes [default: 1]
-    -p --partition <partition>      Specify non-default partition
-    -c --num-cores <num-cores>      Number of cores per node [default: 1]
-    -u --num-gpus <num-gpus>        Used with -g only, number of GPUs [default: 0]
-    -r --reservation <res-name>     Specify a reservation name
-    -b --mem <memory>               Memory in GB
-    -a --account <account>          Specify a non-default account
-    -l --license <license>          Specify a license
-    -f --feature <feature>          Specify a feature, e.g. `ti` for GPUs
-    -z --print-command              Simply print the command to be run
-    -o --openmp                     Run using OpenMP style submission
-"""
-
-from copy import deepcopy
-from os import path
 from shlex import split
 from subprocess import Popen, PIPE
 
-from docopt import docopt
-
-from _base_parser import BaseParser
-
-__version__ = BaseParser.get_semantic_version()
-__app_name__ = path.basename(__file__)
-
-# IMPORTANT: Remember to update the module docstring when changing global values
-
-MINIMUM_MPI_NODES = 2  # Minimum limit on requested MPI nodes
-MINIMUM_TIME = 1  # Minimum limit on requested time in hours
-MAXIMUM_TIME = 12  # Maximum limit on requested time in hours
-
-_arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
-DEFAULT_ARGUMENTS = {
-    '--time': 1,
-    '--num-nodes': 1,
-    '--num-cores': 1,
-    '--mem': 1,
-    '--num-gpus': 1 if _arguments["--gpu"] else 0
-}
-
-
-def set_default_args(arguments, **default_values):
-    """Set default values for parsed arguments
-
-    Args:
-        arguments: A dictionary of parsed command line arguments
-        **default_values: Argument names and their default values
-
-    Returns:
-        A copy of the ``arguments`` argument updated with default values
-    """
-
-    # Set default value for unspecified arguments
-    arguments = deepcopy(arguments)
-    for arg_name, default in default_values.items():
-        if arguments[arg_name] is None:
-            arguments[arg_name] = default
-
-        try:
-            int(arguments[arg_name])
-
-        except ValueError:
-            print("WARNING: {0} should have been an integer, setting {0} to 1 hr".format(arg_name))
-            arguments[arg_name] = default
-
-    return arguments
-
-
-def validate_arguments(arguments):
-    """Exit the application if command-line arguments are invalid
-
-    Args:
-        arguments: A dictionary of parsed command line parsed_args
-    """
-
-    # Check wall time is between limits
-    if not (MINIMUM_TIME <= int(arguments['--time']) <= MAXIMUM_TIME):
-        exit("ERROR: {} is not in {} <= time <= {}... exiting".format(arguments['--time'], MINIMUM_TIME, MAXIMUM_TIME))
-
-    if arguments['--mpi'] and (not arguments['--partition'] == 'compbio') and arguments['--num-nodes'] < MINIMUM_MPI_NODES:
-        exit('ERROR: You must use at least {} node when using the MPI cluster'.format(MINIMUM_MPI_NODES))
-
-    if arguments['--invest'] and not arguments['--partition']:
-        exit("ERROR: You must specify a partition when using the Investor cluster")
+from _base_parser import BaseParser, CommonSettings
 
 
 def run_command(command, stdout=None, stderr=None):
@@ -116,67 +22,129 @@ def run_command(command, stdout=None, stderr=None):
     return Popen(split(command), stdout=stdout, stderr=stderr).communicate()
 
 
-def create_srun_command(arguments):
-    """Create an ``srun`` command based on parsed commandline arguments
+class CrcInteractive(BaseParser, CommonSettings):
+    """Commandline utility for launching an interactive slurm session"""
 
-    Args:
-        arguments: A dictionary of parsed command line parsed_args
+    minimum_mpi_nodes = 2  # Minimum limit on requested MPI nodes
+    minimum_time = 1  # Minimum limit on requested time in hours
+    maximum_time = 12  # Maximum limit on requested time in hours
 
-    Return:
-        The equivalent ``srun`` command as a string
-    """
+    def __init__(self):
+        """Define arguments for the command line interface"""
 
-    # Map arguments from the parent application to equivalent srun arguments
-    srun_dict = {
-        '--partition': '--partition={}',
-        '--num-nodes': '--nodes={}',
-        '--time': '--time={}:00:00',
-        '--reservation': '--reservation={}',
-        '--mem': '--mem={}g',
-        '--account': '--account={}',
-        '--license': '--licenses={}',
-        '--feature': '--constraint={}',
-        '--num-cores': "--cpus-per-task={}" if arguments["--openmp"] else "--ntasks-per-node={}"
-    }
+        super(CrcInteractive, self).__init__()
+        self.add_argument('-s', '--smp', action='store_true', help='Interactive job on smp cluster')
+        self.add_argument('-g', '--gpu', action='store_true', help='Interactive job on gpu cluster')
+        self.add_argument('-m', '--mpi', action='store_true', help='Interactive job on mpi cluster')
+        self.add_argument('-i', '--invest', help='Interactive job on invest cluster')
+        self.add_argument('-d', '--htc', help='Interactive job on htc cluster')
+        self.add_argument('-t', '--time <time>', type=int, default=1, help='Run time in hours, 1 <= time <= 12 [default: 1]')
+        self.add_argument('-n', '--num-nodes', type=int, default=1, help='Number of nodes [default: 1]')
+        self.add_argument('-p', '--partition', help='Specify non-default partition')
+        self.add_argument('-c', '--num-cores', type=int, default=1, help='Number of cores per node [default: 1]')
+        self.add_argument('-u', '--num-gpus', type=int, default=0, help='Used with -g only, number of GPUs [default: 0]')
+        self.add_argument('-r', '--reservation', help='Specify a reservation name')
+        self.add_argument('-b', '--mem', type=int, help='Memory in GB')
+        self.add_argument('-a', '--account', help='Specify a non-default account')
+        self.add_argument('-l', '--license', help='Specify a license')
+        self.add_argument('-f', '--feature', help='Specify a feature, e.g. `ti` for GPUs')
+        self.add_argument('-z', '--print-command', help='Simply print the command to be run')
+        self.add_argument('-o', '--openmp', help='Run using OpenMP style submission')
 
-    # Build a string of srun arguments
-    srun_args = ''
-    for app_arg_name, srun_arg_name in srun_dict.items():
-        arg_value = arguments[app_arg_name]
-        if arg_value:
-            srun_args += ' ' + srun_arg_name.format(arg_value)
+    def _validate_arguments(self, args):
+        """Exit the application if command-line arguments are invalid
 
-    # The --gres argument in srun needs some special handling so is missing from the above dict
-    if (arguments['--gpu'] or arguments['--invest']) and arguments['--num-gpus']:
-        srun_args += ' ' + '--gres=gpu:{}'.format(arguments['--num-gpus'])
+        Args:
+            args: Parsed commandline arguments
+        """
 
-    srun_args += ' --export=ALL'
+        # Check wall time is between limits
+        if not (self.minimum_time <= args.time <= self.maximum_time):
+            self.error('{} is not in {} <= time <= {}... exiting'.format(args.time, self.minimum_time, self.maximum_time))
 
-    # Add the --x11 flag only if X11 is working
-    try:
-        x11_out, x11_err = run_command("xset q", stdout=PIPE, stderr=PIPE)
-        if not x11_err:
+        # Check the minimum number of nodes are requested for mpi
+        if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.minimum_mpi_nodes:
+            self.error('You must use at least {} nodes when using the MPI cluster'.format(self.minimum_mpi_nodes))
+
+        # Check a partition is specified if the user is requesting invest
+        if args.invest and not args.partition:
+            self.error('You must specify a partition when using the Investor cluster')
+
+    @staticmethod
+    def x11_is_available():
+        """Return whether x11 is available in the current runtime environment"""
+
+        try:
+            _, x11_err = run_command('xset q', stdout=PIPE, stderr=PIPE)
+            return not x11_err
+
+        except OSError:
+            pass
+
+        return False
+
+    def create_srun_command(self, args):
+        """Create an ``srun`` command based on parsed commandline arguments
+
+        Args:
+            args: A dictionary of parsed command line parsed_args
+
+        Return:
+            The equivalent ``srun`` command as a string
+        """
+
+        # Map arguments from the parent application to equivalent srun arguments
+        srun_dict = {
+            '--partition': '--partition={}',
+            '--num-nodes': '--nodes={}',
+            '--time': '--time={}:00:00',
+            '--reservation': '--reservation={}',
+            '--mem': '--mem={}g',
+            '--account': '--account={}',
+            '--license': '--licenses={}',
+            '--feature': '--constraint={}',
+            '--num-cores': '--cpus-per-task={}' if args['--openmp'] else '--ntasks-per-node={}'
+        }
+
+        # Build a string of srun arguments
+        srun_args = '--export=ALL'
+        for app_arg_name, srun_arg_name in srun_dict.items():
+            arg_value = getattr(args, app_arg_name)
+            if arg_value:
+                srun_args += ' ' + srun_arg_name.format(arg_value)
+
+        # The --gres argument in srun needs some special handling so is missing from the above dict
+        if (args.gpu or args.invest) and args.num_gpus:
+            srun_args += ' ' + '--gres=gpu:{}'.format(args.num_gpus)
+
+        # Add the --x11 flag only if X11 is working
+        if self.x11_is_available():
             srun_args += ' --x11 '
 
-    except OSError:
-        pass
+        cluster_to_run = next(cluster for cluster in self.cluster_partitions if args.get('--' + cluster))
+        return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
 
-    cluster_names = ('smp', 'gpu', 'mpi', 'invest', 'htc')
-    cluster_to_run = next(cluster for cluster in cluster_names if arguments.get('--' + cluster))
-    return "srun -M {} {} --pty bash".format(cluster_to_run, srun_args)
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
+
+        Args:
+            args: Parsed command line arguments
+        """
+
+        # Set defaults that need to be determined dynamically
+        if not args.num_gpus:
+            args.num_gpus = 1 if args.gpu else 0
+
+        # Create the slurm command
+        self._validate_arguments(args)
+        srun_command = self.create_srun_command(args)
+
+        if args.print_command:
+            print(srun_command)
+
+        else:
+            self.run_command(srun_command)
 
 
 if __name__ == '__main__':
-    _args_with_defaults = set_default_args(_arguments, **DEFAULT_ARGUMENTS)
-    validate_arguments(_args_with_defaults)
-    srun_command = create_srun_command(_args_with_defaults)
-
-    if _arguments['--print-command']:
-        print(srun_command)
-        exit()
-
-    try:
-        run_command(srun_command)
-
-    except KeyboardInterrupt:
-        exit('Interrupt detected! exiting...')
+    CrcInteractive().execute()
