@@ -25,9 +25,9 @@ def run_command(command, stdout=None, stderr=None):
 class CrcInteractive(BaseParser, CommonSettings):
     """Commandline utility for launching an interactive slurm session"""
 
-    minimum_mpi_nodes = 2  # Minimum limit on requested MPI nodes
-    minimum_time = 1  # Minimum limit on requested time in hours
-    maximum_time = 12  # Maximum limit on requested time in hours
+    min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
+    min_time = 1  # Minimum limit on requested time in hours
+    max_time = 12  # Maximum limit on requested time in hours
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -38,11 +38,12 @@ class CrcInteractive(BaseParser, CommonSettings):
         self.add_argument('-m', '--mpi', action='store_true', help='Interactive job on mpi cluster')
         self.add_argument('-i', '--invest', help='Interactive job on invest cluster')
         self.add_argument('-d', '--htc', help='Interactive job on htc cluster')
-        self.add_argument('-t', '--time <time>', type=int, default=1, help='Run time in hours, 1 <= time <= 12 [default: 1]')
+
+        self.add_argument('-t', '--time', type=int, default=1, help='Run time in hours [default: 1]')
         self.add_argument('-n', '--num-nodes', type=int, default=1, help='Number of nodes [default: 1]')
         self.add_argument('-p', '--partition', help='Specify non-default partition')
         self.add_argument('-c', '--num-cores', type=int, default=1, help='Number of cores per node [default: 1]')
-        self.add_argument('-u', '--num-gpus', type=int, default=0, help='Used with -g only, number of GPUs [default: 0]')
+        self.add_argument('-u', '--num-gpus', type=int, default=0, help='If using -g, the number of GPUs [default: 0]')
         self.add_argument('-r', '--reservation', help='Specify a reservation name')
         self.add_argument('-b', '--mem', type=int, help='Memory in GB')
         self.add_argument('-a', '--account', help='Specify a non-default account')
@@ -59,12 +60,12 @@ class CrcInteractive(BaseParser, CommonSettings):
         """
 
         # Check wall time is between limits
-        if not (self.minimum_time <= args.time <= self.maximum_time):
-            self.error('{} is not in {} <= time <= {}... exiting'.format(args.time, self.minimum_time, self.maximum_time))
+        if not (self.min_time <= args.time <= self.max_time):
+            self.error('{} is not in {} <= time <= {}... exiting'.format(args.time, self.min_time, self.max_time))
 
         # Check the minimum number of nodes are requested for mpi
-        if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.minimum_mpi_nodes:
-            self.error('You must use at least {} nodes when using the MPI cluster'.format(self.minimum_mpi_nodes))
+        if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.min_mpi_nodes:
+            self.error('You must use at least {} nodes when using the MPI cluster'.format(self.min_mpi_nodes))
 
         # Check a partition is specified if the user is requesting invest
         if args.invest and not args.partition:
