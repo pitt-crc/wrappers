@@ -9,7 +9,6 @@ from _base_parser import BaseParser, CommonSettings
 class CrcSus(BaseParser, CommonSettings):
     """Command line application for printing an account's service unit allocation"""
 
-
     def __init__(self):
         """Define arguments for the command line interface"""
 
