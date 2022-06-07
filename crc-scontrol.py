@@ -1,9 +1,6 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``scontrol`` command"""
 
-from shlex import split
-from subprocess import Popen, PIPE
-
 from _base_parser import BaseParser
 
 
@@ -26,12 +23,14 @@ class CrcScontrol(BaseParser):
         self.add_argument('-c', '--cluster', choices=valid_clusters, help='print partitions for the given cluster')
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
 
-    @staticmethod
-    def run_command(command):
-        sp = Popen(split(command), stdout=PIPE)
-        return sp.communicate()[0].strip()
-
     def print_node(self, cluster, partition):
+        """Print the slurm configuration of a given cluster and partition
+
+        Args:
+            cluster: The name of the cluster
+            partition: The name of the partition on the cluster
+        """
+
         command = "scontrol -M {} show partition {}".format(cluster, partition)
 
         cluster_dict = {}
@@ -51,14 +50,22 @@ class CrcScontrol(BaseParser):
             args: Parsed command line arguments
         """
 
+        if args.cluster and args.partition:
+            self.print_help()
+            self.exit(0)
+
+        # If the cluster is specified, summarize the available partitions
         if args.cluster:
             print(self.run_command("scontrol -M {} show partition".format(args.cluster)))
+            self.exit(0)
 
-        else:
-            if args.partition not in self.cluster_partitions[args.cluster]:
-                self.error("Error: I don't recognize partition: {}".format(args.partition))
+        # If the partition is specified, find the corresponding cluster
+        for cluster, partitions in self.cluster_partitions:
+            if args.partition in partitions:
+                self.print_node(cluster, args.partition)
+                self.exit(0)
 
-            self.print_node(args.cluster, args.partition)
+        self.error("Error: I don't recognize partition: {}".format(args.partition))
 
 
 if __name__ == '__main__':
