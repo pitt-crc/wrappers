@@ -61,6 +61,5 @@ class CrcSqueue(BaseParser):
         print(self.run_command(' '.join(command_options)))
 
 
-
 if __name__ == '__main__':
     CrcSqueue().execute()

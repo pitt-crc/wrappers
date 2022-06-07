@@ -52,7 +52,6 @@ class BaseParser(ArgumentParser):
 
         raise NotImplementedError
 
-
     @staticmethod
     def run_command(command):
         """Run a command in a dedicated shell
