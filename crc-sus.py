@@ -55,7 +55,7 @@ class CrcSus(BaseParser, CommonSettings):
         # Build return string
         string_prefix = 'Account {}'.format(account)
         string_postfix = '\n '.join(sus_string)
-        return '\n'.join((string_prefix, string_postfix))
+        return '\n '.join((string_prefix, string_postfix))
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
