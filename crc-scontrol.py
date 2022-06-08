@@ -53,7 +53,7 @@ class CrcScontrol(BaseParser, CommonSettings):
             self.exit(0)
 
         # If the partition is specified, find the corresponding cluster
-        for cluster, partitions in self.cluster_partitions:
+        for cluster, partitions in self.cluster_partitions.items():
             if args.partition in partitions:
                 self.print_node(cluster, args.partition)
                 self.exit(0)
