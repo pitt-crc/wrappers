@@ -28,6 +28,7 @@ class CrcInteractive(BaseParser, CommonSettings):
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
+    cluster_names = ('smp', 'gpu', 'mpi', 'invest', 'htc')
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -36,8 +37,8 @@ class CrcInteractive(BaseParser, CommonSettings):
         self.add_argument('-s', '--smp', action='store_true', help='Interactive job on smp cluster')
         self.add_argument('-g', '--gpu', action='store_true', help='Interactive job on gpu cluster')
         self.add_argument('-m', '--mpi', action='store_true', help='Interactive job on mpi cluster')
-        self.add_argument('-i', '--invest', help='Interactive job on invest cluster')
-        self.add_argument('-d', '--htc', help='Interactive job on htc cluster')
+        self.add_argument('-i', '--invest', action='store_true', help='Interactive job on invest cluster')
+        self.add_argument('-d', '--htc', action='store_true', help='Interactive job on htc cluster')
 
         self.add_argument('-t', '--time', type=int, default=1, help='Run time in hours [default: 1]')
         self.add_argument('-n', '--num-nodes', type=int, default=1, help='Number of nodes [default: 1]')
@@ -96,15 +97,15 @@ class CrcInteractive(BaseParser, CommonSettings):
 
         # Map arguments from the parent application to equivalent srun arguments
         srun_dict = {
-            '--partition': '--partition={}',
-            '--num-nodes': '--nodes={}',
-            '--time': '--time={}:00:00',
-            '--reservation': '--reservation={}',
-            '--mem': '--mem={}g',
-            '--account': '--account={}',
-            '--license': '--licenses={}',
-            '--feature': '--constraint={}',
-            '--num-cores': '--cpus-per-task={}' if args['--openmp'] else '--ntasks-per-node={}'
+            'partition': '--partition={}',
+            'num_nodes': '--nodes={}',
+            'time': '--time={}:00:00',
+            'reservation': '--reservation={}',
+            'mem': '--mem={}g',
+            'account': '--account={}',
+            'license': '--licenses={}',
+            'feature': '--constraint={}',
+            'num_cores': '--cpus-per-task={}' if getattr(args, 'openmp') else '--ntasks-per-node={}'
         }
 
         # Build a string of srun arguments
@@ -122,7 +123,7 @@ class CrcInteractive(BaseParser, CommonSettings):
         if self.x11_is_available():
             srun_args += ' --x11 '
 
-        cluster_to_run = next(cluster for cluster in self.cluster_partitions if args.get('--' + cluster))
+        cluster_to_run = next(cluster for cluster in self.cluster_names if getattr(args, cluster))
         return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
 
     def app_logic(self, args):
@@ -131,6 +132,9 @@ class CrcInteractive(BaseParser, CommonSettings):
         Args:
             args: Parsed command line arguments
         """
+
+        if not any(getattr(args, cluster) for cluster in self.cluster_names):
+            self.error('')
 
         # Set defaults that need to be determined dynamically
         if not args.num_gpus:

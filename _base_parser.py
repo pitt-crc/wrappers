@@ -75,6 +75,7 @@ class BaseParser(ArgumentParser):
             message: The error message
         """
 
+        # If true, then no arguments were provided
         if len(sys.argv) == 1:
             self.print_help()
 
