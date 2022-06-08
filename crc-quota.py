@@ -21,8 +21,8 @@ class Quota(object):
         self.name = name
         self.system = system
         self.id = id
-        self.size_used = float(size_used)
-        self.size_limit = float(size_limit)
+        self.size_used = int(size_used)
+        self.size_limit = int(size_limit)
 
     def __str__(self):
         return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format(
@@ -178,7 +178,7 @@ class CrcQuota(BaseParser):
             if args.verbose:
                 print("-> ihome: {}".format(ihome_quota))
             else:
-                print("-> ihome: {} / {}".format(convert_size(float(ihome_quota.size_used)), convert_size(float(ihome_quota.size_limit))))
+                print("-> ihome: {} / {}".format(convert_size(int(ihome_quota.size_used)), convert_size(int(ihome_quota.size_limit))))
 
         print("")
 
