@@ -66,17 +66,16 @@ class BaseParser(ArgumentParser):
         process = Popen(command, stdout=PIPE, stderr=PIPE)
         return process.communicate()[0].strip()
 
-    def error(self, message):
+    def error(self, message, print_help=True):
         """Print the error message to STDOUT and exit
-
-        If the application was called without any arguments, print the help text.
 
         Args:
             message: The error message
+            print_help: If ``True`` and no arguments were passed, print the help text.
         """
 
         # If true, then no arguments were provided
-        if len(sys.argv) == 1:
+        if print_help and len(sys.argv) == 1:
             self.print_help()
 
         else:

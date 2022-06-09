@@ -49,21 +49,25 @@ class CrcJobStats(BaseParser):
         """
 
         # Print the output header
-        width = 76
+        width = 78
         print('=' * width)
         print('JOB STATISTICS'.center(width))
         print('=' * width)
+        print('')
 
         # Print metrics for running jobs
-        for item in ('SubmitTime', 'EndTime', 'RunTime', 'JobId', 'TRES', 'Partition', 'NodeList', 'Command', 'StdOut'):
+        for item in ('SubmitTime', 'EndTime', 'RunTime', 'JobId', 'TRES', 'Partition', 'NodeList', 'Command'):
             print('{:>16s}: {}'.format(item, job_info[item]))
 
         # Add the more information section
-        print('More information:')
-        print('    - `sacct -M {} -j {} -S {} -E {}`'.format(environ['SLURM_CLUSTER_NAME'], job_info['JobId'], job_info['SubmitTime'], job_info['EndTime']))
-        print('{:>17s}'.format('Print control:'))
-        print('    - List of all possible fields: `sacct --helpformat`')
-        print('    - Add `--format=<field1,field2,etc>` with fields of interest')
+        print('')
+        print('=' * width)
+        print(' For more information use the command:')
+        print('   - `sacct -M {} -j {} -S {} -E {}`'.format(environ['SLURM_CLUSTER_NAME'], job_info['JobId'], job_info['SubmitTime'], job_info['EndTime']))
+        print('')
+        print(' To control the output of the bove command:')
+        print('   - Add `--format=<field1,field2,etc>` with fields of interest')
+        print('   - See the list of all possible fields by running: `sacct --helpformat`')
 
         # End the table
         print('=' * width)
@@ -75,7 +79,7 @@ class CrcJobStats(BaseParser):
             args: Parsed command line arguments
         """
 
-        self.raise_if_not_in_slurm()
+        #self.raise_if_not_in_slurm()
         job_info = self.get_job_info()
         self.pretty_print_job_info(job_info)
 
