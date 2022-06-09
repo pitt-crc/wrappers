@@ -2,9 +2,10 @@
 """A simple wrapper around the Slurm ``scancel`` command"""
 
 from os import environ
+from subprocess import Popen, PIPE
 
 from readchar import readchar
-
+from sys import stdout
 from _base_parser import BaseParser, CommonSettings
 
 
@@ -17,6 +18,7 @@ class CrcSCancel(BaseParser, CommonSettings):
         super(CrcSCancel, self).__init__()
         self.add_argument('job_id', type=int, help='the job\'s ID')
 
+    @staticmethod
     def cancel_job_on_cluster(self, user_name, cluster, job_id):
         """Cancel a running slurm job
 
@@ -28,13 +30,15 @@ class CrcSCancel(BaseParser, CommonSettings):
 
         # Fetch a list of running slurm jobs matching the username and job id
         job_id = str(job_id)
-        stdout = self.run_command(['squeue', '-h', '-u', user_name, '-j', job_id, '-M', cluster])
+        sp = Popen(['squeue', '-h', '-u', user_name, '-j', job_id, '-M', cluster], stdout=PIPE, stderr=PIPE)
+        cmd_out, _ = sp.communicate()
 
         # Verify and cancel the running job
-        if job_id in stdout:
-            response = readchar("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(job_id, cluster))
-            if response.lower() == 'y':
-                self.run_command(['scancel', '-M', cluster, job_id])
+        if job_id in cmd_out:
+            stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(job_id, cluster))
+            choice = readchar()
+            if choice.lower() == 'y':
+                Popen(['scancel', '-M', cluster, job_id])
 
             print('')
 
