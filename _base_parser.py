@@ -4,6 +4,19 @@ import abc
 import sys
 from argparse import ArgumentParser
 from os import path
+from subprocess import Popen, PIPE
+
+
+class CommonSettings(object):
+    """Parent class for adding common settings to a command line application"""
+
+    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
+    cluster_partitions = {
+        'smp': ['smp', 'high-mem', "legacy"],
+        'gpu': ['gtx1080', 'titanx', 'titan', 'k40'],
+        'mpi': ['mpi', 'opa', 'ib', "opa-high-mem"],
+        'htc': ['htc']
+    }
 
 
 class BaseParser(ArgumentParser):
@@ -39,16 +52,30 @@ class BaseParser(ArgumentParser):
 
         raise NotImplementedError
 
-    def error(self, message):
-        """Print the error message to STDOUT and exit
+    @staticmethod
+    def run_command(command):
+        """Run a command in a dedicated shell
 
-        If the application was called without any arguments, print the help text.
+        Args:
+            command: The command to execute as a string
+        """
+
+        if isinstance(command, str):
+            command = command.split()
+
+        process = Popen(command, stdout=PIPE, stderr=PIPE)
+        return process.communicate()[0].strip()
+
+    def error(self, message, print_help=True):
+        """Print the error message to STDOUT and exit
 
         Args:
             message: The error message
+            print_help: If ``True`` and no arguments were passed, print the help text.
         """
 
-        if len(sys.argv) == 1:
+        # If true, then no arguments were provided
+        if print_help and len(sys.argv) == 1:
             self.print_help()
 
         else:

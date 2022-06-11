@@ -3,15 +3,11 @@
 
 import dataset
 
-from _base_parser import BaseParser
+from _base_parser import BaseParser, CommonSettings
 
 
-class CrcSus(BaseParser):
+class CrcSus(BaseParser, CommonSettings):
     """Command line application for printing an account's service unit allocation"""
-
-    # Application settings
-    cluster_names = ('smp', 'gpu', 'mpi', 'htc')
-    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -38,7 +34,7 @@ class CrcSus(BaseParser):
         if db_record is None:
             self.error('ERROR: No proposal for the given account was found')
 
-        allocations = {cluster: db_record[cluster] for cluster in self.cluster_names}
+        allocations = {cluster: db_record[cluster] for cluster in self.cluster_partitions}
         return allocations
 
     @staticmethod
@@ -59,7 +55,7 @@ class CrcSus(BaseParser):
         # Build return string
         string_prefix = 'Account {}'.format(account)
         string_postfix = '\n '.join(sus_string)
-        return '\n'.join((string_prefix, string_postfix))
+        return '\n '.join((string_prefix, string_postfix))
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
