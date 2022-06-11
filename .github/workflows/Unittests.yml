@@ -1,0 +1,61 @@
+name: Test Suite
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  python_tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install test dependencies
+        run: |
+          pip install coverage
+
+      - name: Run tests with coverage
+        run: |
+          coverage run -m unittest discover
+          coverage report
+          coverage xml -o report_${{ matrix.python-version }}.xml
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-report
+          path: report_${{ matrix.python-version }}.xml
+
+      # Report test coverage to codacy for the python version being tested
+      - name: Report partial coverage results
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report --partial -l Python -r report_${{ matrix.python-version }}.xml
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
+  codacy-coverage-reporter:
+    name: Report code coverage
+    runs-on: ubuntu-latest
+    needs: python_tests
+    steps:
+
+      # Tell codacy we are done reporting test coverage
+      - name: Finish reporting coverage
+        run: bash <(curl -Ls https://coverage.codacy.com/get.sh) final
+        env:
+          CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
