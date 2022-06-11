@@ -8,9 +8,6 @@ import tty
 from argparse import ArgumentParser
 from subprocess import Popen, PIPE
 
-DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION_FILE = os.path.join(DIR, 'version.txt')
-
 
 class CommonSettings(object):
     """Parent class for adding common settings to a command line application"""
@@ -37,7 +34,11 @@ class BaseParser(ArgumentParser):
     def get_semantic_version():
         """Return the semantic version number of the application"""
 
-        with open(VERSION_FILE) as version_file:
+        # Look for `version.txt` in the same directory as this file
+        file_directory = os.path.dirname(os.path.abspath(__file__))
+        version_file = os.path.join(file_directory, 'version.txt')
+
+        with open(version_file) as version_file:
             return version_file.readline().strip()
 
     @property
@@ -50,16 +51,19 @@ class BaseParser(ArgumentParser):
     def readchar():
         """Read a character from the command line"""
 
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
+        # Get the current settings of the standard input file descriptor
+        file_descriptor = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(file_descriptor)
+
         try:
             tty.setraw(sys.stdin.fileno())
-            ch = sys.stdin.read(1)
+            character = sys.stdin.read(1)
 
         finally:
-            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+            # Restore the original standard input settings
+            termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
 
-        return ch
+        return character
 
     @abc.abstractmethod
     def app_logic(self, args):
@@ -104,8 +108,8 @@ class BaseParser(ArgumentParser):
     def execute(self):
         """Parse command line arguments and execute the application"""
 
-        args = self.parse_args()
         try:
+            args = self.parse_args()
             self.app_logic(args)
 
         except KeyboardInterrupt:
