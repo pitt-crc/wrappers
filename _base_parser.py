@@ -1,12 +1,15 @@
 """Parent classes for building command line applications."""
 
 import abc
+import os
 import sys
 import termios
 import tty
 from argparse import ArgumentParser
-from os import path
 from subprocess import Popen, PIPE
+
+DIR = os.path.dirname(os.path.abspath(__file__))
+VERSION_FILE = os.path.join(DIR, 'version.txt')
 
 
 class CommonSettings(object):
@@ -34,8 +37,7 @@ class BaseParser(ArgumentParser):
     def get_semantic_version():
         """Return the semantic version number of the application"""
 
-        resolved_path = path.abspath('version.txt')
-        with open(resolved_path) as version_file:
+        with open(VERSION_FILE) as version_file:
             return version_file.readline().strip()
 
     @property
@@ -94,10 +96,9 @@ class BaseParser(ArgumentParser):
         # If true, then no arguments were provided
         if print_help and len(sys.argv) == 1:
             self.print_help()
+            return
 
-        else:
-            sys.stderr.write('ERROR: {}\n'.format(message))
-
+        sys.stderr.write('ERROR: {}\n'.format(message))
         sys.exit(2)
 
     def execute(self):
