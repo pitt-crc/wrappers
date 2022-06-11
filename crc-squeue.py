@@ -26,8 +26,8 @@ class CrcSqueue(BaseParser):
         self.add_argument('-s', '--start', action='store_true', help="add the approximate start time")
         self.add_argument('-w', '--watch', action='store_true', help="updates information every 10 seconds")
 
-    def app_logic(self, args):
-        """Logic to evaluate when executing the application
+    def build_slurm_command(self, args):
+        """Return an ``squeue`` command matching parsed command line arguments
 
         Args:
             args: Parsed command line arguments
@@ -58,7 +58,16 @@ class CrcSqueue(BaseParser):
         else:
             command_options.append(self.output_user_format)
 
-        command = ' '.join(command_options)
+        return ' '.join(command_options)
+
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
+
+        Args:
+            args: Parsed command line arguments
+        """
+
+        command = self.build_slurm_command(args)
         system(command)
 
 
