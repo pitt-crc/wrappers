@@ -2,6 +2,8 @@
 
 import abc
 import sys
+import termios
+import tty
 from argparse import ArgumentParser
 from os import path
 from subprocess import Popen, PIPE
@@ -41,6 +43,21 @@ class BaseParser(ArgumentParser):
         """Return the application name and version as a string"""
 
         return '{} version {}'.format(self.prog, self.get_semantic_version())
+
+    @staticmethod
+    def readchar():
+        """Read a character from the command line"""
+
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+        return ch
 
     @abc.abstractmethod
     def app_logic(self, args):

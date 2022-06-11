@@ -3,9 +3,8 @@
 
 from os import environ
 from subprocess import Popen, PIPE
-
-from readchar import readchar
 from sys import stdout
+
 from _base_parser import BaseParser, CommonSettings
 
 
@@ -36,8 +35,7 @@ class CrcSCancel(BaseParser, CommonSettings):
         # Verify and cancel the running job
         if job_id in cmd_out:
             stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(job_id, cluster))
-            choice = readchar()
-            if choice.lower() == 'y':
+            if self.readchar().lower() == 'y':
                 Popen(['scancel', '-M', cluster, job_id])
 
             print('')
