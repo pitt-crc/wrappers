@@ -46,12 +46,12 @@ class CrcInteractive(BaseParser, CommonSettings):
         self.add_argument('-c', '--num-cores', type=int, default=1, help='Number of cores per node [default: 1]')
         self.add_argument('-u', '--num-gpus', type=int, default=0, help='If using -g, the number of GPUs [default: 0]')
         self.add_argument('-r', '--reservation', help='Specify a reservation name')
-        self.add_argument('-b', '--mem', type=int, help='Memory in GB')
+        self.add_argument('-b', '--mem', type=int, default=1, help='Memory in GB')
         self.add_argument('-a', '--account', help='Specify a non-default account')
         self.add_argument('-l', '--license', help='Specify a license')
         self.add_argument('-f', '--feature', help='Specify a feature, e.g. `ti` for GPUs')
-        self.add_argument('-z', '--print-command', help='Simply print the command to be run')
-        self.add_argument('-o', '--openmp', help='Run using OpenMP style submission')
+        self.add_argument('-z', '--print-command', action='store_true', help='Simply print the command to be run')
+        self.add_argument('-o', '--openmp', action='store_true', help='Run using OpenMP style submission')
 
     def _validate_arguments(self, args):
         """Exit the application if command-line arguments are invalid
@@ -148,7 +148,7 @@ class CrcInteractive(BaseParser, CommonSettings):
             print(srun_command)
 
         else:
-            self.run_command(srun_command)
+            Popen(split(srun_command)).communicate()
 
 
 if __name__ == '__main__':
