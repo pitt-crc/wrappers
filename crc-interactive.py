@@ -28,7 +28,11 @@ class CrcInteractive(BaseParser, CommonSettings):
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
-    cluster_names = ('smp', 'gpu', 'mpi', 'invest', 'htc')
+
+    default_time = 1  # Default runtime
+    default_cores = 1  # Default number of requested cores
+    default_mem = 1  # Default memory in GB
+    default_gpus = 0  # Default number of GPUs
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -41,12 +45,12 @@ class CrcInteractive(BaseParser, CommonSettings):
         self.add_argument('-d', '--htc', action='store_true', help='Interactive job on htc cluster')
 
         self.add_argument('-t', '--time', type=int, default=1, help='Run time in hours [default: 1]')
-        self.add_argument('-n', '--num-nodes', type=int, default=1, help='Number of nodes [default: 1]')
+        self.add_argument('-n', '--num-nodes', type=int, default=self.default_time, help='Number of nodes [default: 1]')
         self.add_argument('-p', '--partition', help='Specify non-default partition')
-        self.add_argument('-c', '--num-cores', type=int, default=1, help='Number of cores per node [default: 1]')
-        self.add_argument('-u', '--num-gpus', type=int, default=0, help='If using -g, the number of GPUs [default: 0]')
+        self.add_argument('-c', '--num-cores', type=int, default=self.default_cores, help='Number of cores per node [default: 1]')
+        self.add_argument('-u', '--num-gpus', type=int, default=self.default_gpus, help='If using -g, the number of GPUs [default: 0]')
         self.add_argument('-r', '--reservation', help='Specify a reservation name')
-        self.add_argument('-b', '--mem', type=int, default=1, help='Memory in GB')
+        self.add_argument('-b', '--mem', type=int, default=self.default_mem, help='Memory in GB')
         self.add_argument('-a', '--account', help='Specify a non-default account')
         self.add_argument('-l', '--license', help='Specify a license')
         self.add_argument('-f', '--feature', help='Specify a feature, e.g. `ti` for GPUs')
@@ -123,7 +127,7 @@ class CrcInteractive(BaseParser, CommonSettings):
         if self.x11_is_available():
             srun_args += ' --x11 '
 
-        cluster_to_run = next(cluster for cluster in self.cluster_names if getattr(args, cluster))
+        cluster_to_run = next(cluster for cluster in self.cluster_partitions if getattr(args, cluster))
         return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
 
     def app_logic(self, args):
@@ -133,8 +137,9 @@ class CrcInteractive(BaseParser, CommonSettings):
             args: Parsed command line arguments
         """
 
-        if not any(getattr(args, cluster) for cluster in self.cluster_names):
-            self.error('')
+        if not any(getattr(args, cluster) for cluster in self.cluster_partitions):
+            self.print_help()
+            return
 
         # Set defaults that need to be determined dynamically
         if not args.num_gpus:
