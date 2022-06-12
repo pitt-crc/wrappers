@@ -1,7 +1,6 @@
 """Tests for the ``crc-scontrol`` application."""
 
 from unittest import TestCase
-from unittest.mock import patch
 
 from _base_parser import CommonSettings
 
