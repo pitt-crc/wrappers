@@ -16,3 +16,19 @@ class ArgumentParsing(TestCase):
 
         self.assertFalse(unknown_args)
         self.assertEqual(account_name, args.account)
+
+
+class OutputStringFormatting(TestCase):
+    """Test the formatting of the output string"""
+
+    def test_output_matches_manual_string(self):
+        """Compare output string from the app with manually constructed expectation"""
+
+        output_string = CrcSus.build_output_string(account='sam', smp=10, htc=20)
+        expected_string = (
+            'Account sam\n'
+            ' cluster smp has 10 SUs\n'
+            ' cluster htc has 20 SUs'
+        )
+
+        self.assertEqual(expected_string, output_string)
