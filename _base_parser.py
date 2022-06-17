@@ -89,18 +89,17 @@ class BaseParser(ArgumentParser):
         process = Popen(command, stdout=PIPE, stderr=PIPE)
         return process.communicate()[0].strip()
 
-    def error(self, message, print_help=True):
+    def error(self, message):
         """Print the error message to STDOUT and exit
 
         Args:
             message: The error message
-            print_help: If ``True`` and no arguments were passed, print the help text.
         """
 
         # If true, then no arguments were provided
-        if print_help and len(sys.argv) == 1:
+        if len(sys.argv) == 1:
             self.print_help()
-            return
+            self.exit()
 
         sys.stderr.write('ERROR: {}\n'.format(message))
         sys.exit(2)
