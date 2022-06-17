@@ -37,8 +37,7 @@ class CrcSus(BaseParser, CommonSettings):
         allocations = {cluster: db_record[cluster] for cluster in self.cluster_partitions}
         return allocations
 
-    @staticmethod
-    def build_output_string(account, **allocation):
+    def build_output_string(self, account, **allocation):
         """Build a string describing an account's service unit allocation
 
         Args:
@@ -49,13 +48,14 @@ class CrcSus(BaseParser, CommonSettings):
             A string summarizing the account allocation
         """
 
-        # Convert cluster SUs to strings
-        sus_string = ['cluster {} has {} SUs'.format(cluster, sus) for cluster, sus in allocation.items()]
+        output_lines = ['Account {}'.format(account)]
+        cluster_name_length = max(len(cluster) for cluster in self.cluster_partitions)
 
-        # Build return string
-        string_prefix = 'Account {}'.format(account)
-        string_postfix = '\n '.join(sus_string)
-        return '\n '.join((string_prefix, string_postfix))
+        for cluster in self.cluster_partitions:
+            cluster_name = cluster.rjust(cluster_name_length)
+            output_lines.append(' cluster {} has {} SUs'.format(cluster_name, allocation[cluster]))
+
+        return '\n'.join(output_lines)
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
