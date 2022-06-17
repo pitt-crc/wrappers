@@ -34,8 +34,8 @@ class CrcScontrol(BaseParser, CommonSettings):
 
         partition_info = {}
         for slurm_option in cmd_out:
-            option_name, option_value = slurm_option.split('=')
-            partition_info[option_name] = option_value
+            split_values = slurm_option.split('=')
+            partition_info[split_values[0]] = split_values[1]
 
         return partition_info
 
@@ -77,8 +77,8 @@ class CrcScontrol(BaseParser, CommonSettings):
 
             self.print_node(args.cluster, args.partition)
 
-        # If only the cluster is specified, summarize all available partitions
         else:
+            # Summarize all available partitions
             print(self.run_command("scontrol -M {} show partition".format(args.cluster)))
 
 
