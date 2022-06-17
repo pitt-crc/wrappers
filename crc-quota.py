@@ -4,14 +4,10 @@
 import json
 import math
 import sys
-from os import path
 from shlex import split
 from subprocess import Popen, PIPE
 
 from _base_parser import BaseParser
-
-__version__ = BaseParser.get_semantic_version()
-__app_name__ = path.basename(__file__)
 
 
 class Quota(object):
@@ -30,12 +26,24 @@ class Quota(object):
 
 
 class BeegfsQuota(Quota):
-    """Class to represent a BeeGFS quota"""
+    """Disk usage on the Beegfs file system"""
 
     def __init__(self, name, id, size_used, size_limit, chunk_used, chunk_limit):
         super(BeegfsQuota, self).__init__('beegfs', name, id, size_used, size_limit)
         self.chunk_used = chunk_used
         self.chunk_limit = chunk_limit
+
+    @staticmethod
+    def from_gid(group):
+        """Get BeeGFS quota for a given GID"""
+
+        allocation_out, allocation_err = run_command("df /bgfs/{}".format(group))
+        if len(allocation_out) == 0:
+            return None
+
+        quota_out, quota_err = run_command("beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group))
+        result = quota_out.splitlines()[1].split(',')
+        return BeegfsQuota(result[0], result[1], result[2], result[3], result[4], result[5])
 
     def __str__(self):
         return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}, Chunk Files Used: {}, Chunk File Limit: {}".format(
@@ -43,79 +51,84 @@ class BeegfsQuota(Quota):
 
 
 class IhomeQuota(Quota):
-    """Class to represent an iHome quota"""
+    """Disk usage on the Ihome file system"""
 
     def __init__(self, name, id, size_used, size_limit, inodes, physical):
         super(IhomeQuota, self).__init__('ihome', name, id, size_used, size_limit)
         self.inodes = inodes
         self.physical = physical
 
+    @staticmethod
+    def from_uid(user, uid):
+        # Get the information from Isilon
+        persona = "UID:{}".format(uid)
+
+        with open("/ihome/crc/scripts/ihome_quota.json", "r") as f:
+            data = json.load(f)
+
+        for item in data["quotas"]:
+            if item["persona"] is not None:
+                if item["persona"]["id"] == persona:
+                    return IhomeQuota(user, uid, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
+
+        return None
+
     def __str__(self):
         return "Name: {}, ID: {}, Logical Bytes Used: {}, Byte Limit: {}, Num Files: {}, Physical Bytes Used: {}".format(
             self.name, self.id, self.size_used, self.size_limit, self.inodes, self.physical)
 
 
-def beegfs_get_quota_from_gid(group):
-    """Get BeeGFS quota for a given GID"""
+class ZFS1(Quota):
+    """Disk usage on the ZFS1 file system"""
 
-    allocation_out, allocation_err = run_command("df /bgfs/{}".format(group))
+    @staticmethod
+    def from_gid(group, gid):
+        zfs1_quota = run_command("df /zfs1/{}".format(group))[0].strip()
+        zfs1_quota = zfs1_quota.splitlines()
 
-    if len(allocation_out) == 0:
-        return None
+        if len(zfs1_quota) == 0:
+            zfs1_quota = None
 
-    quota_out, quota_err = run_command("beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group))
-    result = quota_out.splitlines()[1].split(',')
-    return BeegfsQuota(result[0], result[1], result[2], result[3], result[4], result[5])
+        else:
+            result = zfs1_quota[1].split()
+            zfs1_quota = Quota('zfs1', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
 
-
-def zfs_get_quota_from_gid(group, gid):
-    zfs1_quota = run_command("df /zfs1/{}".format(group))[0].strip()
-    zfs1_quota = zfs1_quota.splitlines()
-
-    if len(zfs1_quota) == 0:
-        zfs1_quota = None
-    else:
-        result = zfs1_quota[1].split()
-        zfs1_quota = Quota('zfs1', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
-
-    zfs2_quota = run_command("df /zfs2/{}".format(group))[0].strip()
-    zfs2_quota = zfs2_quota.splitlines()
-
-    if len(zfs2_quota) == 0:
-        zfs2_quota = None
-    else:
-        result = zfs2_quota[1].split()
-        zfs2_quota = Quota('zfs2', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
-
-    return zfs1_quota, zfs2_quota
+        return zfs1_quota
 
 
-def ihome_get_quota_from_uid(user, uid):
-    # Get the information from Isilon
-    persona = "UID:{}".format(uid)
+class ZFS2(Quota):
+    """Disk usage on the ZFS2 file system"""
 
-    with open("/ihome/crc/scripts/ihome_quota.json", "r") as f:
-        data = json.load(f)
+    @staticmethod
+    def from_gid(group, gid):
+        zfs2_quota = run_command("df /zfs2/{}".format(group))[0].strip()
+        zfs2_quota = zfs2_quota.splitlines()
 
-    for item in data["quotas"]:
-        if item["persona"] is not None:
-            if item["persona"]["id"] == persona:
-                return IhomeQuota(user, uid, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
+        if len(zfs2_quota) == 0:
+            zfs2_quota = None
 
-    return None
+        else:
+            result = zfs2_quota[1].split()
+            zfs2_quota = Quota('zfs2', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+
+        return zfs2_quota
 
 
-def ix_get_quota(group, gid):
-    ix_quota = run_command("df /ix/{}".format(group))[0].strip()
-    ix_quota = ix_quota.splitlines()
+class IxQuota(Quota):
+    """Disk usage on the IX file system"""
 
-    if len(ix_quota) == 0:
-        ix_quota = None
-    else:
-        result = ix_quota[1].split()
-        ix_quota = Quota('ix', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+    @staticmethod
+    def from_gid(group, gid):
+        ix_quota = run_command("df /ix/{}".format(group))[0].strip()
+        ix_quota = ix_quota.splitlines()
 
-    return ix_quota
+        if len(ix_quota) == 0:
+            ix_quota = None
+        else:
+            result = ix_quota[1].split()
+            ix_quota = IxQuota('ix', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+
+        return ix_quota
 
 
 def convert_size(size):
@@ -156,6 +169,7 @@ class CrcQuota(BaseParser):
             group = self.run_command("id -gn")
             uid = self.run_command("id -u")
             gid = self.run_command("id -g")
+
         else:
             if len(run_command("id -un {}".format(args.user))[1]) > 0:
                 sys.exit("I don't know who {} is!".format(args.user))
@@ -165,10 +179,11 @@ class CrcQuota(BaseParser):
             uid = self.run_command("id -u {}".format(args.user))
             gid = self.run_command("id -g {}".format(args.user))
 
-        bgfs_quota = beegfs_get_quota_from_gid(group)
-        zfs1_quota, zfs2_quota = zfs_get_quota_from_gid(group, gid)
-        ihome_quota = ihome_get_quota_from_uid(user, uid)
-        ix_quota = ix_get_quota(group, gid)
+        bgfs_quota = BeegfsQuota.from_gid(group)
+        zfs1_quota = ZFS1.from_gid(group, gid)
+        zfs2_quota = ZFS2.from_gid(group, gid)
+        ihome_quota = IhomeQuota.from_uid(user, uid)
+        ix_quota = IxQuota.from_gid(group, gid)
 
         print("User: '{}'".format(user))
         if ihome_quota is None:
