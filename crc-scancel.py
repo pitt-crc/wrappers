@@ -36,8 +36,6 @@ class CrcSCancel(BaseParser, CommonSettings):
             if self.readchar().lower() == 'y':
                 Popen(['scancel', '-M', cluster, job_id])
 
-            print('')
-
     def app_logic(self, args):
         """Logic to evaluate when executing the application
 

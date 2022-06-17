@@ -30,6 +30,7 @@ class BaseParser(ArgumentParser):
         super(BaseParser, self).__init__()
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
+    # TODO: Merge this into app_version once all apps are using the base parser
     @staticmethod
     def get_semantic_version():
         """Return the semantic version number of the application"""
@@ -63,6 +64,7 @@ class BaseParser(ArgumentParser):
             # Restore the original standard input settings
             termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
 
+        print('')
         return character
 
     @abc.abstractmethod
