@@ -20,6 +20,16 @@ class Quota(object):
         self.size_used = int(size_used)
         self.size_limit = int(size_limit)
 
+    @staticmethod
+    def from_df_path(group, gid, path):
+        command = "df {}".format(path)
+        command_out, _ = run_command(command)
+        quota_info = command_out.strip().splitlines()
+
+        if quota_info:
+            result = quota_info[1].split()
+            return Quota('zfs1', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+
     def __str__(self):
         return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format(
             self.name, self.id, self.size_used, self.size_limit)
@@ -78,59 +88,6 @@ class IhomeQuota(Quota):
             self.name, self.id, self.size_used, self.size_limit, self.inodes, self.physical)
 
 
-class ZFS1(Quota):
-    """Disk usage on the ZFS1 file system"""
-
-    @staticmethod
-    def from_gid(group, gid):
-        zfs1_quota = run_command("df /zfs1/{}".format(group))[0].strip()
-        zfs1_quota = zfs1_quota.splitlines()
-
-        if len(zfs1_quota) == 0:
-            zfs1_quota = None
-
-        else:
-            result = zfs1_quota[1].split()
-            zfs1_quota = Quota('zfs1', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
-
-        return zfs1_quota
-
-
-class ZFS2(Quota):
-    """Disk usage on the ZFS2 file system"""
-
-    @staticmethod
-    def from_gid(group, gid):
-        zfs2_quota = run_command("df /zfs2/{}".format(group))[0].strip()
-        zfs2_quota = zfs2_quota.splitlines()
-
-        if len(zfs2_quota) == 0:
-            zfs2_quota = None
-
-        else:
-            result = zfs2_quota[1].split()
-            zfs2_quota = Quota('zfs2', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
-
-        return zfs2_quota
-
-
-class IxQuota(Quota):
-    """Disk usage on the IX file system"""
-
-    @staticmethod
-    def from_gid(group, gid):
-        ix_quota = run_command("df /ix/{}".format(group))[0].strip()
-        ix_quota = ix_quota.splitlines()
-
-        if len(ix_quota) == 0:
-            ix_quota = None
-        else:
-            result = ix_quota[1].split()
-            ix_quota = IxQuota('ix', group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
-
-        return ix_quota
-
-
 def convert_size(size):
     if size == 0:
         return '0B'
@@ -179,11 +136,15 @@ class CrcQuota(BaseParser):
             uid = self.run_command("id -u {}".format(args.user))
             gid = self.run_command("id -g {}".format(args.user))
 
-        bgfs_quota = BeegfsQuota.from_gid(group)
-        zfs1_quota = ZFS1.from_gid(group, gid)
-        zfs2_quota = ZFS2.from_gid(group, gid)
+        ix_path = "/ix/{}".format(group)
+        zfs1_path = "/zfs1/{}".format(group)
+        zfs2_path = "/zfs2/{}".format(group)
+
         ihome_quota = IhomeQuota.from_uid(user, uid)
-        ix_quota = IxQuota.from_gid(group, gid)
+        bgfs_quota = BeegfsQuota.from_gid(group)
+        zfs1_quota = Quota.from_df_path(group, gid, zfs1_path)
+        zfs2_quota = Quota.from_df_path(group, gid, zfs2_path)
+        ix_quota = Quota.from_df_path(group, gid, ix_path)
 
         print("User: '{}'".format(user))
         if ihome_quota is None:
