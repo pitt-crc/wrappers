@@ -73,7 +73,7 @@ class CrcJobStats(BaseParser):
         print('')
         print(horizontal_border)
         print(' For more information use the command:')
-        print('   - '.format(custom_slurm_command))
+        print('   - {}'.format(custom_slurm_command))
         print('')
         print(' To control the output of the above command:')
         print('   - Add `--format=<field1,field2,etc>` with fields of interest')
