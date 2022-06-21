@@ -5,7 +5,7 @@ import os
 import sys
 import termios
 import tty
-from argparse import ArgumentParser
+from argparse import ArgumentParser, HelpFormatter
 from subprocess import Popen, PIPE
 
 
@@ -24,11 +24,17 @@ class CommonSettings(object):
 class BaseParser(ArgumentParser):
     """Base class for building command line applications"""
 
+    # Maximum starting point of help text argument descriptions
+    help_width = 50
+
     def __init__(self):
         """Define arguments for the command line interface"""
 
         super(BaseParser, self).__init__()
         self.add_argument('-v', '--version', action='version', version=self.app_version)
+
+    def _get_formatter(self) -> HelpFormatter:
+        return HelpFormatter(self.prog, max_help_position=self.help_width)
 
     # TODO: Merge this into app_version once all apps are using the base parser
     @staticmethod
