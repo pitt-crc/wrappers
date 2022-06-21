@@ -1,51 +1,55 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""crc-scancel.py -- An scancel Slurm helper
-Usage:
-    crc-scancel.py (-h | --help)
-    crc-scancel.py (-v | --version)
-    crc-scancel.py <job_id>
-
-Positional Arguments:
-    <job_id>                        The job's ID
-
-Options:
-    -h --help                       Print this screen and exit
-    -v --version                    Print the version of crc-scancel.py
-"""
+"""A simple wrapper around the Slurm ``scancel`` command"""
 
 from os import environ
-from os import path
 from subprocess import Popen, PIPE
 from sys import stdout
 
-from docopt import docopt
-from readchar import readchar
+from _base_parser import BaseParser, CommonSettings
 
-from _version import __version__
 
-__app_name__ = path.basename(__file__)
+class CrcSCancel(BaseParser, CommonSettings):
+    """Command line application for canceling the user's running slurm jobs"""
 
-try:
-    # Magical mystical docopt
-    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
+    def __init__(self):
+        """Define arguments for the command line interface"""
 
-    # Job exists on any of the clusters?
-    output = {}
-    for cluster in ['smp', 'gpu', 'mpi', 'htc', 'invest']:
-        # output.append(popen("squeue {0} -j {1} -M {2}".format(user, arguments['<job_id>'], i)).read())
-        sp = Popen(['squeue', '-h', '-u', environ['USER'], '-j', arguments['<job_id>'], '-M', cluster], stdout=PIPE, stderr=PIPE)
-        out, err = sp.communicate()
-        output[cluster] = out
+        super(CrcSCancel, self).__init__()
 
-    # Check that the stdout contains the job_id, ask the user if we can delete it
-    for clus, entry in output.items():
-        if arguments['<job_id>'] in entry:
-            spl = entry.splitlines()
-            stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(arguments['<job_id>'], clus))
-            choice = readchar()
-            if choice.lower() == 'y':
-                Popen(['scancel', '-M', clus, arguments['<job_id>']])
-            print('')
+        # Argument must be a valid integer expressed as a string
+        int_as_str = lambda x: str(int(x))
+        self.add_argument('job_id', type=int_as_str, help='the job\'s ID')
 
-except KeyboardInterrupt:
-    exit('Interrupt detected! exiting...')
+    def cancel_job_on_cluster(self, user_name, cluster, job_id):
+        """Cancel a running slurm job
+
+        Args:
+            user_name: The name of the user who submitted the job
+            cluster: The name of the cluster the job is running on
+            job_id: The ID of the slurm job to cancel
+        """
+
+        # Fetch a list of running slurm jobs matching the username and job id
+        process = Popen(['squeue', '-h', '-u', user_name, '-j', job_id, '-M', cluster], stdout=PIPE, stderr=PIPE)
+        cmd_out, _ = process.communicate()
+
+        # Verify and cancel the running job
+        if job_id in cmd_out:
+            stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(job_id, cluster))
+            if self.readchar().lower() == 'y':
+                Popen(['scancel', '-M', cluster, job_id])
+
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
+
+        Args:
+            args: Namespace of parsed arguments from the command line
+        """
+
+        user = environ['USER']
+        for cluster in self.cluster_partitions:
+            self.cancel_job_on_cluster(user, cluster, args.job_id)
+
+
+if __name__ == '__main__':
+    CrcSCancel().execute()

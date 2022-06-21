@@ -1,79 +1,86 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""crc-scontrol.py -- An scontrol Slurm helper
-Usage:
-    crc-scontrol.py (-c <cluster> | -p <partition>) [-hv]
+"""A simple wrapper around the Slurm ``scontrol`` command"""
 
-Positional Arguments:
-    -c --cluster <cluster>          Print partitions for <cluster>
-    -p --partition <partition>      Prints information about node in <partition>
-
-Options:
-    -h --help                       Print this screen and exit
-    -v --version                    Print the version of crc-scontrol.py
-"""
-
-from os import path
-from random import choice
-from shlex import split
-from subprocess import Popen, PIPE
-
-from docopt import docopt
-
-from _version import __version__
-
-__app_name__ = path.basename(__file__)
+from _base_parser import BaseParser, CommonSettings
 
 
-def print_command(command):
-    sp = Popen(split(command), stdout=PIPE)
-    print(sp.communicate()[0].strip())
+class CrcScontrol(BaseParser, CommonSettings):
+    """Command line application for fetching data from the Slurm ``scontrol`` utility"""
 
+    def __init__(self):
+        """Define arguments for the command line interface"""
 
-def run_command_dict(command):
-    sp = Popen(split(command), stdout=PIPE)
-    out = sp.communicate()[0].strip().split()
-    cluster_dict = {}
-    for op in out:
-        sp = op.split('=')
-        cluster_dict[sp[0]] = sp[1]
-    return cluster_dict
+        super(CrcScontrol, self).__init__()
 
+        valid_clusters = tuple(self.cluster_partitions)
+        self.add_argument(
+            '-c', '--cluster',
+            required=True,
+            choices=valid_clusters,
+            help='print partitions for the given cluster')
 
-def run_command(command):
-    sp = Popen(split(command), stdout=PIPE)
-    return sp.communicate()[0].strip().split()
+        self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
 
+    def get_partition_info(self, cluster, partition):
+        """Return a dictionary of Slurm settings as configured on a given partition
 
-def print_node(cluster):
-    cluster_dict = run_command_dict("scontrol -M {} show partition {}".format(cluster, arguments['--partition']))
-    node = choice(run_command("scontrol show hostname {}".format(cluster_dict['Nodes'])))
-    print_command("scontrol -M {} show node {}".format(cluster, node))
+        Args:
+            cluster: The name of the cluster to get settings for
+            partition: The name of the partition in the given cluster
+        """
 
+        scontrol_command = "scontrol -M {} show partition {}".format(cluster, partition)
+        cmd_out = self.run_command(scontrol_command).split()
 
-try:
-    arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
+        partition_info = {}
+        for slurm_option in cmd_out:
+            split_values = slurm_option.split('=')
+            partition_info[split_values[0]] = split_values[1]
 
-    smp_partitions = ['smp', 'high-mem', "legacy"]
-    gpu_partitions = ['gtx1080', 'titanx', 'titan', 'k40']
-    mpi_partitions = ['opa', 'ib', "opa-high-mem"]
-    htc_partitions = ['htc']
+        return partition_info
 
-    if arguments['--cluster']:
-        if arguments['--cluster'] in ['smp', 'gpu', 'mpi', 'htc']:
-            print_command("scontrol -M {} show partition".format(arguments['--cluster']))
+    def print_node(self, cluster, partition):
+        """Print the slurm configuration of a given cluster and partition
+
+        Args:
+            cluster: The name of the cluster
+            partition: The name of the partition on the cluster
+        """
+
+        # Retrieve a list of nodes available in a given partition
+        partition_info = self.get_partition_info(cluster, partition)
+        partition_nodes = partition_info['Nodes']
+
+        # Get slurm settings for each node in the partition
+        # Only print out values for a single node
+        # Assume the first node is representative of the partition
+        nodes_info = self.run_command("scontrol show hostname {}".format(partition_nodes))
+        node = nodes_info.split()[0]
+        print(self.run_command("scontrol -M {} show node {}".format(cluster, node)))
+
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
+
+        If a partition is specified (with or without a cluster name), print a
+        summary for that partition.
+
+        If only the cluster is specified, print a summary for all available
+        partitions.
+
+        Args:
+            args: Parsed command line arguments
+        """
+
+        if args.partition:
+            if args.partition not in self.cluster_partitions[args.cluster]:
+                self.error('Partition {} is not part of cluster {}'.format(args.partition, args.cluster))
+
+            self.print_node(args.cluster, args.partition)
+
         else:
-            print("Error: I don't recognize cluster: {}".format(arguments['--cluster']))
-    elif arguments['--partition']:
-        if arguments['--partition'] in smp_partitions:
-            print_node("smp")
-        elif arguments['--partition'] in gpu_partitions:
-            print_node("gpu")
-        elif arguments['--partition'] in mpi_partitions:
-            print_node("mpi")
-        elif arguments['--partition'] in htc_partitions:
-            print_node("htc")
-        else:
-            print("Error: I don't recognize partition: {}".format(arguments['--partition']))
+            # Summarize all available partitions
+            print(self.run_command("scontrol -M {} show partition".format(args.cluster)))
 
-except KeyboardInterrupt:
-    exit('Interrupt detected! exiting...')
+
+if __name__ == '__main__':
+    CrcScontrol().execute()

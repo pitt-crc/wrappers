@@ -22,9 +22,10 @@ from subprocess import Popen, PIPE
 
 from docopt import docopt
 
-from _version import __version__
+from ._base_parser import BaseParser
 
 __app_name__ = basename(__file__)
+__version__ = BaseParser.get_semantic_version()
 
 # Default partitions to print if not specified by user
 CLUSTER_PARTITIONS = {
