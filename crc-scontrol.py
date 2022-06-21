@@ -13,7 +13,12 @@ class CrcScontrol(BaseParser, CommonSettings):
         super(CrcScontrol, self).__init__()
 
         valid_clusters = tuple(self.cluster_partitions)
-        self.add_argument('-c', '--cluster', choices=valid_clusters, help='print partitions for the given cluster')
+        self.add_argument(
+            '-c', '--cluster',
+            required=True,
+            choices=valid_clusters,
+            help='print partitions for the given cluster')
+
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
 
     def get_partition_info(self, cluster, partition):
@@ -29,8 +34,8 @@ class CrcScontrol(BaseParser, CommonSettings):
 
         partition_info = {}
         for slurm_option in cmd_out:
-            option_name, option_value = slurm_option.split('=')
-            partition_info[option_name] = option_value
+            split_values = slurm_option.split('=')
+            partition_info[split_values[0]] = split_values[1]
 
         return partition_info
 
@@ -56,24 +61,25 @@ class CrcScontrol(BaseParser, CommonSettings):
     def app_logic(self, args):
         """Logic to evaluate when executing the application
 
+        If a partition is specified (with or without a cluster name), print a
+        summary for that partition.
+
+        If only the cluster is specified, print a summary for all available
+        partitions.
+
         Args:
             args: Parsed command line arguments
         """
 
-        if args.cluster and args.partition:
-            self.print_help()
+        if args.partition:
+            if args.partition not in self.cluster_partitions[args.cluster]:
+                self.error('Partition {} is not part of cluster {}'.format(args.partition, args.cluster))
 
-        # If the cluster is specified, summarize the available partitions
-        elif args.cluster:
-            print(self.run_command("scontrol -M {} show partition".format(args.cluster)))
+            self.print_node(args.cluster, args.partition)
 
-        # If the partition is specified, find the corresponding cluster
         else:
-            for cluster, partitions in self.cluster_partitions.items():
-                if args.partition in partitions:
-                    self.print_node(cluster, args.partition)
-
-        self.error("Error: I don't recognize partition: {}".format(args.partition))
+            # Summarize all available partitions
+            print(self.run_command("scontrol -M {} show partition".format(args.cluster)))
 
 
 if __name__ == '__main__':

@@ -10,11 +10,12 @@ class CrcJobStats(BaseParser):
     cluster = environ.get('SLURM_CLUSTER_NAME')
     job_id = environ.get('SLURM_JOB_ID')
 
-    def raise_if_not_in_slurm(self):
+    def exit_if_not_in_slurm(self):
         """Error if the application is not running from within a slurm job"""
 
         if 'SLURM_JOB_ID' not in environ:
-            self.error('This script is meant to be added at the bottom of your Slurm scripts!')
+            print('This script is meant to be added at the bottom of your Slurm scripts!')
+            self.exit()
 
     def get_job_info(self):
         """Return information about the running job as a dictionary"""
@@ -79,7 +80,7 @@ class CrcJobStats(BaseParser):
             args: Parsed command line arguments
         """
 
-        #self.raise_if_not_in_slurm()
+        self.exit_if_not_in_slurm()
         job_info = self.get_job_info()
         self.pretty_print_job_info(job_info)
 

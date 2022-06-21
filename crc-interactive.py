@@ -139,7 +139,7 @@ class CrcInteractive(BaseParser, CommonSettings):
 
         if not any(getattr(args, cluster) for cluster in self.cluster_partitions):
             self.print_help()
-            return
+            self.exit()
 
         # Set defaults that need to be determined dynamically
         if not args.num_gpus:

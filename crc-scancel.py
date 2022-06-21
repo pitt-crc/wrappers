@@ -15,7 +15,10 @@ class CrcSCancel(BaseParser, CommonSettings):
         """Define arguments for the command line interface"""
 
         super(CrcSCancel, self).__init__()
-        self.add_argument('job_id', type=int, help='the job\'s ID')
+
+        # Argument must be a valid integer expressed as a string
+        int_as_str = lambda x: str(int(x))
+        self.add_argument('job_id', type=int_as_str, help='the job\'s ID')
 
     def cancel_job_on_cluster(self, user_name, cluster, job_id):
         """Cancel a running slurm job
@@ -27,7 +30,7 @@ class CrcSCancel(BaseParser, CommonSettings):
         """
 
         # Fetch a list of running slurm jobs matching the username and job id
-        process = Popen(['squeue', '-h', '-u', user_name, '-j', str(job_id), '-M', cluster], stdout=PIPE, stderr=PIPE)
+        process = Popen(['squeue', '-h', '-u', user_name, '-j', job_id, '-M', cluster], stdout=PIPE, stderr=PIPE)
         cmd_out, _ = process.communicate()
 
         # Verify and cancel the running job
@@ -35,8 +38,6 @@ class CrcSCancel(BaseParser, CommonSettings):
             stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(job_id, cluster))
             if self.readchar().lower() == 'y':
                 Popen(['scancel', '-M', cluster, job_id])
-
-            print('')
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
