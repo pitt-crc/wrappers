@@ -5,7 +5,7 @@ import os
 import sys
 import termios
 import tty
-from argparse import ArgumentParser
+from argparse import ArgumentParser, HelpFormatter
 from subprocess import Popen, PIPE
 
 
@@ -24,12 +24,19 @@ class CommonSettings(object):
 class BaseParser(ArgumentParser):
     """Base class for building command line applications"""
 
+    # Maximum starting point of help text argument descriptions
+    help_width = 50
+
     def __init__(self):
         """Define arguments for the command line interface"""
 
         super(BaseParser, self).__init__()
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
+    def _get_formatter(self) -> HelpFormatter:
+        return HelpFormatter(self.prog, max_help_position=self.help_width)
+
+    # TODO: Merge this into app_version once all apps are using the base parser
     @staticmethod
     def get_semantic_version():
         """Return the semantic version number of the application"""
@@ -63,6 +70,7 @@ class BaseParser(ArgumentParser):
             # Restore the original standard input settings
             termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
 
+        print('')
         return character
 
     @abc.abstractmethod
@@ -89,18 +97,17 @@ class BaseParser(ArgumentParser):
         process = Popen(command, stdout=PIPE, stderr=PIPE)
         return process.communicate()[0].strip()
 
-    def error(self, message, print_help=True):
+    def error(self, message):
         """Print the error message to STDOUT and exit
 
         Args:
             message: The error message
-            print_help: If ``True`` and no arguments were passed, print the help text.
         """
 
         # If true, then no arguments were provided
-        if print_help and len(sys.argv) == 1:
+        if len(sys.argv) == 1:
             self.print_help()
-            return
+            self.exit()
 
         sys.stderr.write('ERROR: {}\n'.format(message))
         sys.exit(2)
