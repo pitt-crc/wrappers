@@ -1,0 +1,41 @@
+from unittest import TestCase
+
+CrcIdle = __import__('crc-idle').CrcIdle
+
+
+class ArgumentParsing(TestCase):
+    """Test the parsing of command line arguments"""
+
+    def test_partition_parsing(self):
+        """Test the application supports parsing multiple cluster partitions"""
+
+        app = CrcIdle()
+        args, unknown_args = app.parse_known_args(['-p', 'partition1'])
+        self.assertFalse(unknown_args)
+        self.assertEqual(['partition1'], args.partition)
+
+        args, unknown_args = app.parse_known_args(['-p', 'partition1', 'partition2'])
+        self.assertFalse(unknown_args)
+        self.assertEqual(['partition1', 'partition2'], args.partition)
+
+    def test_cluster_parsing(self):
+        """Test argument flags are parsed and stored as cluster names"""
+
+        app = CrcIdle()
+        args, unknown_args = app.parse_known_args(['-s', '--mpi'])
+
+        self.assertFalse(unknown_args)
+        self.assertTrue(args.smp)
+        self.assertTrue(args.mpi)
+        self.assertFalse(args.htc)
+        self.assertFalse(args.gpu)
+
+    def test_clusters_default_to_false(self):
+        """Test all cluster flags default to a ``False`` value"""
+
+        app = CrcIdle()
+        args, unknown_args = app.parse_known_args([])
+
+        self.assertFalse(unknown_args)
+        for cluster in app.cluster_partitions:
+            self.assertFalse(getattr(args, cluster))
