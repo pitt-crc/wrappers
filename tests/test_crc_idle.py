@@ -47,6 +47,8 @@ class ClusterList(TestCase):
     """Test the selection of what clusters to print"""
 
     def test_defaults_all_clusters(self):
+        """Test all clusters are returned if none are specified in the parsed arguments"""
+
         app = CrcIdle()
         args, unknown_args = app.parse_known_args(['-p', 'partition1'])
 
@@ -54,6 +56,7 @@ class ClusterList(TestCase):
         self.assertCountEqual(app.cluster_partitions, returned_clusters)
 
     def test_returns_arg_values(self):
+        """Test returned cluster names match the clusters specified in the parsed arguments"""
         app = CrcIdle()
         args, unknown_args = app.parse_known_args(['-s', '--mpi'])
 
