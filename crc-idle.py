@@ -41,7 +41,7 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         all_clusters = tuple(self.cluster_partitions)
-        argument_clusters = filter(lambda cluster: getattr(args, cluster), self.cluster_partitions)
+        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), self.cluster_partitions))
 
         # Default to returning all clusters
         return argument_clusters or all_clusters

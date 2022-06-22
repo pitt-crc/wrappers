@@ -1,3 +1,5 @@
+"""Tests for the ``crc-idle`` application"""
+
 from unittest import TestCase
 
 CrcIdle = __import__('crc-idle').CrcIdle
@@ -39,3 +41,21 @@ class ArgumentParsing(TestCase):
         self.assertFalse(unknown_args)
         for cluster in app.cluster_partitions:
             self.assertFalse(getattr(args, cluster))
+
+
+class ClusterList(TestCase):
+    """Test the selection of what clusters to print"""
+
+    def test_defaults_all_clusters(self):
+        app = CrcIdle()
+        args, unknown_args = app.parse_known_args(['-p', 'partition1'])
+
+        returned_clusters = app.get_cluster_list(args)
+        self.assertCountEqual(app.cluster_partitions, returned_clusters)
+
+    def test_returns_arg_values(self):
+        app = CrcIdle()
+        args, unknown_args = app.parse_known_args(['-s', '--mpi'])
+
+        returned_clusters = app.get_cluster_list(args)
+        self.assertCountEqual(['smp', 'mpi'], returned_clusters)
