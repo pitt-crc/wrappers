@@ -6,6 +6,7 @@ import sys
 import termios
 import tty
 from argparse import ArgumentParser, HelpFormatter
+from shlex import split
 from subprocess import Popen, PIPE
 
 
@@ -33,7 +34,7 @@ class BaseParser(ArgumentParser):
         super(BaseParser, self).__init__()
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
-    def _get_formatter(self) -> HelpFormatter:
+    def _get_formatter(self):
         return HelpFormatter(self.prog, max_help_position=self.help_width)
 
     # TODO: Merge this into app_version once all apps are using the base parser
@@ -84,18 +85,24 @@ class BaseParser(ArgumentParser):
         raise NotImplementedError
 
     @staticmethod
-    def run_command(command):
+    def run_command(command, include_err=False):
         """Run a command in a dedicated shell
 
         Args:
             command: The command to execute as a string
+            include_err: Include output to stderr in the returned values
+
+        Returns:
+            The output to stdout and (optionally) stderr
         """
 
-        if isinstance(command, str):
-            command = command.split()
+        command_list = split(command)
+        process = Popen(command_list, stdout=PIPE, stderr=PIPE)
+        std_out, std_err = process.communicate()
+        if include_err:
+            return std_out.strip(), std_err.strip()
 
-        process = Popen(command, stdout=PIPE, stderr=PIPE)
-        return process.communicate()[0].strip()
+        return std_out.strip()
 
     def error(self, message):
         """Print the error message to STDOUT and exit
