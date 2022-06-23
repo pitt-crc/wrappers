@@ -61,7 +61,7 @@ class AbstractQuota(object):
         """
 
         if size == 0:
-            return '0B'
+            return '0.0 B'
 
         size_units = ('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB')
         i = int(math.floor(math.log(size, 1024)))
@@ -237,7 +237,7 @@ class CrcQuota(BaseParser):
         ix_quota = GenericQuota.from_path('ix', '/ix/{}'.format(group))
 
         # Only return quotas that exist for the given group (i.e., objects that are not None)
-        all_quotas = (bgfs_quota, zfs1_quota, zfs2_quota, ix_quota)
+        all_quotas = (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota)
         return tuple(filter(None, all_quotas))
 
     def app_logic(self, args):
