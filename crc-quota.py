@@ -253,11 +253,15 @@ class CrcQuota(BaseParser):
         supp_quotas = self.get_group_quotas(group)
 
         print("User: '{}'".format(user))
-        print('User ID: {}'.format(uid))
+        if args.verbose:
+            print('User ID: {}'.format(uid))
+
         print(ihome_quota.to_string(args.verbose))
 
         print("\nGroup: '{}'".format(group))
-        print('Group ID: {}'.format(gid))
+        if args.verbose:
+            print('Group ID: {}'.format(gid))
+
         for quota in supp_quotas:
             print(quota.to_string(args.verbose))
 
