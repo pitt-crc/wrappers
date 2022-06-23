@@ -1,6 +1,7 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line utility for checking a user's disk usage"""
 
+import abc
 import json
 import math
 import sys
@@ -10,15 +11,51 @@ from subprocess import Popen, PIPE
 from _base_parser import BaseParser
 
 
-class Quota(object):
-    """Class to represent a quota"""
+def run_command(command):
+    p = Popen(split(command), stdout=PIPE, stderr=PIPE)
+    return p.communicate()[0].strip()
 
-    def __init__(self, system, name, id, size_used, size_limit):
+
+class AbstractQuota(object, metaclass=abc.ABCMeta):
+    """Base class for building OO representations of file system quotas"""
+
+    def __init__(self, name, size_used, size_limit):
+        """Create a new quota using known disk usage data
+
+        Args:
+            size_used: Disk space used by the user/group
+            size_limit: Maximum disk space allocated to a user/group
+        """
+
         self.name = name
-        self.system = system
-        self.id = id
-        self.size_used = self.convert_size(int(size_used))
-        self.size_limit = self.convert_size(int(size_limit))
+        self.size_used = size_used
+        self.size_limit = size_limit
+
+    def to_string(self, verbose=False):
+        """Return a string representation of the quota usage
+
+        Args:
+            verbose: Return a more detailed representation
+        """
+
+        if verbose:
+            return self._verbose_string()
+
+        return self._short_string()
+
+    def _verbose_string(self):
+        return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format(
+            self.name,
+            self.id,
+            self.convert_size(self.size_used),
+            self.convert_size(self.size_limit))
+
+    def _short_string(self):
+        return "-> {}: {} / {}".format(
+            self.name,
+            self.convert_size(self.size_used),
+            self.convert_size(self.size_limit)
+        )
 
     @staticmethod
     def convert_size(size):
@@ -40,39 +77,64 @@ class Quota(object):
         s = round(size / p, 2)
         return '%s %s' % (s, size_units[i])
 
-    @staticmethod
-    def from_path(group, gid, path, system):
-        command = "df {}".format(path)
-        command_out, _ = run_command(command)
-        quota_info = command_out.strip().splitlines()
 
-        if quota_info:
-            result = quota_info[1].split()
-            return Quota(system, group, gid, int(result[2]) * 1024, int(result[1]) * 1024)
+class GenericQuota(AbstractQuota):
+    """Disk storage quota for a generic file system"""
 
-    @staticmethod
-    def from_uid(user, uid):
+    @classmethod
+    def from_path(cls, name, path):
+        """Return a quota object for a given file path
+
+        Args:
+            path: The file path for create a quota for
+
+        Returns:
+            An instance of the parent class
+        """
+
+        df_command = "df {}".format(path)
+        quota_info_list = run_command(df_command).splitlines()
+        if not quota_info_list:
+            raise RuntimeError('Could not find quota information for path: {}'.format(path))
+
+        result = quota_info_list[1].split()
+        return cls(name, int(result[2]) * 1024, int(result[1]) * 1024)
+
+
+class BeegfsQuota(AbstractQuota):
+    """Disk storage quota for a BeeGFS file system"""
+
+    def __init__(self, name, size_used, size_limit, chunk_used, chunk_limit):
+        super(BeegfsQuota, self).__init__(name, size_used, size_limit)
+        self.chunk_used = chunk_used
+        self.chunk_limit = chunk_limit
+
+    @classmethod
+    def from_group(cls, group):
+        quota_out, quota_err = run_command("beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group))
+        result = quota_out.splitlines()[1].split(',')
+        return cls(result[2], result[3], result[4], result[5])
+
+
+class IsilonQuota(AbstractQuota):
+    """Disk storage quota for the ihome file system"""
+
+    def __init__(self, name, size_used, size_limit, inodes, physical):
+        super(IsilonQuota, self).__init__(name, size_used, size_limit)
+        self.inodes = inodes
+        self.physical = physical
+
+    @classmethod
+    def from_uid(cls, uid):
         # Get the information from Isilon
-        persona = "UID:{}".format(uid)
-
         with open("/ihome/crc/scripts/ihome_quota.json", "r") as f:
             data = json.load(f)
 
+        persona = "UID:{}".format(uid)
         for item in data["quotas"]:
             if item["persona"] is not None:
                 if item["persona"]["id"] == persona:
-                    return Quota(user, uid, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"])
-
-        return None
-
-    def __str__(self):
-        return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format(
-            self.name, self.id, self.size_used, self.size_limit)
-
-
-def run_command(command):
-    p = Popen(split(command), stdout=PIPE, stderr=PIPE)
-    return p.communicate()
+                    return cls(item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
 
 
 class CrcQuota(BaseParser):
@@ -85,59 +147,48 @@ class CrcQuota(BaseParser):
         self.add_argument('-u', '--user', default=None, help='username of quota to query')
         self.add_argument('--verbose', action='store_true', help='verbose quota output')
 
-    def get_user_info(self, user=None):
+    def get_user_info(self, username=None):
         """Return system IDs for the current user
 
         Args:
-            user: The name of the user to get IDs for (defaults to current user)
+            username: The name of the user to get IDs for (defaults to current user)
 
         Returns:
 
         """
 
-        if user is None:
-            user = self.run_command("id -un")
-            group = self.run_command("id -gn")
-            uid = self.run_command("id -u")
-            gid = self.run_command("id -g")
+        username = username or ''
+        check_user_cmd = "id -un {}".format(username)
+        user, err = self.run_command(check_user_cmd, include_err=True)
 
-        elif len(run_command("id -un {}".format(user))[1]) > 0:
-            sys.exit("Could not find quota information for user {}".format(user))
+        if err:
+            sys.exit("Could not find quota information for user {}".format(username))
 
-        else:
-            user = self.run_command("id -un {}".format(user))
-            group = self.run_command("id -gn {}".format(user))
-            uid = self.run_command("id -u {}".format(user))
-            gid = self.run_command("id -g {}".format(user))
+        group = self.run_command("id -gn {}".format(username))
+        uid = self.run_command("id -u {}".format(username))
+        gid = self.run_command("id -g {}".format(username))
 
         return gid, group, uid, user
 
-    def get_quota_info(self, group, gid):
+    @staticmethod
+    def get_group_quotas(group):
         """Return quota information for the given group
 
         Args:
             group: The name of the group
-            gid: The system id of the group
 
         Returns:
             A tuple of ``Quota`` objects
         """
 
-        bgfs_quota = Quota.from_path(group, gid, '/bgfs/{}'.format(group), 'bgfs')
-        zfs1_quota = Quota.from_path(group, gid, '/zfs1/{}'.format(group), 'zfs1')
-        zfs2_quota = Quota.from_path(group, gid, '/zfs2/{}'.format(group), 'zfs2')
-        ix_quota = Quota.from_path(group, gid, '/ix/{}'.format(group), 'ix')
+        bgfs_quota = GenericQuota.from_path('bgfs', '/bgfs/{}'.format(group))
+        zfs1_quota = GenericQuota.from_path('zfs1', '/zfs1/{}'.format(group))
+        zfs2_quota = GenericQuota.from_path('zfs2', '/zfs2/{}'.format(group))
+        ix_quota = GenericQuota.from_path('ix', '/ix/{}'.format(group))
 
+        # Only return quotas that exist for the given group
         all_quotas = (bgfs_quota, zfs1_quota, zfs2_quota, ix_quota)
-        return tuple(quota for quota in all_quotas if quota is not None)
-
-    def print_quota(self, quota, verbose=False):
-
-        if verbose:
-            print('-> {}: {}'.format(quota.system, quota))
-
-        else:
-            print('-> {}: {} / {}'.format(quota.system, quota.size_used, quota.size_limit))
+        return tuple(filter(None, all_quotas))
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
@@ -146,28 +197,20 @@ class CrcQuota(BaseParser):
             args: Parsed command line arguments
         """
 
+        # Get disk usage information for the given user
         gid, group, uid, user = self.get_user_info(args.user)
-
-        # Get disk usage information for each file system
-        ihome_quota = IhomeQuota.from_uid(user, uid)
-        disk_quotas = self.get_quota_info(group, gid)
+        ihome_quota = IsilonQuota.from_uid(uid)
+        supp_quotas = self.get_group_quotas(group)
 
         print("User: '{}'".format(user))
-        if ihome_quota is None:
-            print('-> ihome: NONE')
-
-        else:
-            self.print_quota(quota, args.verbose)
+        print(ihome_quota.to_string(args.verbose))
 
         print("Group: '{}'".format(group))
-        if not disk_quotas:
+        for quota in supp_quotas:
+            print(quota.to_string(args.verbose))
+
+        if not supp_quotas:
             print('If you need additional storage, you can request up to 5TB on BGFS, ZFS or IX!. Contact CRC for more details.')
-
-        for quota in disk_quotas:
-            if quota is None:
-                continue
-
-            self.print_quota(quota, args.verbose)
 
 
 if __name__ == "__main__":

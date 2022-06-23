@@ -84,7 +84,7 @@ class BaseParser(ArgumentParser):
         raise NotImplementedError
 
     @staticmethod
-    def run_command(command):
+    def run_command(command, include_err=False):
         """Run a command in a dedicated shell
 
         Args:
@@ -95,7 +95,11 @@ class BaseParser(ArgumentParser):
             command = command.split()
 
         process = Popen(command, stdout=PIPE, stderr=PIPE)
-        return process.communicate()[0].strip()
+        std_out, std_err = process.communicate()
+        if include_err:
+            return std_err.strip(), std_err.strip()
+
+        return std_out.strip()
 
     def error(self, message):
         """Print the error message to STDOUT and exit
