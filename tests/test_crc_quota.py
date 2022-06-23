@@ -2,7 +2,7 @@
 
 import unittest
 
-AbstractQuota = __import__('crc-quota').AbstractQuota
+AbstractQuota = __import__('crc-quota').AbstractFilesystemUsage
 
 
 class BytesUnitConversion(unittest.TestCase):

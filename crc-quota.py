@@ -8,7 +8,7 @@ import sys
 from _base_parser import BaseParser
 
 
-class AbstractQuota(object):
+class AbstractFilesystemUsage(object):
     """Base class for building object-oriented representations of file system quotas"""
 
     def __init__(self, name, size_used, size_limit):
@@ -70,7 +70,7 @@ class AbstractQuota(object):
         return '%s %s' % (s, size_units[i])
 
 
-class GenericQuota(AbstractQuota):
+class GenericUsage(AbstractFilesystemUsage):
     """Disk storage quota for a generic file system"""
 
     @classmethod
@@ -94,7 +94,7 @@ class GenericQuota(AbstractQuota):
         return cls(name, int(result[2]) * 1024, int(result[1]) * 1024)
 
 
-class BeegfsQuota(AbstractQuota):
+class BeegfsUsage(AbstractFilesystemUsage):
     """Disk storage quota for a BeeGFS file system"""
 
     def __init__(self, name, size_used, size_limit, chunk_used, chunk_limit):
@@ -108,7 +108,7 @@ class BeegfsQuota(AbstractQuota):
             chunk_limit: Maximum chunks allowed by the allocation
         """
 
-        super(BeegfsQuota, self).__init__(name, size_used, size_limit)
+        super(BeegfsUsage, self).__init__(name, size_used, size_limit)
         self.chunk_used = chunk_used
         self.chunk_limit = chunk_limit
 
@@ -142,7 +142,7 @@ class BeegfsQuota(AbstractQuota):
         return cls(name, int(result[2]), int(result[3]), int(result[4]), result[5])
 
 
-class IhomeQuota(AbstractQuota):
+class IhomeUsage(AbstractFilesystemUsage):
     """Disk storage quota for the ihome file system"""
 
     def __init__(self, name, size_used, size_limit, files, physical):
@@ -156,7 +156,7 @@ class IhomeQuota(AbstractQuota):
             physical: Physical size of the data on disk
         """
 
-        super(IhomeQuota, self).__init__(name, size_used, size_limit)
+        super(IhomeUsage, self).__init__(name, size_used, size_limit)
         self.files = files
         self.physical = physical
 
@@ -232,10 +232,10 @@ class CrcQuota(BaseParser):
             A tuple of ``Quota`` objects
         """
 
-        zfs1_quota = GenericQuota.from_path('zfs1', '/zfs1/{}'.format(group))
-        zfs2_quota = GenericQuota.from_path('zfs2', '/zfs2/{}'.format(group))
-        bgfs_quota = BeegfsQuota.from_group('beegfs', group)
-        ix_quota = GenericQuota.from_path('ix', '/ix/{}'.format(group))
+        zfs1_quota = GenericUsage.from_path('zfs1', '/zfs1/{}'.format(group))
+        zfs2_quota = GenericUsage.from_path('zfs2', '/zfs2/{}'.format(group))
+        bgfs_quota = BeegfsUsage.from_group('beegfs', group)
+        ix_quota = GenericUsage.from_path('ix', '/ix/{}'.format(group))
 
         # Only return quotas that exist for the given group (i.e., objects that are not None)
         all_quotas = (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota)
@@ -250,7 +250,7 @@ class CrcQuota(BaseParser):
 
         # Get disk usage information for the given user
         user, uid, group, gid = self.get_user_info(args.user)
-        ihome_quota = IhomeQuota.from_uid('ihome', uid)
+        ihome_quota = IhomeUsage.from_uid('ihome', uid)
         supp_quotas = self.get_group_quotas(group)
 
         print("User: '{}'".format(user))
