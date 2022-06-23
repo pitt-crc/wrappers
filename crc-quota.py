@@ -37,9 +37,8 @@ class AbstractQuota(object):
         return self._short_string()
 
     def _verbose_string(self):
-        return "Name: {}, ID: {}, Bytes Used: {}, Byte Limit: {}".format(
+        return "-> {}: Bytes Used: {}, Byte Limit: {}".format(
             self.name,
-            self.id,
             self.convert_size(self.size_used),
             self.convert_size(self.size_limit))
 
@@ -113,6 +112,14 @@ class BeegfsQuota(AbstractQuota):
         self.chunk_used = chunk_used
         self.chunk_limit = chunk_limit
 
+    def _verbose_string(self):
+        return "-> {}: Bytes Used: {}, Byte Limit: {}, Chunk Files Used: {}, Chunk File Limit: {}".format(
+            self.name,
+            self.size_used,
+            self.size_limit,
+            self.chunk_used,
+            self.chunk_limit)
+
     @classmethod
     def from_group(cls, name, group):
         """Return a quota object for a given group name
@@ -125,13 +132,14 @@ class BeegfsQuota(AbstractQuota):
             An instance of the parent class
         """
 
-        quota_info_cmd = "beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group)
-        quota_out, quota_err = BaseParser.run_command(quota_info_cmd, include_err=True)
-        result = quota_out.splitlines()[1].split(',')
-        if not result:
+        allocation_out = BaseParser.run_command("df /bgfs/{}".format(group))
+        if len(allocation_out) == 0:
             return None
 
-        return cls(name, result[2], result[3], result[4], result[5])
+        quota_info_cmd = "beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group)
+        quota_out = BaseParser.run_command(quota_info_cmd)
+        result = quota_out.splitlines()[1].split(',')
+        return cls(name, int(result[2]), int(result[3]), int(result[4]), result[5])
 
 
 class IhomeQuota(AbstractQuota):
@@ -151,6 +159,10 @@ class IhomeQuota(AbstractQuota):
         super(IhomeQuota, self).__init__(name, size_used, size_limit)
         self.files = files
         self.physical = physical
+
+    def _verbose_string(self):
+        return "-> {}: Logical Bytes Used: {}, Byte Limit: {}, Num Files: {}, Physical Bytes Used: {}".format(
+            self.name, self.size_used, self.size_limit, self.files, self.physical)
 
     @classmethod
     def from_uid(cls, name, uid):
@@ -219,9 +231,9 @@ class CrcQuota(BaseParser):
             A tuple of ``Quota`` objects
         """
 
-        bgfs_quota = GenericQuota.from_path('bgfs', '/bgfs/{}'.format(group))
         zfs1_quota = GenericQuota.from_path('zfs1', '/zfs1/{}'.format(group))
         zfs2_quota = GenericQuota.from_path('zfs2', '/zfs2/{}'.format(group))
+        bgfs_quota = BeegfsQuota.from_group('beegfs', group)
         ix_quota = GenericQuota.from_path('ix', '/ix/{}'.format(group))
 
         # Only return quotas that exist for the given group (i.e., objects that are not None)
@@ -241,9 +253,11 @@ class CrcQuota(BaseParser):
         supp_quotas = self.get_group_quotas(group)
 
         print("User: '{}'".format(user))
+        print('User ID: {}'.format(uid))
         print(ihome_quota.to_string(args.verbose))
 
         print("\nGroup: '{}'".format(group))
+        print('Group ID: {}'.format(gid))
         for quota in supp_quotas:
             print(quota.to_string(args.verbose))
 
