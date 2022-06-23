@@ -16,7 +16,7 @@ def run_command(command):
     return p.communicate()[0].strip()
 
 
-class AbstractQuota(object, metaclass=abc.ABCMeta):
+class AbstractQuota(object):
     """Base class for building OO representations of file system quotas"""
 
     def __init__(self, name, size_used, size_limit):
@@ -86,6 +86,7 @@ class GenericQuota(AbstractQuota):
         """Return a quota object for a given file path
 
         Args:
+            name: Name of the file system (e.g., zfs, ix, home)
             path: The file path for create a quota for
 
         Returns:
@@ -95,7 +96,7 @@ class GenericQuota(AbstractQuota):
         df_command = "df {}".format(path)
         quota_info_list = run_command(df_command).splitlines()
         if not quota_info_list:
-            raise RuntimeError('Could not find quota information for path: {}'.format(path))
+            return None
 
         result = quota_info_list[1].split()
         return cls(name, int(result[2]) * 1024, int(result[1]) * 1024)
@@ -125,7 +126,7 @@ class IsilonQuota(AbstractQuota):
         self.physical = physical
 
     @classmethod
-    def from_uid(cls, uid):
+    def from_uid(cls, name, uid):
         # Get the information from Isilon
         with open("/ihome/crc/scripts/ihome_quota.json", "r") as f:
             data = json.load(f)
@@ -134,7 +135,7 @@ class IsilonQuota(AbstractQuota):
         for item in data["quotas"]:
             if item["persona"] is not None:
                 if item["persona"]["id"] == persona:
-                    return cls(item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
+                    return cls(name, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
 
 
 class CrcQuota(BaseParser):
@@ -199,13 +200,13 @@ class CrcQuota(BaseParser):
 
         # Get disk usage information for the given user
         gid, group, uid, user = self.get_user_info(args.user)
-        ihome_quota = IsilonQuota.from_uid(uid)
+        ihome_quota = IsilonQuota.from_uid('ihome', uid)
         supp_quotas = self.get_group_quotas(group)
 
         print("User: '{}'".format(user))
         print(ihome_quota.to_string(args.verbose))
 
-        print("Group: '{}'".format(group))
+        print("\nGroup: '{}'".format(group))
         for quota in supp_quotas:
             print(quota.to_string(args.verbose))
 

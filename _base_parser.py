@@ -33,7 +33,7 @@ class BaseParser(ArgumentParser):
         super(BaseParser, self).__init__()
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
-    def _get_formatter(self) -> HelpFormatter:
+    def _get_formatter(self):
         return HelpFormatter(self.prog, max_help_position=self.help_width)
 
     # TODO: Merge this into app_version once all apps are using the base parser
