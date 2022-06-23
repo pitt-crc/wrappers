@@ -90,6 +90,10 @@ class BaseParser(ArgumentParser):
 
         Args:
             command: The command to execute as a string
+            include_err: Include output to stderr in the returned values
+
+        Returns:
+            The output to stdout and (optionally) stderr
         """
 
         command_list = split(command)

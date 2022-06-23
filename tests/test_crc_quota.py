@@ -1,3 +1,5 @@
+"""Unit tests for the ``crc-quota`` application"""
+
 import unittest
 
 AbstractQuota = __import__('crc-quota').AbstractQuota

@@ -184,7 +184,8 @@ class IhomeQuota(AbstractQuota):
         for item in data["quotas"]:
             if item["persona"] is not None:
                 if item["persona"]["id"] == persona:
-                    return cls(name, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
+                    return cls(name, item["usage"]["logical"], item["thresholds"]["hard"],
+                               item["usage"]["inodes"], item["usage"]["physical"])
 
 
 class CrcQuota(BaseParser):
@@ -266,7 +267,9 @@ class CrcQuota(BaseParser):
             print(quota.to_string(args.verbose))
 
         if not supp_quotas:
-            print('If you need additional storage, you can request up to 5TB on BGFS, ZFS or IX!. Contact CRC for more details.')
+            print(
+                'If you need additional storage, you can request up to 5TB on '
+                'BGFS, ZFS or IX!. Contact CRC for more details.')
 
 
 if __name__ == "__main__":
