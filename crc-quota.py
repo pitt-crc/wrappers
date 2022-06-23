@@ -4,19 +4,12 @@
 import json
 import math
 import sys
-from shlex import split
-from subprocess import Popen, PIPE
 
 from _base_parser import BaseParser
 
 
-def run_command(command):
-    p = Popen(split(command), stdout=PIPE, stderr=PIPE)
-    return p.communicate()[0].strip()
-
-
 class AbstractQuota(object):
-    """Base class for building OO representations of file system quotas"""
+    """Base class for building object-oriented representations of file system quotas"""
 
     def __init__(self, name, size_used, size_limit):
         """Create a new quota from known system metrics
@@ -94,7 +87,7 @@ class GenericQuota(AbstractQuota):
         """
 
         df_command = "df {}".format(path)
-        quota_info_list = run_command(df_command).splitlines()
+        quota_info_list = BaseParser.run_command(df_command).splitlines()
         if not quota_info_list:
             return None
 
@@ -132,7 +125,8 @@ class BeegfsQuota(AbstractQuota):
             An instance of the parent class
         """
 
-        quota_out, quota_err = run_command("beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group))
+        quota_info_cmd = "beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group)
+        quota_out, quota_err = BaseParser.run_command(quota_info_cmd, include_err=True)
         result = quota_out.splitlines()[1].split(',')
         if not result:
             return None
@@ -178,7 +172,7 @@ class IhomeQuota(AbstractQuota):
         for item in data["quotas"]:
             if item["persona"] is not None:
                 if item["persona"]["id"] == persona:
-                    return cls(name, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["files"], item["usage"]["physical"])
+                    return cls(name, item["usage"]["logical"], item["thresholds"]["hard"], item["usage"]["inodes"], item["usage"]["physical"])
 
 
 class CrcQuota(BaseParser):
