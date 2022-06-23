@@ -6,6 +6,7 @@ import sys
 import termios
 import tty
 from argparse import ArgumentParser, HelpFormatter
+from shlex import split
 from subprocess import Popen, PIPE
 
 
@@ -91,13 +92,11 @@ class BaseParser(ArgumentParser):
             command: The command to execute as a string
         """
 
-        if isinstance(command, str):
-            command = command.split()
-
-        process = Popen(command, stdout=PIPE, stderr=PIPE)
+        command_list = split(command)
+        process = Popen(command_list, stdout=PIPE, stderr=PIPE)
         std_out, std_err = process.communicate()
         if include_err:
-            return std_err.strip(), std_err.strip()
+            return std_out.strip(), std_err.strip()
 
         return std_out.strip()
 
