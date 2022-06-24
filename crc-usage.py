@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Command line interface that wrapps the banking application"""
+"""Command line interface that wraps the banking application"""
 
 from os import environ
 
@@ -10,7 +10,7 @@ class CrcUsage(BaseParser):
     """Command line application for printing a slurm account's cluster usage"""
 
     default_user = environ.get('USER')
-    banking_path = '/ihome/crc/bank/crc_bank.py'
+    banking_executable = '/ihome/crc/bank/crc_bank.py'
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -29,7 +29,7 @@ class CrcUsage(BaseParser):
         if not account_exists:
             self.error("Your group doesn't have an account according to Slurm")
 
-        bank_info = '{} usage {}'.format(self.banking_path, args.account)
+        bank_info = '{} usage {}'.format(self.banking_executable, args.account)
         out = self.run_command(bank_info)
         print(out)
 
