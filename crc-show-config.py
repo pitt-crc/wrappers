@@ -4,13 +4,13 @@
 from _base_parser import BaseParser, CommonSettings
 
 
-class CrcScontrol(BaseParser, CommonSettings):
+class CrcShowConfig(BaseParser, CommonSettings):
     """Command line application for fetching data from the Slurm ``scontrol`` utility"""
 
     def __init__(self):
         """Define arguments for the command line interface"""
 
-        super(CrcScontrol, self).__init__()
+        super(CrcShowConfig, self).__init__()
 
         valid_clusters = tuple(self.cluster_partitions)
         self.add_argument(
@@ -83,4 +83,4 @@ class CrcScontrol(BaseParser, CommonSettings):
 
 
 if __name__ == '__main__':
-    CrcScontrol().execute()
+    CrcShowConfig().execute()
