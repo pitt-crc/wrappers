@@ -1,11 +1,11 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""A simple wrapper around the Slurm ``scontrol`` command"""
+"""Display the slurm configuration for a given cluster/partition"""
 
 from _base_parser import BaseParser, CommonSettings
 
 
 class CrcShowConfig(BaseParser, CommonSettings):
-    """Command line application for fetching data from the Slurm ``scontrol`` utility"""
+    """Command line application for fetching slurm configuration info from the ``scontrol`` utility"""
 
     def __init__(self):
         """Define arguments for the command line interface"""
