@@ -4,6 +4,6 @@ renamed. This placeholder instructs users to use the new command line app.
 """
 
 print(
-    'DEPRECATION WARNING: The `crc-scontrol` application has been deprecated. '
+    'DEPRECATION ERROR: The `crc-scontrol` application has been deprecated. '
     'Please use the `crc-show-config` application instead.'
 )
