@@ -63,8 +63,7 @@ class CrcIdle(BaseParser, CommonSettings):
         if cluster in ['gpu']:
             command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster,partition)
         else:
-            command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
-        
+            command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition) 
         stdout = self.run_command(command)
         slurm_data = stdout.strip().split()
 
@@ -72,13 +71,15 @@ class CrcIdle(BaseParser, CommonSettings):
         return_dict = {}
         for node_info in slurm_data:
             if cluster in ['gpu']:
-                node_name, total, allocated, extra = node_info.split('_')
+                #node_name, total, allocated, extra empty character array
+                _, total, allocated, _ = node_info.split('_')
                 allocated = int(allocated[-1:])
                 total = int(total[-1:])
-                idle = total - allocated 
-            else:                    
+                idle = total - allocated
+            else:
                 node_name, resource_data = node_info.split(',')
-                allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
+                #allocated, idle, other, total
+                _, idle, _, _ = [int(x) for x in resource_data.split('/')]
 
             if idle > 0:
                 return_dict.setdefault(idle, 0)
