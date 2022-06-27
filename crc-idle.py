@@ -75,18 +75,14 @@ class CrcIdle(BaseParser, CommonSettings):
                 node_name, total, allocated, extra = node_info.split('_')
                 allocated = int(allocated[-1:])
                 total = int(total[-1:])
-                idle = total - allocated
-                if idle > 0: 
-                    return_dict.setdefault(idle,0)
-                    return_dict[idle] += 1
-
+                idle = total - allocated 
             else:                    
                 node_name, resource_data = node_info.split(',')
                 allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
 
-                if idle > 0:
-                    return_dict.setdefault(idle, 0)
-                    return_dict[idle] += 1
+            if idle > 0:
+                return_dict.setdefault(idle, 0)
+                return_dict[idle] += 1
 
         return return_dict
 
