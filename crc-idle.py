@@ -3,7 +3,6 @@
 
 from _base_parser import BaseParser, CommonSettings
 
-
 class CrcIdle(BaseParser, CommonSettings):
     """Command line application for listing idle Slurm resources"""
 
@@ -61,21 +60,33 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = 'sinfo -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
+        if cluster in ['gpu']:
+            command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster,partition)
+        else:
+            command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
+        
         stdout = self.run_command(command)
+        slurm_data = stdout.strip().split()
 
-        first_line_of_data = 3
-        slurm_data = stdout.strip().split()[first_line_of_data:]
-
-        # Count the number of nodes having a given number of idle cores
+        # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = {}
         for node_info in slurm_data:
-            node_name, resource_data = node_info.split(',')
-            allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
+            if cluster in ['gpu']:
+                node_name, total, allocated, extra = node_info.split('_')
+                allocated = int(allocated[-1:])
+                total = int(total[-1:])
+                idle = total - allocated
+                if idle > 0: 
+                    return_dict.setdefault(idle,0)
+                    return_dict[idle] += 1
 
-            if idle > 0:
-                return_dict.setdefault(idle, 0)
-                return_dict[idle] += 1
+            else:                    
+                node_name, resource_data = node_info.split(',')
+                allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
+
+                if idle > 0:
+                    return_dict.setdefault(idle, 0)
+                    return_dict[idle] += 1
 
         return return_dict
 
