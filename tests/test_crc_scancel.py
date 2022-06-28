@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-CrcSCancel = __import__('crc-scancel').CrcSCancel
+CrcScancel = __import__('crc-scancel').CrcScancel
 
 
 class ArgumentParsing(TestCase):
@@ -16,7 +16,7 @@ class ArgumentParsing(TestCase):
         """
 
         job_id = '1234'
-        args, unknown_args = CrcSCancel().parse_known_args([job_id])
+        args, unknown_args = CrcScancel().parse_known_args([job_id])
 
         self.assertFalse(unknown_args)
         self.assertEqual(job_id, args.job_id)

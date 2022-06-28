@@ -33,7 +33,7 @@ class CrcJobStats(BaseParser):
         for idx, item in enumerate(split_output):
             if '=' not in item:
                 drop_indices.append(idx)
-                split_output[idx - 1] += '\ ' + item
+                split_output[idx - 1] += r'\ ' + item
 
         for drop_idx in reversed(sorted(drop_indices)):
             del split_output[drop_idx]
@@ -73,7 +73,7 @@ class CrcJobStats(BaseParser):
         print('')
         print(horizontal_border)
         print(' For more information use the command:')
-        print('   - '.format(custom_slurm_command))
+        print('   - {}'.format(custom_slurm_command))
         print('')
         print(' To control the output of the above command:')
         print('   - Add `--format=<field1,field2,etc>` with fields of interest')
