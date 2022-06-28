@@ -1,5 +1,6 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``scontrol`` command"""
+
 import re
 
 from _base_parser import BaseParser, CommonSettings

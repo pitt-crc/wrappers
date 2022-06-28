@@ -2,7 +2,6 @@
 """A simple wrapper around the Slurm ``scancel`` command"""
 
 from os import environ
-from subprocess import Popen, PIPE
 from sys import stdout
 
 from _base_parser import BaseParser, CommonSettings
@@ -22,8 +21,7 @@ class CrcScancel(BaseParser, CommonSettings):
         int_as_str = lambda x: str(int(x))
         self.add_argument('job_id', type=int_as_str, help='the job\'s ID')
 
-    @staticmethod
-    def cancel_job_on_cluster(cluster, job_id):
+    def cancel_job_on_cluster(self, cluster, job_id):
         """Cancel a running slurm job
 
         Args:
@@ -31,7 +29,7 @@ class CrcScancel(BaseParser, CommonSettings):
             job_id: The ID of the slurm job to cancel
         """
 
-        Popen(['scancel', '-M', cluster, job_id])
+        self.run_command('scancel -M {} {}'.format(cluster, job_id))
 
     def get_cluster_for_job_id(self, job_id):
         """Return the name of the cluster a slurm job is running on
@@ -46,11 +44,8 @@ class CrcScancel(BaseParser, CommonSettings):
 
         for cluster in self.cluster_names:
             # Fetch a list of running slurm jobs matching the username and job id
-            command = ['squeue', '-h', '-u', self.user, '-j', job_id, '-M', cluster]
-            process = Popen(command, stdout=PIPE, stderr=PIPE)
-            command_out, _ = process.communicate()
-
-            if job_id in command_out:
+            command = 'squeue -h -u {} -j job_id -M {}'.format(self.user, cluster)
+            if job_id in self.run_command(command):
                 return cluster
 
         return None

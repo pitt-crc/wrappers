@@ -1,25 +1,7 @@
 #!/usr/bin/python -E
 """A simple wrapper around the Slurm ``srun`` command"""
 
-from shlex import split
-from subprocess import Popen, PIPE
-
 from _base_parser import BaseParser, CommonSettings
-
-
-def run_command(command, stdout=None, stderr=None):
-    """Execute a child program in a new process
-
-    Args:
-        command: The command to execute in the subprocess
-        stdout: Optionally route STDOUT from the child process
-        stderr: Optionally route STDERR from the child process
-
-    Returns:
-        The submitted child application as a ``Popen`` instance
-    """
-
-    return Popen(split(command), stdout=stdout, stderr=stderr).communicate()
 
 
 class CrcInteractive(BaseParser, CommonSettings):
@@ -96,12 +78,11 @@ class CrcInteractive(BaseParser, CommonSettings):
         if args.invest and not args.partition:
             self.error('You must specify a partition when using the Investor cluster')
 
-    @staticmethod
-    def x11_is_available():
+    def x11_is_available(self):
         """Return whether x11 is available in the current runtime environment"""
 
         try:
-            _, x11_err = run_command('xset q', stdout=PIPE, stderr=PIPE)
+            _, x11_err = self.run_command('xset q', include_err=True)
             return not x11_err
 
         except OSError:
@@ -173,7 +154,7 @@ class CrcInteractive(BaseParser, CommonSettings):
             print(srun_command)
 
         else:
-            Popen(split(srun_command)).communicate()
+            self.run_command(srun_command)
 
 
 if __name__ == '__main__':
