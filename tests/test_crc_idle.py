@@ -39,7 +39,7 @@ class ArgumentParsing(TestCase):
         args, unknown_args = app.parse_known_args([])
 
         self.assertFalse(unknown_args)
-        for cluster in app.cluster_partitions:
+        for cluster in app.cluster_names:
             self.assertFalse(getattr(args, cluster))
 
 
@@ -53,7 +53,7 @@ class ClusterList(TestCase):
         args, unknown_args = app.parse_known_args(['-p', 'partition1'])
 
         returned_clusters = app.get_cluster_list(args)
-        self.assertCountEqual(app.cluster_partitions, returned_clusters)
+        self.assertCountEqual(app.cluster_names, returned_clusters)
 
     def test_returns_arg_values(self):
         """Test returned cluster names match the clusters specified in the parsed arguments"""

@@ -40,11 +40,10 @@ class CrcIdle(BaseParser, CommonSettings):
             A tuple fo cluster names
         """
 
-        all_clusters = tuple(self.cluster_partitions)
-        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), self.cluster_partitions))
+        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), self.cluster_names))
 
         # Default to returning all clusters
-        return argument_clusters or all_clusters
+        return argument_clusters or self.cluster_names
 
     def _idle_cpu_resources(self, cluster, partition):
         """Return the idle CPU resources on a given cluster partition
