@@ -33,7 +33,7 @@ class CrcJobStats(BaseParser):
         for idx, item in enumerate(split_output):
             if '=' not in item:
                 drop_indices.append(idx)
-                split_output[idx - 1] += '\ ' + item
+                split_output[idx - 1] += r'\ ' + item
 
         for drop_idx in reversed(sorted(drop_indices)):
             del split_output[drop_idx]

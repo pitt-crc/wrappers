@@ -15,7 +15,7 @@ class ArgumentParsing(TestCase):
 
         app = CrcScontrol()
 
-        for cluster in CommonSettings.cluster_partitions:
+        for cluster in CommonSettings.cluster_names:
             known_args, unknown_args = app.parse_known_args(['--cluster', cluster])
             self.assertEqual(cluster, known_args.cluster)
             self.assertFalse(unknown_args)

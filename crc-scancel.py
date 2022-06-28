@@ -44,7 +44,7 @@ class CrcScancel(BaseParser, CommonSettings):
         # However, that approach fails for scavenger jobs. Instead, we iterate
         # over the clusters until we find the right one.
 
-        for cluster in self.cluster_partitions:
+        for cluster in self.cluster_names:
             # Fetch a list of running slurm jobs matching the username and job id
             command = ['squeue', '-h', '-u', self.user, '-j', job_id, '-M', cluster]
             process = Popen(command, stdout=PIPE, stderr=PIPE)
