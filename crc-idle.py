@@ -3,6 +3,7 @@
 
 from _base_parser import BaseParser, CommonSettings
 
+
 class CrcIdle(BaseParser, CommonSettings):
     """Command line application for listing idle Slurm resources"""
 
@@ -45,6 +46,60 @@ class CrcIdle(BaseParser, CommonSettings):
         # Default to returning all clusters
         return argument_clusters or all_clusters
 
+    def _idle_cpu_resources(self, cluster, partition):
+        """Return the idle CPU resources on a given cluster partition
+
+        Args:
+            cluster: The cluster to print a summary for
+            partition: The partition in the parent cluster
+
+        Returns:
+            A dictionary mapping idle resources to number of nodes
+        """
+
+        # Use `sinfo` command to determine the status of each node in the given partition
+        command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
+        stdout = self.run_command(command)
+        slurm_data = stdout.strip().split()
+
+        # Count the number of nodes having a given number of idle cores/GPUs
+        return_dict = dict()
+        for node_info in slurm_data:
+            node_name, resource_data = node_info.split(',')
+            # Return values include: allocated, idle, other, total
+            _, idle, _, _ = [int(x) for x in resource_data.split('/')]
+            return_dict[idle] += 1
+
+        return return_dict
+
+    def _idle_gpu_resources(self, cluster, partition):
+        """Return the idle GPU resources on a given cluster partition
+
+        Args:
+            cluster: The cluster to print a summary for
+            partition: The partition in the parent cluster
+
+        Returns:
+            A dictionary mapping idle resources to number of nodes
+        """
+
+        # Use `sinfo` command to determine the status of each node in the given partition
+        command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster, partition)
+        stdout = self.run_command(command)
+        slurm_data = stdout.strip().split()
+
+        # Count the number of nodes having a given number of idle cores/GPUs
+        return_dict = dict()
+        for node_info in slurm_data:
+            # node_name, total, allocated, extra empty character array
+            _, total, allocated, _ = node_info.split('_')
+            allocated = int(allocated[-1:])
+            total = int(total[-1:])
+            idle = total - allocated
+            return_dict[idle] += 1
+
+        return return_dict
+
     def count_idle_resources(self, cluster, partition):
         """Determine the number of idle resources on a given cluster partition
 
@@ -59,33 +114,11 @@ class CrcIdle(BaseParser, CommonSettings):
             A dictionary mapping idle resources to number of nodes
         """
 
-        # Use `sinfo` command to determine the status of each node in the given partition
-        if cluster in ['gpu']:
-            command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster,partition)
+        if self.cluster_types[cluster] == 'GPUs':
+            return self._idle_gpu_resources(cluster, partition)
+
         else:
-            command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition) 
-        stdout = self.run_command(command)
-        slurm_data = stdout.strip().split()
-
-        # Count the number of nodes having a given number of idle cores/GPUs
-        return_dict = {}
-        for node_info in slurm_data:
-            if cluster in ['gpu']:
-                #node_name, total, allocated, extra empty character array
-                _, total, allocated, _ = node_info.split('_')
-                allocated = int(allocated[-1:])
-                total = int(total[-1:])
-                idle = total - allocated
-            else:
-                node_name, resource_data = node_info.split(',')
-                #allocated, idle, other, total
-                _, idle, _, _ = [int(x) for x in resource_data.split('/')]
-
-            if idle > 0:
-                return_dict.setdefault(idle, 0)
-                return_dict[idle] += 1
-
-        return return_dict
+            return self._idle_cpu_resources(cluster, partition)
 
     def print_partition_summary(self, cluster, partition):
         """Print a summary of idle resources in a single partition
