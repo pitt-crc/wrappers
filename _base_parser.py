@@ -14,12 +14,7 @@ class CommonSettings(object):
     """Parent class for adding common settings to a command line application"""
 
     banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
-    cluster_partitions = {
-        'smp': ['smp', 'high-mem', "legacy"],
-        'gpu': ['gtx1080', 'titanx', 'titan', 'k40'],
-        'mpi': ['mpi', 'opa', 'ib', "opa-high-mem"],
-        'htc': ['htc']
-    }
+    cluster_names = ('smp', 'gpu', 'mpi', 'htc')
 
 
 class BaseParser(ArgumentParser):

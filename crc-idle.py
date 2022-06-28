@@ -138,7 +138,7 @@ def cpu_logic(cluster, partition):
 
 arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
 
-CLUSTERS = CommonSettings.cluster_partitions
+CLUSTERS = CommonSettings.cluster_names
 
 # Arguments Check
 # ===============
