@@ -92,7 +92,7 @@ class BaseParser(ArgumentParser):
         """
 
         command_list = split(command)
-        process = Popen(command_list, stdout=PIPE, stderr=PIPE)
+        process = Popen(command_list, stdout=PIPE, stderr=PIPE, shell=False)
         std_out, std_err = process.communicate()
         if include_err:
             return std_out.strip(), std_err.strip()
