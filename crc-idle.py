@@ -65,10 +65,12 @@ class CrcIdle(BaseParser, CommonSettings):
         self.partition_names = tuple([line.split('=')[1] for line in partition_info if 'PartitionName=' in line])
 
         # Default to returning all partitions
-        import pdb; pdb.set_trace()
-        argument_partitions = tuple(filter(lambda partition: partition in vars(args)['partition'], self.partition_names))
+        if not vars(args)['partition']:
+            partitions = self.partition_names
+        else:
+            partitions = tuple(filter(lambda partition: partition in vars(args)['partition'], self.partition_names))
 
-        return argument_partitions or self.partition_names
+        return partitions
         
 
     def _idle_cpu_resources(self, cluster, partition):
