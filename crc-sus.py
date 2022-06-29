@@ -13,7 +13,9 @@ class CrcSus(BaseParser, CommonSettings):
         """Define arguments for the command line interface"""
 
         super(CrcSus, self).__init__()
-        self.add_argument(dest='account', type=str, help="the Slurm account")
+
+        default_group = self.run_command("id -gn")
+        self.add_argument('account', default=default_group, nargs='?', help='slurm account name')
 
     def get_allocation_info(self, account):
         """Return the service unit allocation for a given account name
