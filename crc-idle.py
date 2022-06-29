@@ -93,7 +93,7 @@ class CrcIdle(BaseParser, CommonSettings):
             node_name, resource_data = node_info.split(',')
             # Return values include: allocated, idle, other, total
             _, idle, _, _ = [int(x) for x in resource_data.split('/')]
-            return_dict = return_dict.set_default(idle,0) + 1
+            return_dict[idle] = return_dict.setdefault(idle,0) + 1
 
         return return_dict
 
@@ -121,7 +121,7 @@ class CrcIdle(BaseParser, CommonSettings):
             allocated = int(allocated[-1:])
             total = int(total[-1:])
             idle = total - allocated
-            return_dict = return_dict.setdefault(idle,0) + 1
+            return_dict[idle] = return_dict.setdefault(idle,0) + 1
 
         return return_dict
 
