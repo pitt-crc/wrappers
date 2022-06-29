@@ -55,7 +55,7 @@ class CrcSus(BaseParser, CommonSettings):
 
         for cluster in self.cluster_names:
             cluster_name = cluster.rjust(cluster_name_length)
-            output_lines.append(' cluster {} has {} SUs'.format(cluster_name, allocation.get(cluster, 0)))
+            output_lines.append(' cluster {} has {:,} SUs'.format(cluster_name, allocation.get(cluster, 0)))
 
         return '\n'.join(output_lines)
 
