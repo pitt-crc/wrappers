@@ -79,7 +79,8 @@ class CrcInteractive(BaseParser, CommonSettings):
         if args.invest and not args.partition:
             self.error('You must specify a partition when using the Investor cluster')
 
-    def x11_is_available(self):
+    @staticmethod
+    def x11_is_available():
         """Return whether x11 is available in the current runtime environment"""
 
         try:
@@ -155,7 +156,7 @@ class CrcInteractive(BaseParser, CommonSettings):
             print(srun_command)
 
         else:
-            self.run_command(srun_command)
+            Shell.run_command(srun_command)
 
 
 if __name__ == '__main__':

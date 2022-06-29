@@ -22,7 +22,8 @@ class CrcScancel(BaseParser, CommonSettings):
         int_as_str = lambda x: str(int(x))
         self.add_argument('job_id', type=int_as_str, help='the job\'s ID')
 
-    def cancel_job_on_cluster(self, cluster, job_id):
+    @staticmethod
+    def cancel_job_on_cluster(cluster, job_id):
         """Cancel a running slurm job
 
         Args:
