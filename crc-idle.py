@@ -46,7 +46,7 @@ class CrcIdle(BaseParser, CommonSettings):
         return argument_clusters or self.cluster_names
 
     def _idle_cpu_resources(self, cluster, partition):
-        """Return the idle CPU resources on a given cluster partition
+        """Return the idle CPU resources on a given cluster partition. 
 
         Args:
             cluster: The cluster to print a summary for
@@ -65,14 +65,17 @@ class CrcIdle(BaseParser, CommonSettings):
         return_dict = dict()
         for node_info in slurm_data:
             node_name, resource_data = node_info.split(',')
+
             # Return values include: allocated, idle, other, total
             _, idle, _, _ = [int(x) for x in resource_data.split('/')]
-            return_dict[idle] += 1
+            
+            return_dict[idle] = return_dict.setdefault(idle,0) + 1
 
         return return_dict
 
     def _idle_gpu_resources(self, cluster, partition):
-        """Return the idle GPU resources on a given cluster partition
+        """Return the idle GPU resources on a given cluster partition.
+           If the host node is in 'drain' state, the GPUs are reported as unavailable.
 
         Args:
             cluster: The cluster to print a summary for
@@ -83,19 +86,27 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster, partition)
+       # command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster, partition)
+        command = "sinfo -h -M {0} -p {1} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '".format(cluster, partition)
         stdout = self.run_command(command)
         slurm_data = stdout.strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            # node_name, total, allocated, extra empty character array
-            _, total, allocated, _ = node_info.split('_')
-            allocated = int(allocated[-1:])
-            total = int(total[-1:])
-            idle = total - allocated
-            return_dict[idle] += 1
+            # node_name, total, allocated, node state
+            _, total, allocated, state = node_info.split('_')
+            
+            #If the node is in a downed state, report 0 resource availability. 
+            if state in ['drain']:
+                import pdb; pdb.set_trace()
+                idle = 0
+            else:
+                allocated = int(allocated[-1:])
+                total = int(total[-1:])
+                idle = total - allocated
+            
+            return_dict[idle] = return_dict.setdefault(idle,0) + 1
 
         return return_dict
 
@@ -151,7 +162,14 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         for cluster in self.get_cluster_list(args):
-            partitions_to_print = args.partition or self.cluster_partitions[cluster]
+            if hasattr('self','cluster_partitions'):
+                partitions_to_print = self.cluster_partitions[cluster]
+            else:
+                partitions_to_print = args.partition
+                if not partitions_to_print:
+                    print('Please provide a partition')
+                    return
+
             for partition in partitions_to_print:
                 self.print_partition_summary(cluster, partition)
 
