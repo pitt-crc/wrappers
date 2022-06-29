@@ -4,6 +4,7 @@
 from os import environ
 
 from _base_parser import BaseParser
+from _utils import Shell
 
 
 class CrcSqueue(BaseParser):
@@ -68,7 +69,7 @@ class CrcSqueue(BaseParser):
         """
 
         command = self.build_slurm_command(args)
-        print(self.run_command(command))
+        print(Shell.run_command(command))
 
 
 if __name__ == '__main__':

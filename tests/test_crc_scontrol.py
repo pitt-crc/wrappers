@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from _base_parser import CommonSettings
+from _utils import CommonSettings
 
 CrcScontrol = __import__('crc-scontrol').CrcScontrol
 

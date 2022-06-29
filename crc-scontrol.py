@@ -3,7 +3,8 @@
 
 import re
 
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import CommonSettings, Shell
 
 
 class CrcScontrol(BaseParser, CommonSettings):
@@ -33,11 +34,12 @@ class CrcScontrol(BaseParser, CommonSettings):
             A tuple of partition names
         """
 
-        output = BaseParser.run_command("scontrol -M {} show partition".format(cluster_name))
+        output = Shell.run_command("scontrol -M {} show partition".format(cluster_name))
         regex_pattern = re.compile(r'PartitionName=(\w*)')
         return tuple(re.findall(regex_pattern, output))
 
-    def get_partition_info(self, cluster, partition):
+    @staticmethod
+    def get_partition_info(cluster, partition):
         """Return a dictionary of Slurm settings as configured on a given partition
 
         Args:
@@ -46,7 +48,7 @@ class CrcScontrol(BaseParser, CommonSettings):
         """
 
         scontrol_command = "scontrol -M {} show partition {}".format(cluster, partition)
-        cmd_out = self.run_command(scontrol_command).split()
+        cmd_out = Shell.run_command(scontrol_command).split()
 
         partition_info = {}
         for slurm_option in cmd_out:
@@ -70,9 +72,9 @@ class CrcScontrol(BaseParser, CommonSettings):
         # Get slurm settings for each node in the partition
         # Only print out values for a single node
         # Assume the first node is representative of the partition
-        nodes_info = self.run_command("scontrol show hostname {}".format(partition_nodes))
+        nodes_info = Shell.run_command("scontrol show hostname {}".format(partition_nodes))
         node = nodes_info.split()[0]
-        print(self.run_command("scontrol -M {} show node {}".format(cluster, node)))
+        print(Shell.run_command("scontrol -M {} show node {}".format(cluster, node)))
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
@@ -95,7 +97,7 @@ class CrcScontrol(BaseParser, CommonSettings):
 
         else:
             # Summarize all available partitions
-            print(self.run_command("scontrol -M {} show partition".format(args.cluster)))
+            print(Shell.run_command("scontrol -M {} show partition".format(args.cluster)))
 
 
 if __name__ == '__main__':

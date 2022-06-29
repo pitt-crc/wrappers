@@ -2,6 +2,7 @@
 """Command line interface that wraps the banking application"""
 
 from _base_parser import BaseParser
+from _utils import Shell
 
 
 class CrcUsage(BaseParser):
@@ -14,7 +15,7 @@ class CrcUsage(BaseParser):
 
         super(CrcUsage, self).__init__()
 
-        default_group = self.run_command("id -gn")
+        default_group = Shell.run_command("id -gn")
         self.add_argument('account', default=default_group, nargs='?', help='slurm account name')
 
     def app_logic(self, args):
@@ -24,12 +25,12 @@ class CrcUsage(BaseParser):
             args: Parsed command line arguments
         """
 
-        account_exists = self.run_command('sacctmgr -n list account account={} format=account%30'.format(args.account))
+        account_exists = Shell.run_command('sacctmgr -n list account account={} format=account%30'.format(args.account))
         if not account_exists:
             self.error("The group '{}' doesn't have an account according to Slurm".format(args.account))
 
-        bank_info = '{} {}'.format(self.banking_executable, args.account)
-        print(self.run_command(bank_info))
+        bank_info_command = '{} {}'.format(self.banking_executable, args.account)
+        print(Shell.run_command(bank_info_command))
 
 
 if __name__ == '__main__':

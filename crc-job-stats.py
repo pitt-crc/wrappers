@@ -4,6 +4,7 @@
 from os import environ
 
 from _base_parser import BaseParser
+from _utils import Shell
 
 
 class CrcJobStats(BaseParser):
@@ -24,7 +25,7 @@ class CrcJobStats(BaseParser):
 
         # Get job information from the ``scontrol`` utility
         # Slurm settings are returned as "key=value" pairs seperated by whitespace
-        output = self.run_command(['scontrol', '-M', self.cluster, 'show', 'job', self.job_id])
+        output = Shell.run_command(['scontrol', '-M', self.cluster, 'show', 'job', self.job_id])
         split_output = output.strip().split()
 
         # Some slurm settings are file paths which may contain whitespace

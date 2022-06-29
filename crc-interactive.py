@@ -1,7 +1,8 @@
 #!/usr/bin/python -E
 """A simple wrapper around the Slurm ``srun`` command"""
 
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import CommonSettings, Shell
 
 
 class CrcInteractive(BaseParser, CommonSettings):
@@ -82,7 +83,7 @@ class CrcInteractive(BaseParser, CommonSettings):
         """Return whether x11 is available in the current runtime environment"""
 
         try:
-            _, x11_err = self.run_command('xset q', include_err=True)
+            _, x11_err = Shell.run_command('xset q', include_err=True)
             return not x11_err
 
         except OSError:

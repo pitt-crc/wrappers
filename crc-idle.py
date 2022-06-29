@@ -1,7 +1,8 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line application for listing idle Slurm resources"""
 
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import CommonSettings, Shell
 
 
 class CrcIdle(BaseParser, CommonSettings):
@@ -84,7 +85,7 @@ class CrcIdle(BaseParser, CommonSettings):
 
         # Use `sinfo` command to determine the status of each node in the given partition
         command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster, partition)
-        stdout = self.run_command(command)
+        stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs

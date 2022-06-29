@@ -3,7 +3,8 @@
 
 import dataset
 
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import CommonSettings, Shell
 
 
 class CrcSus(BaseParser, CommonSettings):
@@ -14,7 +15,7 @@ class CrcSus(BaseParser, CommonSettings):
 
         super(CrcSus, self).__init__()
 
-        default_group = self.run_command("id -gn")
+        default_group = Shell.run_command("id -gn")
         self.add_argument('account', default=default_group, nargs='?', help='slurm account name')
 
     def get_allocation_info(self, account):
