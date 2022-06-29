@@ -68,7 +68,7 @@ class CrcSqueue(BaseParser):
         """
 
         command = self.build_slurm_command(args)
-        self.run_command(command)
+        print(self.run_command(command))
 
 
 if __name__ == '__main__':

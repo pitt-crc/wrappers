@@ -14,11 +14,10 @@ class CrcScontrol(BaseParser, CommonSettings):
 
         super(CrcScontrol, self).__init__()
 
-        valid_clusters = tuple(self.cluster_names)
         self.add_argument(
             '-c', '--cluster',
             required=True,
-            choices=valid_clusters,
+            choices=self.cluster_names,
             help='print partitions for the given cluster')
 
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')

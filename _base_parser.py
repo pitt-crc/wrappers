@@ -32,23 +32,19 @@ class BaseParser(ArgumentParser):
     def _get_formatter(self):
         return HelpFormatter(self.prog, max_help_position=self.help_width)
 
-    # TODO: Merge this into app_version once all apps are using the base parser
-    @staticmethod
-    def get_semantic_version():
-        """Return the semantic version number of the application"""
+    @property
+    def app_version(self):
+        """Return the application name and version as a string"""
 
         # Look for `version.txt` in the same directory as this file
         file_directory = os.path.dirname(os.path.abspath(__file__))
         version_file = os.path.join(file_directory, 'version.txt')
 
         with open(version_file) as version_file:
-            return version_file.readline().strip()
+            semantic_version = version_file.readline().strip()
 
-    @property
-    def app_version(self):
-        """Return the application name and version as a string"""
-
-        return '{} version {}'.format(self.prog, self.get_semantic_version())
+        program_name = os.path.splitext(self.prog)[0]
+        return '{} version {}'.format(program_name, semantic_version)
 
     @staticmethod
     def readchar():
