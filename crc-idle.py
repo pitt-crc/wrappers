@@ -3,7 +3,6 @@
 
 from _base_parser import BaseParser, CommonSettings
 
-
 class CrcIdle(BaseParser, CommonSettings):
     """Command line application for listing idle Slurm resources"""
 
@@ -37,13 +36,40 @@ class CrcIdle(BaseParser, CommonSettings):
             args: Parsed command line arguments
 
         Returns:
-            A tuple fo cluster names
+            A tuple of cluster names
         """
 
         argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), self.cluster_names))
 
         # Default to returning all clusters
         return argument_clusters or self.cluster_names
+
+    def get_partition_list(self, cluster, args):
+        """Return a list of partitions specifed in the command line arguments
+
+        Returns a tuple of partitions specified by command line arguments. If no
+        partitions were specified, then return a tuple of all partitions for the cluster.
+        By default, scontrol only shows partitions that the user executing the command 
+        can see, so there is no need to try to hide invest partitions. 
+
+        Args:
+           args: Parsed command line arguments
+
+        Returns:
+            A tuple of partition names
+        """
+      
+        command = 'scontrol -M {0} show partitions'.format(cluster) 
+        stdout = self.run_command(command)
+        partition_info = stdout.strip().split()
+        self.partition_names = tuple([line.split('=')[1] for line in partition_info if 'PartitionName=' in line])
+
+        # Default to returning all partitions
+        import pdb; pdb.set_trace()
+        argument_partitions = tuple(filter(lambda partition: partition in vars(args)['partition'], self.partition_names))
+
+        return argument_partitions or self.partition_names
+        
 
     def _idle_cpu_resources(self, cluster, partition):
         """Return the idle CPU resources on a given cluster partition
@@ -67,7 +93,7 @@ class CrcIdle(BaseParser, CommonSettings):
             node_name, resource_data = node_info.split(',')
             # Return values include: allocated, idle, other, total
             _, idle, _, _ = [int(x) for x in resource_data.split('/')]
-            return_dict[idle] += 1
+            return_dict = return_dict.set_default(idle,0) + 1
 
         return return_dict
 
@@ -95,7 +121,7 @@ class CrcIdle(BaseParser, CommonSettings):
             allocated = int(allocated[-1:])
             total = int(total[-1:])
             idle = total - allocated
-            return_dict[idle] += 1
+            return_dict = return_dict.setdefault(idle,0) + 1
 
         return return_dict
 
@@ -151,8 +177,7 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         for cluster in self.get_cluster_list(args):
-            partitions_to_print = args.partition or self.cluster_partitions[cluster]
-            for partition in partitions_to_print:
+            for partition in self.get_partition_list(cluster,args):
                 self.print_partition_summary(cluster, partition)
 
 
