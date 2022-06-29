@@ -99,7 +99,6 @@ class CrcIdle(BaseParser, CommonSettings):
             
             #If the node is in a downed state, report 0 resource availability. 
             if state in ['drain']:
-                import pdb; pdb.set_trace()
                 idle = 0
             else:
                 allocated = int(allocated[-1:])
