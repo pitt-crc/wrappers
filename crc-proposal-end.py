@@ -4,7 +4,7 @@
 import dataset
 
 from _base_parser import BaseParser
-from _utils import CommonSettings
+from _utils import CommonSettings, Shell
 
 
 class CrcProposalEnd(BaseParser, CommonSettings):
@@ -14,7 +14,9 @@ class CrcProposalEnd(BaseParser, CommonSettings):
         """Define arguments for the command line interface"""
 
         super(CrcProposalEnd, self).__init__()
-        self.add_argument('account', help='the Slurm account')
+
+        default_group = Shell.run_command("id -gn")
+        self.add_argument('account', default=default_group, nargs='?', help='the Slurm account')
 
     def get_proposal_end_date(self, account):
         """Get the proposal end date for a given account
