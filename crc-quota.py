@@ -6,6 +6,7 @@ import math
 import sys
 
 from _base_parser import BaseParser
+from _utils import Shell
 
 
 class AbstractFilesystemUsage(object):
@@ -86,7 +87,7 @@ class GenericUsage(AbstractFilesystemUsage):
         """
 
         df_command = "df {}".format(path)
-        quota_info_list = BaseParser.run_command(df_command).splitlines()
+        quota_info_list = Shell.run_command(df_command).splitlines()
         if not quota_info_list:
             return None
 
@@ -132,12 +133,12 @@ class BeegfsUsage(AbstractFilesystemUsage):
             An instance of the parent class
         """
 
-        allocation_out = BaseParser.run_command("df /bgfs/{}".format(group))
+        allocation_out = Shell.run_command("df /bgfs/{}".format(group))
         if len(allocation_out) == 0:
             return None
 
         quota_info_cmd = "beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group)
-        quota_out = BaseParser.run_command(quota_info_cmd)
+        quota_out = Shell.run_command(quota_info_cmd)
         result = quota_out.splitlines()[1].split(',')
         return cls(name, int(result[2]), int(result[3]), int(result[4]), result[5])
 
@@ -210,14 +211,14 @@ class CrcQuota(BaseParser):
 
         username = username or ''
         check_user_cmd = "id -un {}".format(username)
-        user, err = self.run_command(check_user_cmd, include_err=True)
+        user, err = Shell.run_command(check_user_cmd, include_err=True)
 
         if err:
             sys.exit("Could not find quota information for user {}".format(username))
 
-        group = self.run_command("id -gn {}".format(username))
-        uid = self.run_command("id -u {}".format(username))
-        gid = self.run_command("id -g {}".format(username))
+        group = Shell.run_command("id -gn {}".format(username))
+        uid = Shell.run_command("id -u {}".format(username))
+        gid = Shell.run_command("id -g {}".format(username))
 
         return user, uid, group, gid
 

@@ -1,28 +1,11 @@
 #!/usr/bin/python -E
 """A simple wrapper around the Slurm ``srun`` command"""
 
-from shlex import split
-from subprocess import Popen, PIPE
-
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import Shell, SlurmInfo
 
 
-def run_command(command, stdout=None, stderr=None):
-    """Execute a child program in a new process
-
-    Args:
-        command: The command to execute in the subprocess
-        stdout: Optionally route STDOUT from the child process
-        stderr: Optionally route STDERR from the child process
-
-    Returns:
-        The submitted child application as a ``Popen`` instance
-    """
-
-    return Popen(split(command), stdout=stdout, stderr=stderr).communicate()
-
-
-class CrcInteractive(BaseParser, CommonSettings):
+class CrcInteractive(BaseParser):
     """Commandline utility for launching an interactive slurm session"""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
@@ -101,7 +84,7 @@ class CrcInteractive(BaseParser, CommonSettings):
         """Return whether x11 is available in the current runtime environment"""
 
         try:
-            _, x11_err = run_command('xset q', stdout=PIPE, stderr=PIPE)
+            _, x11_err = Shell.run_command('xset q', include_err=True)
             return not x11_err
 
         except OSError:
@@ -147,7 +130,7 @@ class CrcInteractive(BaseParser, CommonSettings):
         if self.x11_is_available():
             srun_args += ' --x11 '
 
-        cluster_to_run = next(cluster for cluster in self.cluster_names if getattr(args, cluster))
+        cluster_to_run = next(cluster for cluster in SlurmInfo.cluster_names if getattr(args, cluster))
         return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
 
     def app_logic(self, args):
@@ -157,7 +140,7 @@ class CrcInteractive(BaseParser, CommonSettings):
             args: Parsed command line arguments
         """
 
-        if not any(getattr(args, cluster) for cluster in self.cluster_names):
+        if not any(getattr(args, cluster) for cluster in SlurmInfo.cluster_names):
             self.print_help()
             self.exit()
 
@@ -173,7 +156,7 @@ class CrcInteractive(BaseParser, CommonSettings):
             print(srun_command)
 
         else:
-            Popen(split(srun_command)).communicate()
+            Shell.run_command(srun_command)
 
 
 if __name__ == '__main__':
