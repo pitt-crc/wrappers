@@ -65,10 +65,11 @@ class AbstractFilesystemUsage(object):
             return '0.0 B'
 
         size_units = ('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB')
-        i = int(math.floor(math.log(size, 1024)))
-        p = math.pow(1024, i)
-        s = round(size / p, 2)
-        return '%s %s' % (s, size_units[i])
+
+        base_2_power = int(math.floor(math.log(size, 1024)))
+        conversion_factor = math.pow(1024, base_2_power)
+        final_size = round(size / conversion_factor, 2)
+        return '{} {}'.format(final_size, size_units[base_2_power])
 
 
 class GenericUsage(AbstractFilesystemUsage):
@@ -199,7 +200,8 @@ class CrcQuota(BaseParser):
         self.add_argument('-u', '--user', default=None, help='username of quota to query')
         self.add_argument('--verbose', action='store_true', help='verbose quota output')
 
-    def get_user_info(self, username=None):
+    @staticmethod
+    def get_user_info(username=None):
         """Return system IDs for the current user
 
         Args:
