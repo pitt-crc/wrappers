@@ -1,13 +1,11 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``scontrol`` command"""
 
-import re
-
 from _base_parser import BaseParser
-from _utils import CommonSettings, Shell
+from _utils import Shell, SlurmInfo
 
 
-class CrcScontrol(BaseParser, CommonSettings):
+class CrcScontrol(BaseParser):
     """Command line application for fetching data from the Slurm ``scontrol`` utility"""
 
     def __init__(self):
@@ -18,25 +16,10 @@ class CrcScontrol(BaseParser, CommonSettings):
         self.add_argument(
             '-c', '--cluster',
             required=True,
-            choices=self.cluster_names,
+            choices=SlurmInfo.cluster_names,
             help='print partitions for the given cluster')
 
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
-
-    @staticmethod
-    def _slurm_cluster_partitions(cluster_name):
-        """Return a tuple of partition names associated with a given slurm cluster
-
-        Args:
-            cluster_name: The name of a slurm cluster
-
-        Returns:
-            A tuple of partition names
-        """
-
-        output = Shell.run_command("scontrol -M {} show partition".format(cluster_name))
-        regex_pattern = re.compile(r'PartitionName=(\w*)')
-        return tuple(re.findall(regex_pattern, output))
 
     @staticmethod
     def get_partition_info(cluster, partition):
@@ -90,7 +73,7 @@ class CrcScontrol(BaseParser, CommonSettings):
         """
 
         if args.partition:
-            if args.partition not in self._slurm_cluster_partitions(args.cluster):
+            if args.partition not in SlurmInfo.get_partition_names(args.cluster):
                 self.error('Partition {} is not part of cluster {}'.format(args.partition, args.cluster))
 
             self.print_node(args.cluster, args.partition)

@@ -1,15 +1,9 @@
+import re
 import sys
 import termios
 import tty
 from shlex import split
 from subprocess import Popen, PIPE
-
-
-class CommonSettings(object):
-    """Parent class for adding common settings to a command line application"""
-
-    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
-    cluster_names = ('smp', 'gpu', 'mpi', 'htc')
 
 
 class Shell:
@@ -53,3 +47,24 @@ class Shell:
             return std_out.strip(), std_err.strip()
 
         return std_out.strip()
+
+
+class SlurmInfo:
+    """Class for fetching Slurm config data"""
+
+    cluster_names = ('smp', 'gpu', 'mpi', 'htc')
+
+    @staticmethod
+    def get_partition_names(cluster_name):
+        """Return a tuple of partition names associated with a given slurm cluster
+
+        Args:
+            cluster_name: The name of a slurm cluster
+
+        Returns:
+            A tuple of partition names
+        """
+
+        output = Shell.run_command("scontrol -M {} show partition".format(cluster_name))
+        regex_pattern = re.compile(r'PartitionName=(\w*)')
+        return tuple(re.findall(regex_pattern, output))

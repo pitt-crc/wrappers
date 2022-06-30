@@ -2,10 +2,10 @@
 """Command line application for listing idle Slurm resources"""
 
 from _base_parser import BaseParser
-from _utils import CommonSettings, Shell
+from _utils import Shell, SlurmInfo
 
 
-class CrcIdle(BaseParser, CommonSettings):
+class CrcIdle(BaseParser):
     """Command line application for listing idle Slurm resources"""
 
     # The type of resource available on a cluster
@@ -41,12 +41,13 @@ class CrcIdle(BaseParser, CommonSettings):
             A tuple fo cluster names
         """
 
-        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), self.cluster_names))
+        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), SlurmInfo.cluster_names))
 
         # Default to returning all clusters
-        return argument_clusters or self.cluster_names
+        return argument_clusters or SlurmInfo.cluster_names
 
-    def _idle_cpu_resources(self, cluster, partition):
+    @staticmethod
+    def _idle_cpu_resources(cluster, partition):
         """Return the idle CPU resources on a given cluster partition
 
         Args:
@@ -59,7 +60,7 @@ class CrcIdle(BaseParser, CommonSettings):
 
         # Use `sinfo` command to determine the status of each node in the given partition
         command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
-        stdout = self.run_command(command)
+        stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
@@ -72,7 +73,8 @@ class CrcIdle(BaseParser, CommonSettings):
 
         return return_dict
 
-    def _idle_gpu_resources(self, cluster, partition):
+    @staticmethod
+    def _idle_gpu_resources(cluster, partition):
         """Return the idle GPU resources on a given cluster partition
 
         Args:
@@ -152,7 +154,7 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         for cluster in self.get_cluster_list(args):
-            partitions_to_print = args.partition or self.cluster_partitions[cluster]
+            partitions_to_print = args.partition or SlurmInfo.get_partition_names(cluster)
             for partition in partitions_to_print:
                 self.print_partition_summary(cluster, partition)
 

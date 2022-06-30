@@ -4,11 +4,13 @@
 import dataset
 
 from _base_parser import BaseParser
-from _utils import CommonSettings, Shell
+from _utils import Shell
 
 
-class CrcProposalEnd(BaseParser, CommonSettings):
+class CrcProposalEnd(BaseParser):
     """Command line application for printing an account's proposal end date"""
+
+    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
     def __init__(self):
         """Define arguments for the command line interface"""

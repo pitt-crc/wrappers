@@ -5,10 +5,10 @@ from os import environ
 from sys import stdout
 
 from _base_parser import BaseParser
-from _utils import CommonSettings, Shell
+from _utils import Shell, SlurmInfo
 
 
-class CrcScancel(BaseParser, CommonSettings):
+class CrcScancel(BaseParser):
     """Command line application for canceling the user's running slurm jobs"""
 
     user = environ['USER']
@@ -44,7 +44,7 @@ class CrcScancel(BaseParser, CommonSettings):
         # However, that approach fails for scavenger jobs. Instead, we iterate
         # over the clusters until we find the right one.
 
-        for cluster in self.cluster_names:
+        for cluster in SlurmInfo.cluster_names:
             # Fetch a list of running slurm jobs matching the username and job id
             command = 'squeue -h -u {} -j job_id -M {}'.format(self.user, cluster)
             if job_id in Shell.run_command(command):

@@ -2,10 +2,10 @@
 """A simple wrapper around the Slurm ``srun`` command"""
 
 from _base_parser import BaseParser
-from _utils import CommonSettings, Shell
+from _utils import Shell, SlurmInfo
 
 
-class CrcInteractive(BaseParser, CommonSettings):
+class CrcInteractive(BaseParser):
     """Commandline utility for launching an interactive slurm session"""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
@@ -130,7 +130,7 @@ class CrcInteractive(BaseParser, CommonSettings):
         if self.x11_is_available():
             srun_args += ' --x11 '
 
-        cluster_to_run = next(cluster for cluster in self.cluster_names if getattr(args, cluster))
+        cluster_to_run = next(cluster for cluster in SlurmInfo.cluster_names if getattr(args, cluster))
         return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
 
     def app_logic(self, args):
@@ -140,7 +140,7 @@ class CrcInteractive(BaseParser, CommonSettings):
             args: Parsed command line arguments
         """
 
-        if not any(getattr(args, cluster) for cluster in self.cluster_names):
+        if not any(getattr(args, cluster) for cluster in SlurmInfo.cluster_names):
             self.print_help()
             self.exit()
 

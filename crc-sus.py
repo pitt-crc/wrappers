@@ -4,11 +4,13 @@
 import dataset
 
 from _base_parser import BaseParser
-from _utils import CommonSettings, Shell
+from _utils import Shell, SlurmInfo
 
 
-class CrcSus(BaseParser, CommonSettings):
+class CrcSus(BaseParser):
     """Command line application for printing an account's service unit allocation"""
+
+    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -37,7 +39,7 @@ class CrcSus(BaseParser, CommonSettings):
         if db_record is None:
             self.error('ERROR: No proposal for the given account was found')
 
-        allocations = {cluster: db_record[cluster] for cluster in self.cluster_names}
+        allocations = {cluster: db_record[cluster] for cluster in SlurmInfo.cluster_names}
         return allocations
 
     def build_output_string(self, account, **allocation):
@@ -52,9 +54,9 @@ class CrcSus(BaseParser, CommonSettings):
         """
 
         output_lines = ['Account {}'.format(account)]
-        cluster_name_length = max(len(cluster) for cluster in self.cluster_names)
+        cluster_name_length = max(len(cluster) for cluster in SlurmInfo.cluster_names)
 
-        for cluster in self.cluster_names:
+        for cluster in SlurmInfo.cluster_names:
             cluster_name = cluster.rjust(cluster_name_length)
             output_lines.append(' cluster {} has {:,} SUs'.format(cluster_name, allocation.get(cluster, 0)))
 
