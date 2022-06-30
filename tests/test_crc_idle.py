@@ -4,6 +4,8 @@ from unittest import TestCase
 
 CrcIdle = __import__('crc-idle').CrcIdle
 
+from _utils import SlurmInfo
+
 
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
@@ -39,7 +41,7 @@ class ArgumentParsing(TestCase):
         args, unknown_args = app.parse_known_args([])
 
         self.assertFalse(unknown_args)
-        for cluster in app.cluster_names:
+        for cluster in SlurmInfo.cluster_names:
             self.assertFalse(getattr(args, cluster))
 
 
@@ -53,7 +55,7 @@ class ClusterList(TestCase):
         args, unknown_args = app.parse_known_args(['-p', 'partition1'])
 
         returned_clusters = app.get_cluster_list(args)
-        self.assertCountEqual(app.cluster_names, returned_clusters)
+        self.assertCountEqual(SlurmInfo.cluster_names, returned_clusters)
 
     def test_returns_arg_values(self):
         """Test returned cluster names match the clusters specified in the parsed arguments"""
