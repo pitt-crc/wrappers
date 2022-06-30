@@ -69,7 +69,7 @@ class AbstractFilesystemUsage(object):
         base_2_power = int(math.floor(math.log(size, 1024)))
         conversion_factor = math.pow(1024, base_2_power)
         final_size = round(size / conversion_factor, 2)
-        return '{:.1f} {}'.format(final_size, size_units[base_2_power])
+        return '{} {}'.format(final_size, size_units[base_2_power])
 
 
 class GenericUsage(AbstractFilesystemUsage):
