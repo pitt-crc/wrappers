@@ -42,7 +42,8 @@ class CrcSus(BaseParser):
         allocations = {cluster: db_record[cluster] for cluster in SlurmInfo.cluster_names}
         return allocations
 
-    def build_output_string(self, account, **allocation):
+    @staticmethod
+    def build_output_string(account, **allocation):
         """Build a string describing an account's service unit allocation
 
         Args:

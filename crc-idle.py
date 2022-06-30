@@ -28,7 +28,8 @@ class CrcIdle(BaseParser):
         self.add_argument('-d', '--htc', action='store_true', help='show idle resources on the htc cluster')
         self.add_argument('-p', '--partition', nargs='+', help='Specify non-default partition')
 
-    def get_cluster_list(self, args):
+    @staticmethod
+    def get_cluster_list(args):
         """Return a list of clusters specified in the command line arguments
 
         Returns a tuple of clusters specified by command line arguments. If no
