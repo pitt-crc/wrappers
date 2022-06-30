@@ -3,18 +3,7 @@
 import abc
 import os
 import sys
-import termios
-import tty
 from argparse import ArgumentParser, HelpFormatter
-from shlex import split
-from subprocess import Popen, PIPE
-
-
-class CommonSettings(object):
-    """Parent class for adding common settings to a command line application"""
-
-    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
-    cluster_names = ('smp', 'gpu', 'mpi', 'htc')
 
 
 class BaseParser(ArgumentParser):
@@ -30,44 +19,23 @@ class BaseParser(ArgumentParser):
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
     def _get_formatter(self):
+        """Returns a ``HelpFormatter`` object for formatting application help text"""
+
         return HelpFormatter(self.prog, max_help_position=self.help_width)
 
-    # TODO: Merge this into app_version once all apps are using the base parser
-    @staticmethod
-    def get_semantic_version():
-        """Return the semantic version number of the application"""
+    @property
+    def app_version(self):
+        """Return the application name and version as a string"""
 
         # Look for `version.txt` in the same directory as this file
         file_directory = os.path.dirname(os.path.abspath(__file__))
         version_file = os.path.join(file_directory, 'version.txt')
 
         with open(version_file) as version_file:
-            return version_file.readline().strip()
+            semantic_version = version_file.readline().strip()
 
-    @property
-    def app_version(self):
-        """Return the application name and version as a string"""
-
-        return '{} version {}'.format(self.prog, self.get_semantic_version())
-
-    @staticmethod
-    def readchar():
-        """Read a character from the command line"""
-
-        # Get the current settings of the standard input file descriptor
-        file_descriptor = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(file_descriptor)
-
-        try:
-            tty.setraw(sys.stdin.fileno())
-            character = sys.stdin.read(1)
-
-        finally:
-            # Restore the original standard input settings
-            termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
-
-        print('')
-        return character
+        program_name = os.path.splitext(self.prog)[0]
+        return '{} version {}'.format(program_name, semantic_version)
 
     @abc.abstractmethod
     def app_logic(self, args):
@@ -78,26 +46,6 @@ class BaseParser(ArgumentParser):
         """
 
         raise NotImplementedError
-
-    @staticmethod
-    def run_command(command, include_err=False):
-        """Run a command in a dedicated shell
-
-        Args:
-            command: The command to execute as a string
-            include_err: Include output to stderr in the returned values
-
-        Returns:
-            The output to stdout and (optionally) stderr
-        """
-
-        command_list = split(command)
-        process = Popen(command_list, stdout=PIPE, stderr=PIPE)
-        std_out, std_err = process.communicate()
-        if include_err:
-            return std_out.strip(), std_err.strip()
-
-        return std_out.strip()
 
     def error(self, message):
         """Print the error message to STDOUT and exit

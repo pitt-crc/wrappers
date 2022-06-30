@@ -2,6 +2,8 @@
 
 from unittest import TestCase
 
+from _utils import SlurmInfo
+
 CrcIdle = __import__('crc-idle').CrcIdle
 
 
@@ -39,7 +41,7 @@ class ArgumentParsing(TestCase):
         args, unknown_args = app.parse_known_args([])
 
         self.assertFalse(unknown_args)
-        for cluster in app.cluster_names:
+        for cluster in SlurmInfo.cluster_names:
             self.assertFalse(getattr(args, cluster))
 
 
@@ -51,14 +53,16 @@ class ClusterList(TestCase):
 
         app = CrcIdle()
         args, unknown_args = app.parse_known_args(['-p', 'partition1'])
+        self.assertFalse(unknown_args)
 
         returned_clusters = app.get_cluster_list(args)
-        self.assertCountEqual(app.cluster_names, returned_clusters)
+        self.assertCountEqual(SlurmInfo.cluster_names, returned_clusters)
 
     def test_returns_arg_values(self):
         """Test returned cluster names match the clusters specified in the parsed arguments"""
         app = CrcIdle()
         args, unknown_args = app.parse_known_args(['-s', '--mpi'])
+        self.assertFalse(unknown_args)
 
         returned_clusters = app.get_cluster_list(args)
         self.assertCountEqual(['smp', 'mpi'], returned_clusters)

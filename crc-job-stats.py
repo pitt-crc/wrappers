@@ -4,6 +4,7 @@
 from os import environ
 
 from _base_parser import BaseParser
+from _utils import Shell
 
 
 class CrcJobStats(BaseParser):
@@ -24,7 +25,8 @@ class CrcJobStats(BaseParser):
 
         # Get job information from the ``scontrol`` utility
         # Slurm settings are returned as "key=value" pairs seperated by whitespace
-        output = self.run_command(['scontrol', '-M', self.cluster, 'show', 'job', self.job_id])
+        job_info_command = 'scontrol -M {} show job {}'.format(self.cluster, self.job_id)
+        output = Shell.run_command(job_info_command)
         split_output = output.strip().split()
 
         # Some slurm settings are file paths which may contain whitespace
@@ -46,8 +48,7 @@ class CrcJobStats(BaseParser):
 
         return job_info
 
-    @staticmethod
-    def pretty_print_job_info(job_info):
+    def pretty_print_job_info(self, job_info):
         """Print information about a running job in a readable format
 
         Args:
@@ -57,7 +58,7 @@ class CrcJobStats(BaseParser):
         width = 78
         horizontal_border = '=' * width
         custom_slurm_command = '`sacct -M {} -j {} -S {} -E {}`'.format(
-            environ['SLURM_CLUSTER_NAME'], job_info['JobId'], job_info['SubmitTime'], job_info['EndTime'])
+            self.cluster, job_info['JobId'], job_info['SubmitTime'], job_info['EndTime'])
 
         # Print the output header
         print(horizontal_border)

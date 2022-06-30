@@ -1,10 +1,11 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line application for listing idle Slurm resources"""
 
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import Shell, SlurmInfo
 
 
-class CrcIdle(BaseParser, CommonSettings):
+class CrcIdle(BaseParser):
     """Command line application for listing idle Slurm resources"""
 
     # The type of resource available on a cluster
@@ -27,7 +28,8 @@ class CrcIdle(BaseParser, CommonSettings):
         self.add_argument('-d', '--htc', action='store_true', help='show idle resources on the htc cluster')
         self.add_argument('-p', '--partition', nargs='+', help='Specify non-default partition')
 
-    def get_cluster_list(self, args):
+    @staticmethod
+    def get_cluster_list(args):
         """Return a list of clusters specified in the command line arguments
 
         Returns a tuple of clusters specified by command line arguments. If no
@@ -40,13 +42,14 @@ class CrcIdle(BaseParser, CommonSettings):
             A tuple fo cluster names
         """
 
-        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), self.cluster_names))
+        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), SlurmInfo.cluster_names))
 
         # Default to returning all clusters
-        return argument_clusters or self.cluster_names
+        return argument_clusters or SlurmInfo.cluster_names
 
-    def _idle_cpu_resources(self, cluster, partition):
-        """Return the idle CPU resources on a given cluster partition 
+    @staticmethod
+    def _idle_cpu_resources(cluster, partition):
+        """Return the idle CPU resources on a given cluster partition
 
         Args:
             cluster: The cluster to print a summary for
@@ -58,7 +61,7 @@ class CrcIdle(BaseParser, CommonSettings):
 
         # Use `sinfo` command to determine the status of each node in the given partition
         command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
-        stdout = self.run_command(command)
+        stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
@@ -72,7 +75,8 @@ class CrcIdle(BaseParser, CommonSettings):
 
         return return_dict
 
-    def _idle_gpu_resources(self, cluster, partition):
+    @staticmethod
+    def _idle_gpu_resources(cluster, partition):
         """Return the idle GPU resources on a given cluster partition
            
            If the host node is in 'drain' state, the GPUs are reported as unavailable.
@@ -87,7 +91,7 @@ class CrcIdle(BaseParser, CommonSettings):
 
         # Use `sinfo` command to determine the status of each node in the given partition
         command = "sinfo -h -M {0} -p {1} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '".format(cluster, partition)
-        stdout = self.run_command(command)
+        stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
@@ -160,14 +164,7 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         for cluster in self.get_cluster_list(args):
-            if hasattr('self','cluster_partitions'):
-                partitions_to_print = self.cluster_partitions[cluster]
-            else:
-                partitions_to_print = args.partition
-                if not partitions_to_print:
-                    print('Please provide a partition')
-                    return
-
+            partitions_to_print = args.partition or SlurmInfo.get_partition_names(cluster)
             for partition in partitions_to_print:
                 self.print_partition_summary(cluster, partition)
 

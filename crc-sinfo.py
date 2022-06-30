@@ -2,6 +2,7 @@
 """A simple wrapper around the Slurm ``sinfo`` command"""
 
 from _base_parser import BaseParser
+from _utils import Shell
 
 
 class CrcSinfo(BaseParser):
@@ -14,7 +15,7 @@ class CrcSinfo(BaseParser):
             args: Parsed command line arguments
         """
 
-        print(self.run_command("sinfo -M all"))
+        print(Shell.run_command("sinfo -M all"))
 
 
 if __name__ == '__main__':
