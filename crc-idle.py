@@ -46,7 +46,7 @@ class CrcIdle(BaseParser, CommonSettings):
         return argument_clusters or self.cluster_names
 
     def _idle_cpu_resources(self, cluster, partition):
-        """Return the idle CPU resources on a given cluster partition. 
+        """Return the idle CPU resources on a given cluster partition 
 
         Args:
             cluster: The cluster to print a summary for
@@ -65,7 +65,6 @@ class CrcIdle(BaseParser, CommonSettings):
         return_dict = dict()
         for node_info in slurm_data:
             node_name, resource_data = node_info.split(',')
-
             # Return values include: allocated, idle, other, total
             _, idle, _, _ = [int(x) for x in resource_data.split('/')]
             
@@ -74,7 +73,8 @@ class CrcIdle(BaseParser, CommonSettings):
         return return_dict
 
     def _idle_gpu_resources(self, cluster, partition):
-        """Return the idle GPU resources on a given cluster partition.
+        """Return the idle GPU resources on a given cluster partition
+           
            If the host node is in 'drain' state, the GPUs are reported as unavailable.
 
         Args:
@@ -86,7 +86,6 @@ class CrcIdle(BaseParser, CommonSettings):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-       # command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster, partition)
         command = "sinfo -h -M {0} -p {1} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '".format(cluster, partition)
         stdout = self.run_command(command)
         slurm_data = stdout.strip().split()
@@ -97,7 +96,7 @@ class CrcIdle(BaseParser, CommonSettings):
             # node_name, total, allocated, node state
             _, total, allocated, state = node_info.split('_')
             
-            #If the node is in a downed state, report 0 resource availability. 
+            # If the node is in a downed state, report 0 resource availability.
             if state in ['drain']:
                 idle = 0
             else:
