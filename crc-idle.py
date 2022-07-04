@@ -69,8 +69,7 @@ class CrcIdle(BaseParser):
         for node_info in slurm_data:
             node_name, resource_data = node_info.split(',')
             # Return values include: allocated, idle, other, total
-            _, idle, _, _ = [int(x) for x in resource_data.split('/')]
-            
+            _, idle, _, _ = [int(x) for x in resource_data.split('/')] 
             return_dict[idle] = return_dict.setdefault(idle,0) + 1
 
         return return_dict
