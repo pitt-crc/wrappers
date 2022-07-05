@@ -179,8 +179,8 @@ class IhomeUsage(AbstractFilesystemUsage):
         """
 
         # Get the information from Isilon
-        with open("/ihome/crc/scripts/ihome_quota.json", "r") as f:
-            data = json.load(f)
+        with open("/ihome/crc/scripts/ihome_quota.json", "r") as infile:
+            data = json.load(infile)
 
         persona = "UID:{}".format(uid)
         for item in data["quotas"]:
