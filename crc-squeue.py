@@ -2,6 +2,7 @@
 """A simple wrapper around the Slurm ``squeue`` command"""
 
 from os import environ
+from time import sleep
 
 from _base_parser import BaseParser
 from _utils import Shell
@@ -36,15 +37,11 @@ class CrcSqueue(BaseParser):
 
         # Variables for building shell commands
         user = "-u {0}".format(environ['USER'])
-        watch = "-i {0}".format(self.watch_frequency)
 
         # Build the base command
         command_options = ["squeue -M all"]
         if not args.all:
             command_options.append(user)
-
-        if args.watch:
-            command_options.append(watch)
 
         # Add on the necessary output format
         if args.all and args.start:
@@ -69,7 +66,12 @@ class CrcSqueue(BaseParser):
         """
 
         command = self.build_slurm_command(args)
+
         print(Shell.run_command(command))
+        while args.watch:
+            sleep(self.watch_frequency)
+            print()
+            print(Shell.run_command(command))
 
 
 if __name__ == '__main__':
