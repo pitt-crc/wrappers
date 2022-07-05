@@ -68,5 +68,5 @@ class SlurmInfo:
         """
 
         output = Shell.run_command("scontrol -M {} show partition".format(cluster_name))
-        regex_pattern = re.compile(r'PartitionName=(\w*)')
+        regex_pattern = re.compile(r'PartitionName=(.*)\n')
         return tuple(re.findall(regex_pattern, output))
