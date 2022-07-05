@@ -4,7 +4,7 @@ from unittest import TestCase
 
 from _utils import SlurmInfo
 
-CrcScontrol = __import__('crc-scontrol').CrcScontrol
+CrcShowConfig = __import__('crc-show-config').CrcShowConfig
 
 
 class ArgumentParsing(TestCase):
@@ -13,7 +13,7 @@ class ArgumentParsing(TestCase):
     def test_clusters_are_valid_arguments(self):
         """Test clusters defined in common settings are valid values for the ``--cluster`` argument"""
 
-        app = CrcScontrol()
+        app = CrcShowConfig()
 
         for cluster in SlurmInfo.cluster_names:
             known_args, unknown_args = app.parse_known_args(['--cluster', cluster])
