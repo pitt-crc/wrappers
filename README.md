@@ -16,4 +16,4 @@ git fetch
 git checkout tags/[RELEASETAG]
 ```
 
-If you need to rollback to an earlier version, use the same `git` commands lsited above but with the appropraite tag. 
+If you need to roll back to an earlier version, use the same `git` commands listed above but with the appropriate tag. 

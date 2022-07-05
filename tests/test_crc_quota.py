@@ -6,7 +6,7 @@ AbstractQuota = __import__('crc-quota').AbstractFilesystemUsage
 
 
 class BytesUnitConversion(unittest.TestCase):
-    """Test the conversion of bytes into human readable units"""
+    """Test the conversion of bytes into human-readable units"""
 
     def test_zero_bytes(self):
         """Test the conversion of zero bytes"""

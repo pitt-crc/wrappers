@@ -3,17 +3,22 @@
 
 import dataset
 
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import Shell
 
 
-class CrcProposalEnd(BaseParser, CommonSettings):
+class CrcProposalEnd(BaseParser):
     """Command line application for printing an account's proposal end date"""
+
+    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
     def __init__(self):
         """Define arguments for the command line interface"""
 
         super(CrcProposalEnd, self).__init__()
-        self.add_argument('account', help='the Slurm account')
+
+        default_group = Shell.run_command("id -gn")
+        self.add_argument('account', default=default_group, nargs='?', help='the Slurm account')
 
     def get_proposal_end_date(self, account):
         """Get the proposal end date for a given account

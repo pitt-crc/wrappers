@@ -1,190 +1,164 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
-"""crc-idle.py -- Find empty cores and GPUs
-Usage:
-    crc-idle.py [-hv]
-    crc-idle.py [-hv] (-s | -g | -m | -i | -d) [-p <partition>]
+"""Command line application for listing idle Slurm resources"""
 
-Positional Arguments:
-    -s --smp                        Interactive job on smp cluster
-    -g --gpu                        Interactive job on gpu cluster
-    -m --mpi                        Interactive job on mpi cluster
-    -d --htc                        Interactive job on htc cluster
-
-Options:
-    -h --help                       Print this screen and exit
-    -v --version                    Print the version of crc-idle.py
-    -p --partition <partition>      Use a specific partition
-"""
-
-from os import path
-from shlex import split
-from subprocess import Popen, PIPE
-
-from docopt import docopt
-
-from _base_parser import BaseParser, CommonSettings
-
-__version__ = BaseParser.get_semantic_version()
-__app_name__ = path.basename(__file__)
+from _base_parser import BaseParser
+from _utils import Shell, SlurmInfo
 
 
-def run_command(command):
-    sp = Popen(split(command), stdout=PIPE, stderr=PIPE)
-    return sp.communicate()[0].strip().split()
+class CrcIdle(BaseParser):
+    """Command line application for listing idle Slurm resources"""
 
+    # The type of resource available on a cluster
+    # Either ``cores`` or ``GPUs`` depending on the cluster type
+    cluster_types = {
+        'smp': 'cores',
+        'gpu': 'GPUs',
+        'mpi': 'cores',
+        'htc': 'cores'
+    }
 
-def gpu_based_empty(clus, pars):
-    if not isinstance(pars, list):
-        pars = [pars]
-    for par in pars:
-        # Dictionaries to populate
-        gpu_counts = {}
-        used_counts = {}
+    def __init__(self):
+        """Define arguments for the command line interface"""
 
-        # Generate the GPU counts
-        out = run_command("sinfo -M {0} -p {1} -N -o %N,%G".format(clus, par))
-        for line in out[3:]:
-            name, gpus = line.split(",")
-            gpu_counts[name] = int(gpus.split("(")[0].split(":")[-1])
+        super(CrcIdle, self).__init__()
+        self.add_argument('-s', '--smp', action='store_true', help='show idle resources on the smp cluster')
+        self.add_argument('-g', '--gpu', action='store_true', help='show idle resources on the gpu cluster')
+        self.add_argument('-m', '--mpi', action='store_true', help='show idle resources on the mpi cluster')
+        self.add_argument('-i', '--invest', action='store_true', help='show idle resources on the invest cluster')
+        self.add_argument('-d', '--htc', action='store_true', help='show idle resources on the htc cluster')
+        self.add_argument('-p', '--partition', nargs='+', help='Specify non-default partition')
 
-        # Generate the used counts
-        out = run_command("squeue -M gpu -p {0} -o %N,%b -t RUNNING".format(par))
-        for line in out[3:]:
-            sp = line.split(",")
-            nodes = sp[:-1]
-            count = int(sp[-1].split(":")[-1])
+    @staticmethod
+    def get_cluster_list(args):
+        """Return a list of clusters specified in the command line arguments
 
-            # There is potentially lists of nodes, e.g. gpu-stage[03-04]
-            # -> we can use scontrol show hostname to get this
-            fix_nodes = []
-            for node in nodes:
-                if "[" in node:
-                    append_em = run_command("scontrol show hostname {0}".format(node))
-                    for add in append_em:
-                        fix_nodes.append(add)
-                else:
-                    fix_nodes.append(node)
-            nodes = fix_nodes
+        Returns a tuple of clusters specified by command line arguments. If no
+        clusters were specified, then return a tuple of all cluster names.
 
-            for node in nodes:
-                try:
-                    used_counts[node] += count
-                except:
-                    used_counts[node] = count
+        Args:
+            args: Parsed command line arguments
 
-        # Determine idle GPUs for each machine
-        idle_gpus = {}
-        for node in gpu_counts.keys():
-            try:
-                idle_gpus[node] = gpu_counts[node] - used_counts[node]
-            except:
-                idle_gpus[node] = gpu_counts[node]
+        Returns:
+            A tuple fo cluster names
+        """
 
-        # Reduce idle_gpus into counts
-        counts = {}
-        counts[0] = 0
-        counts[1] = 0
-        counts[2] = 0
-        counts[3] = 0
-        counts[4] = 0
-        for v in idle_gpus.values():
-            counts[v] += 1
+        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), SlurmInfo.cluster_names))
 
-        # Print everything out
-        clus_par_str = "Cluster: {0}, Partition: {1}".format(clus, par)
-        print(clus_par_str)
-        print("=" * len(clus_par_str))
-        if counts[0] == len(idle_gpus):
-            print(" No idle GPUs")
+        # Default to returning all clusters
+        return argument_clusters or SlurmInfo.cluster_names
+
+    @staticmethod
+    def _idle_cpu_resources(cluster, partition):
+        """Return the idle CPU resources on a given cluster partition
+
+        Args:
+            cluster: The cluster to print a summary for
+            partition: The partition in the parent cluster
+
+        Returns:
+            A dictionary mapping idle resources to number of nodes
+        """
+
+        # Use `sinfo` command to determine the status of each node in the given partition
+        command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
+        stdout = Shell.run_command(command)
+        slurm_data = stdout.strip().split()
+
+        # Count the number of nodes having a given number of idle cores/GPUs
+        return_dict = dict()
+        for node_info in slurm_data:
+            node_name, resource_data = node_info.split(',')
+            # Return values include: allocated, idle, other, total
+            _, idle, _, _ = [int(x) for x in resource_data.split('/')]
+            return_dict[idle] += 1
+
+        return return_dict
+
+    @staticmethod
+    def _idle_gpu_resources(cluster, partition):
+        """Return the idle GPU resources on a given cluster partition
+
+        Args:
+            cluster: The cluster to print a summary for
+            partition: The partition in the parent cluster
+
+        Returns:
+            A dictionary mapping idle resources to number of nodes
+        """
+
+        # Use `sinfo` command to determine the status of each node in the given partition
+        command = 'sinfo -h -M {0} -p {1} -N --Format=NodeList:_,gres:5,gresUsed:12'.format(cluster, partition)
+        stdout = Shell.run_command(command)
+        slurm_data = stdout.strip().split()
+
+        # Count the number of nodes having a given number of idle cores/GPUs
+        return_dict = dict()
+        for node_info in slurm_data:
+            # node_name, total, allocated, extra empty character array
+            _, total, allocated, _ = node_info.split('_')
+            allocated = int(allocated[-1:])
+            total = int(total[-1:])
+            idle = total - allocated
+            return_dict[idle] += 1
+
+        return return_dict
+
+    def count_idle_resources(self, cluster, partition):
+        """Determine the number of idle resources on a given cluster partition
+
+        The returned dictionary maps the number of idle resources (e.g., cores)
+        to the number of nodes in the partition having that many resources idle.
+
+        Args:
+            cluster: The cluster to print a summary for
+            partition: The partition in the parent cluster
+
+        Returns:
+            A dictionary mapping idle resources to number of nodes
+        """
+
+        if self.cluster_types[cluster] == 'GPUs':
+            return self._idle_gpu_resources(cluster, partition)
+
         else:
-            for x in range(1, 5):
-                if counts[x] > 0:
-                    print("{0:3d} nodes w/ {1:3d} idle GPUs".format(counts[x], x))
+            return self._idle_cpu_resources(cluster, partition)
+
+    def print_partition_summary(self, cluster, partition):
+        """Print a summary of idle resources in a single partition
+
+        Args:
+            cluster: The cluster to print a summary for
+            partition: The partition in the parent cluster
+        """
+
+        resource_allocation = self.count_idle_resources(cluster, partition)
+
+        output_width = 30
+        header = 'Cluster: {0}, Partition: {1}'.format(cluster, partition)
+        unit = self.cluster_types[cluster]
+
+        print(header.center(output_width))
+        print('=' * output_width)
+        for idle, nodes in sorted(resource_allocation.items()):
+            print('{0:3d} nodes w/ {1:3d} idle {2}'.format(nodes, idle, unit))
+
+        if not resource_allocation:
+            print(' No idle resources')
+
+        print('')
+
+    def app_logic(self, args):
+        """Logic to evaluate when executing the application
+
+        Args:
+            args: Parsed command line arguments
+        """
+
+        for cluster in self.get_cluster_list(args):
+            partitions_to_print = args.partition or SlurmInfo.get_partition_names(cluster)
+            for partition in partitions_to_print:
+                self.print_partition_summary(cluster, partition)
 
 
-def cpu_based_empty_cores(clus, pars):
-    if not isinstance(pars, list):
-        pars = [pars]
-
-    for par in pars:
-        core_dict = {}
-        out = run_command("sinfo -M {0} -p {1} -N -o %N,%C".format(clus, par))
-        # Generate the core_dict
-        for line in out[3:]:
-            name, cores = line.split(",")
-            _, idle, _, total = [int(x) for x in cores.split("/")]
-            if idle != 0 and (idle in core_dict.keys()):
-                core_dict[idle] += 1
-            elif idle != 0:
-                core_dict[idle] = 1
-
-        # Print out the core_dict
-        clus_par_str = "Cluster: {0}, Partition: {1}".format(clus, par)
-        print(clus_par_str)
-        print("=" * len(clus_par_str))
-        if len(core_dict.keys()):
-            for idle in sorted(core_dict.keys()):
-                print("{0:3d} nodes w/ {1:3d} idle cores".format(core_dict[idle], idle))
-        else:
-            print(" No idle cores")
-
-
-def cpu_logic(cluster, partition):
-    if partition:
-        cpu_based_empty_cores(cluster, partition)
-    else:
-        cpu_based_empty_cores(cluster, CLUSTERS[cluster])
-
-
-arguments = docopt(__doc__, version='{} version {}'.format(__app_name__, __version__))
-
-CLUSTERS = CommonSettings.cluster_partitions
-
-# Arguments Check
-# ===============
-# 1. If no clusters specified, print all clusters
-if not any(
-        [arguments["--smp"], arguments["--gpu"], arguments["--mpi"], arguments["--htc"]]
-):
-    arguments["--smp"] = True
-    arguments["--gpu"] = True
-    arguments["--mpi"] = True
-    arguments["--htc"] = True
-
-# 2. If partition is specified, make sure it exists for the cluster
-if arguments["--partition"]:
-    partition_exists = False
-    arguments["--cluster"] = None
-    if arguments["--smp"] and arguments["--partition"] in CLUSTERS["smp"]:
-        partition_exists = True
-        arguments["--cluster"] = "smp"
-    elif arguments["--gpu"] and arguments["--partition"] in CLUSTERS["gpu"]:
-        partition_exists = True
-        arguments["--cluster"] = "gpu"
-    elif arguments["--mpi"] and arguments["--partition"] in CLUSTERS["mpi"]:
-        partition_exists = True
-        arguments["--cluster"] = "mpi"
-    elif arguments["--htc"] and arguments["--partition"] in CLUSTERS["htc"]:
-        partition_exists = True
-        arguments["--cluster"] = "htc"
-
-    if arguments["--cluster"] and not partition_exists:
-        exit("Error: Partition {} doesnt exist for cluster {}").format(
-            arguments["--partition"], arguments["--cluster"]
-        )
-
-if arguments["--smp"]:
-    cpu_logic("smp", arguments["--partition"])
-
-if arguments["--gpu"]:
-    arguments["--cluster"] = "gpu"
-    if arguments["--partition"]:
-        gpu_based_empty(arguments["--cluster"], arguments["--partition"])
-    else:
-        gpu_based_empty(arguments["--cluster"], CLUSTERS[arguments["--cluster"]])
-
-if arguments["--mpi"]:
-    cpu_logic("mpi", arguments["--partition"])
-
-if arguments["--htc"]:
-    cpu_logic("htc", arguments["--partition"])
+if __name__ == '__main__':
+    CrcIdle().execute()

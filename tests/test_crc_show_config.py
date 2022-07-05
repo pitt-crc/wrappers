@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from _base_parser import CommonSettings
+from _utils import SlurmInfo
 
 CrcShowConfig = __import__('crc-show-config').CrcShowConfig
 
@@ -15,7 +15,7 @@ class ArgumentParsing(TestCase):
 
         app = CrcShowConfig()
 
-        for cluster in CommonSettings.cluster_partitions:
+        for cluster in SlurmInfo.cluster_names:
             known_args, unknown_args = app.parse_known_args(['--cluster', cluster])
             self.assertEqual(cluster, known_args.cluster)
             self.assertFalse(unknown_args)

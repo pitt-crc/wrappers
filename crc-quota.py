@@ -6,6 +6,7 @@ import math
 import sys
 
 from _base_parser import BaseParser
+from _utils import Shell
 
 
 class AbstractFilesystemUsage(object):
@@ -64,10 +65,11 @@ class AbstractFilesystemUsage(object):
             return '0.0 B'
 
         size_units = ('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB')
-        i = int(math.floor(math.log(size, 1024)))
-        p = math.pow(1024, i)
-        s = round(size / p, 2)
-        return '%s %s' % (s, size_units[i])
+
+        base_2_power = int(math.floor(math.log(size, 1024)))
+        conversion_factor = math.pow(1024, base_2_power)
+        final_size = round(size / conversion_factor, 2)
+        return '{} {}'.format(final_size, size_units[base_2_power])
 
 
 class GenericUsage(AbstractFilesystemUsage):
@@ -86,7 +88,7 @@ class GenericUsage(AbstractFilesystemUsage):
         """
 
         df_command = "df {}".format(path)
-        quota_info_list = BaseParser.run_command(df_command).splitlines()
+        quota_info_list = Shell.run_command(df_command).splitlines()
         if not quota_info_list:
             return None
 
@@ -132,12 +134,12 @@ class BeegfsUsage(AbstractFilesystemUsage):
             An instance of the parent class
         """
 
-        allocation_out = BaseParser.run_command("df /bgfs/{}".format(group))
+        allocation_out = Shell.run_command("df /bgfs/{}".format(group))
         if len(allocation_out) == 0:
             return None
 
         quota_info_cmd = "beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group)
-        quota_out = BaseParser.run_command(quota_info_cmd)
+        quota_out = Shell.run_command(quota_info_cmd)
         result = quota_out.splitlines()[1].split(',')
         return cls(name, int(result[2]), int(result[3]), int(result[4]), result[5])
 
@@ -198,7 +200,8 @@ class CrcQuota(BaseParser):
         self.add_argument('-u', '--user', default=None, help='username of quota to query')
         self.add_argument('--verbose', action='store_true', help='verbose quota output')
 
-    def get_user_info(self, username=None):
+    @staticmethod
+    def get_user_info(username=None):
         """Return system IDs for the current user
 
         Args:
@@ -210,14 +213,14 @@ class CrcQuota(BaseParser):
 
         username = username or ''
         check_user_cmd = "id -un {}".format(username)
-        user, err = self.run_command(check_user_cmd, include_err=True)
+        user, err = Shell.run_command(check_user_cmd, include_err=True)
 
         if err:
             sys.exit("Could not find quota information for user {}".format(username))
 
-        group = self.run_command("id -gn {}".format(username))
-        uid = self.run_command("id -u {}".format(username))
-        gid = self.run_command("id -g {}".format(username))
+        group = Shell.run_command("id -gn {}".format(username))
+        uid = Shell.run_command("id -u {}".format(username))
+        gid = Shell.run_command("id -g {}".format(username))
 
         return user, uid, group, gid
 

@@ -2,13 +2,13 @@
 """A simple wrapper around the Slurm ``scancel`` command"""
 
 from os import environ
-from subprocess import Popen, PIPE
 from sys import stdout
 
-from _base_parser import BaseParser, CommonSettings
+from _base_parser import BaseParser
+from _utils import Shell, SlurmInfo
 
 
-class CrcScancel(BaseParser, CommonSettings):
+class CrcScancel(BaseParser):
     """Command line application for canceling the user's running slurm jobs"""
 
     user = environ['USER']
@@ -31,7 +31,7 @@ class CrcScancel(BaseParser, CommonSettings):
             job_id: The ID of the slurm job to cancel
         """
 
-        Popen(['scancel', '-M', cluster, job_id])
+        Shell.run_command('scancel -M {} {}'.format(cluster, job_id))
 
     def get_cluster_for_job_id(self, job_id):
         """Return the name of the cluster a slurm job is running on
@@ -44,13 +44,10 @@ class CrcScancel(BaseParser, CommonSettings):
         # However, that approach fails for scavenger jobs. Instead, we iterate
         # over the clusters until we find the right one.
 
-        for cluster in self.cluster_partitions:
+        for cluster in SlurmInfo.cluster_names:
             # Fetch a list of running slurm jobs matching the username and job id
-            command = ['squeue', '-h', '-u', self.user, '-j', job_id, '-M', cluster]
-            process = Popen(command, stdout=PIPE, stderr=PIPE)
-            command_out, _ = process.communicate()
-
-            if job_id in command_out:
+            command = 'squeue -h -u {} -j job_id -M {}'.format(self.user, cluster)
+            if job_id in Shell.run_command(command):
                 return cluster
 
         return None
@@ -67,7 +64,7 @@ class CrcScancel(BaseParser, CommonSettings):
             self.error('Could not find job {} running on known clusters'.format(args.job_id))
 
         stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(args.job_id, cluster))
-        if self.readchar().lower() == 'y':
+        if Shell.readchar().lower() == 'y':
             self.cancel_job_on_cluster(cluster, args.job_id)
 
 
