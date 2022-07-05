@@ -197,7 +197,7 @@ class CrcQuota(BaseParser):
         """Define arguments for the command line interface"""
 
         super(CrcQuota, self).__init__()
-        self.add_argument('-u', '--user', default=None, help='username of quota to query')
+        self.add_argument('user', default=None, nargs='?', help='username of quota to query')
         self.add_argument('--verbose', action='store_true', help='verbose quota output')
 
     @staticmethod
