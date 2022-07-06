@@ -16,7 +16,7 @@ class CrcShowConfig(BaseParser):
         self.add_argument(
             '-c', '--cluster',
             required=True,
-            choices=SlurmInfo.cluster_names,
+            choices=SlurmInfo.get_cluster_names(),
             help='print partitions for the given cluster')
 
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')

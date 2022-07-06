@@ -28,8 +28,6 @@ class OutputStringFormatting(TestCase):
         expected_string = (
             'Account sam\n'
             ' cluster smp has 10 SUs\n'
-            ' cluster gpu has 0 SUs\n'
-            ' cluster mpi has 0 SUs\n'
             ' cluster htc has 20 SUs'
         )
 

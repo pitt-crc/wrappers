@@ -23,22 +23,6 @@ class ArgumentParsing(TestCase):
 class SlurmCommandCreation(TestCase):
     """Test the creation of ``squeue`` commands based on command line arguments"""
 
-    def test_watch_option(self):
-        """Test the ``watch`` argument enables ``-i`` in the piped slurm command"""
-
-        app = CrcSqueue()
-        expected_slurm_argument = "-i {0}".format(CrcSqueue.watch_frequency)
-
-        # The application should default to showing information for the current user
-        args, _ = app.parse_known_args([''])
-        slurm_command = app.build_slurm_command(args)
-        self.assertNotIn(expected_slurm_argument, slurm_command, '-i flag was added slurm command')
-
-        # Make sure user option is disabled when ``--all`` argument is given
-        args, _ = app.parse_known_args(['--watch'])
-        slurm_command = app.build_slurm_command(args)
-        self.assertIn(expected_slurm_argument, slurm_command, '-i flag is missing from slurm command')
-
     def test_all_option(self):
         """Test the ``--all`` argument disables ``-u`` in the piped slurm command"""
 

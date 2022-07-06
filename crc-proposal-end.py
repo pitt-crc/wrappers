@@ -32,7 +32,7 @@ class CrcProposalEnd(BaseParser):
 
         db_record = table.find_one(account=account)
         if db_record is None:
-            self.error("ERROR: The account: {0} doesn't appear to exist".format(account))
+            self.error("The account: {0} doesn't appear to exist".format(account))
 
         return db_record['end_date']
 

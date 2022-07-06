@@ -54,19 +54,57 @@ class Shell:
 class SlurmInfo:
     """Class for fetching Slurm config data"""
 
-    cluster_names = ('smp', 'gpu', 'mpi', 'htc')
+    ignore_clusters = {'azure'}
+    ignore_partitions = {
+        'pliu',
+        'jdurrant',
+        'kjordan',
+        'lchong',
+        'eschneider',
+        'eschneider-mpi',
+        'isenocak',
+        'isenocak-mpi',
+        'power9'
+    }
 
-    @staticmethod
-    def get_partition_names(cluster_name):
+    @classmethod
+    def get_cluster_names(cls, include_all_clusters=False):
+        """Return a tuple cluster names configured with slurm
+
+        Args:
+            include_all_clusters: Include clusters that are otherwise marked as ignored
+
+        Returns:
+            A set of cluster names
+        """
+
+        # Get cluster names using squeue to fetch all running jobs for a non-existent username
+        output = Shell.run_command('squeue -u fakeuser -M all')
+        regex_pattern = re.compile(r'CLUSTER: (.*)\n')
+        cluster_names = set(re.findall(regex_pattern, output))
+
+        if not include_all_clusters:
+            cluster_names -= cls.ignore_clusters
+
+        return cluster_names
+
+    @classmethod
+    def get_partition_names(cls, cluster_name, include_all_partitions=False):
         """Return a tuple of partition names associated with a given slurm cluster
 
         Args:
             cluster_name: The name of a slurm cluster
+            include_all_partitions: Include partitions that are otherwise marked as ignored
 
         Returns:
-            A tuple of partition names
+            A set of partition names
         """
 
         output = Shell.run_command("scontrol -M {} show partition".format(cluster_name))
-        regex_pattern = re.compile(r'PartitionName=(\w*)')
-        return tuple(re.findall(regex_pattern, output))
+        regex_pattern = re.compile(r'PartitionName=(.*)\n')
+        partition_names = set(re.findall(regex_pattern, output))
+
+        if not include_all_partitions:
+            partition_names -= cls.ignore_partitions
+
+        return partition_names
