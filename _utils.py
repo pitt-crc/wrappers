@@ -55,7 +55,17 @@ class SlurmInfo:
     """Class for fetching Slurm config data"""
 
     ignore_clusters = {'azure'}
-    ignore_partitions = {}
+    ignore_partitions = {
+        'pliu',
+        'jdurrant',
+        'kjordan',
+        'lchong',
+        'eschneider',
+        'eschneider-mpi',
+        'isenocak',
+        'isenocak-mpi',
+        'power9'
+    }
 
     @classmethod
     def get_cluster_names(cls, include_all_clusters=False):
@@ -95,6 +105,6 @@ class SlurmInfo:
         partition_names = set(re.findall(regex_pattern, output))
 
         if not include_all_partitions:
-            partition_names -= cls.ignore_clusters
+            partition_names -= cls.ignore_partitions
 
         return partition_names

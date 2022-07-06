@@ -16,6 +16,7 @@ class CrcIdle(BaseParser):
         'mpi': 'cores',
         'htc': 'cores'
     }
+    default_type = 'cores'
 
     def __init__(self):
         """Define arguments for the command line interface"""
@@ -127,7 +128,7 @@ class CrcIdle(BaseParser):
             A dictionary mapping idle resources to number of nodes
         """
 
-        if self.cluster_types[cluster] == 'GPUs':
+        if self.cluster_types.get(cluster, self.default_type) == 'GPUs':
             return self._idle_gpu_resources(cluster, partition)
 
         else:
@@ -145,7 +146,7 @@ class CrcIdle(BaseParser):
 
         output_width = 30
         header = 'Cluster: {0}, Partition: {1}'.format(cluster, partition)
-        unit = self.cluster_types[cluster]
+        unit = self.cluster_types.get(cluster, self.default_type)
 
         print(header)
         print('=' * output_width)
