@@ -1,6 +1,6 @@
 """Tests for the ``crc-scontrol`` application."""
 
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from _utils import SlurmInfo
 
