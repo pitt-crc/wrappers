@@ -46,11 +46,9 @@ class CrcScancel(BaseParser):
 
         for cluster in SlurmInfo.cluster_names:
             # Fetch a list of running slurm jobs matching the username and job id
-            command = 'squeue -h -u {} -j job_id -M {}'.format(self.user, cluster)
+            command = 'squeue -h -u {} -j {} -M {}'.format(self.user, job_id, cluster)
             if job_id in Shell.run_command(command):
                 return cluster
-
-        return None
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
