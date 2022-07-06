@@ -1,6 +1,8 @@
 #!/usr/bin/python -E
 """A simple wrapper around the Slurm ``srun`` command"""
 
+from os import system
+
 from _base_parser import BaseParser
 from _utils import Shell, SlurmInfo
 
@@ -140,7 +142,7 @@ class CrcInteractive(BaseParser):
             args: Parsed command line arguments
         """
 
-        if not any(getattr(args, cluster) for cluster in SlurmInfo.get_cluster_names(include_all_clusters=True)):
+        if not any(getattr(args, cluster) for cluster in SlurmInfo.get_cluster_names()):
             self.print_help()
             self.exit()
 
@@ -156,8 +158,7 @@ class CrcInteractive(BaseParser):
             print(srun_command)
 
         else:
-            print('Launching session...')
-            Shell.run_command(srun_command)
+            system(srun_command)
 
 
 if __name__ == '__main__':
