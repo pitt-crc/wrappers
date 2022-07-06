@@ -39,7 +39,11 @@ class CrcSus(BaseParser):
         if db_record is None:
             self.error('ERROR: No proposal for the given account was found')
 
-        allocations = {cluster: db_record[cluster] for cluster in SlurmInfo.cluster_names}
+        allocations = dict()
+        for cluster in SlurmInfo.get_cluster_names():
+            if cluster in db_record:
+                allocations[cluster] = db_record[cluster]
+
         return allocations
 
     @staticmethod
@@ -55,11 +59,11 @@ class CrcSus(BaseParser):
         """
 
         output_lines = ['Account {}'.format(account)]
-        cluster_name_length = max(len(cluster) for cluster in SlurmInfo.cluster_names)
+        cluster_name_length = max(len(cluster) for cluster in allocation)
 
-        for cluster in SlurmInfo.cluster_names:
+        for cluster, sus in allocation.items():
             cluster_name = cluster.rjust(cluster_name_length)
-            output_lines.append(' cluster {} has {:,} SUs'.format(cluster_name, allocation.get(cluster, 0)))
+            output_lines.append(' cluster {} has {:,} SUs'.format(cluster_name, sus))
 
         return '\n'.join(output_lines)
 

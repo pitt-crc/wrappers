@@ -42,10 +42,11 @@ class CrcIdle(BaseParser):
             A tuple fo cluster names
         """
 
-        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), SlurmInfo.cluster_names))
+        argument_options = ('smp', 'gpu', 'mpi', 'invest', 'htc')
+        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), argument_options))
 
         # Default to returning all clusters
-        return argument_clusters or SlurmInfo.cluster_names
+        return argument_clusters or argument_options
 
     @staticmethod
     def _idle_cpu_resources(cluster, partition):
@@ -146,10 +147,10 @@ class CrcIdle(BaseParser):
         header = 'Cluster: {0}, Partition: {1}'.format(cluster, partition)
         unit = self.cluster_types[cluster]
 
-        print(header.center(output_width))
+        print(header)
         print('=' * output_width)
         for idle, nodes in sorted(resource_allocation.items()):
-            print('{0:3d} nodes w/ {1:3d} idle {2}'.format(nodes, idle, unit))
+            print('{0:4d} nodes w/ {1:3d} idle {2}'.format(nodes, idle, unit))
 
         if not resource_allocation:
             print(' No idle resources')

@@ -44,7 +44,7 @@ class CrcScancel(BaseParser):
         # However, that approach fails for scavenger jobs. Instead, we iterate
         # over the clusters until we find the right one.
 
-        for cluster in SlurmInfo.cluster_names:
+        for cluster in SlurmInfo.get_cluster_names(include_all_clusters=True):
             # Fetch a list of running slurm jobs matching the username and job id
             command = 'squeue -h -u {} -j {} -M {}'.format(self.user, job_id, cluster)
             if job_id in Shell.run_command(command):
@@ -64,6 +64,7 @@ class CrcScancel(BaseParser):
         stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(args.job_id, cluster))
         if Shell.readchar().lower() == 'y':
             self.cancel_job_on_cluster(cluster, args.job_id)
+            print('Force Terminated job {}'.format(args.job_id))
 
 
 if __name__ == '__main__':

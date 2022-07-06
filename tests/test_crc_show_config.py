@@ -15,7 +15,7 @@ class ArgumentParsing(TestCase):
 
         app = CrcShowConfig()
 
-        for cluster in SlurmInfo.cluster_names:
+        for cluster in SlurmInfo.get_cluster_names():
             known_args, unknown_args = app.parse_known_args(['--cluster', cluster])
             self.assertEqual(cluster, known_args.cluster)
             self.assertFalse(unknown_args)
