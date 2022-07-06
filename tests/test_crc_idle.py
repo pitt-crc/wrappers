@@ -1,6 +1,6 @@
 """Tests for the ``crc-idle`` application"""
 
-from unittest import TestCase
+from unittest import TestCase, skip
 
 from _utils import SlurmInfo
 
@@ -34,6 +34,7 @@ class ArgumentParsing(TestCase):
         self.assertFalse(args.htc)
         self.assertFalse(args.gpu)
 
+    @skip('Requires slurm utilities')
     def test_clusters_default_to_false(self):
         """Test all cluster flags default to a ``False`` value"""
 
@@ -48,6 +49,7 @@ class ArgumentParsing(TestCase):
 class ClusterList(TestCase):
     """Test the selection of what clusters to print"""
 
+    @skip('Requires slurm utilities')
     def test_defaults_all_clusters(self):
         """Test all clusters are returned if none are specified in the parsed arguments"""
 

@@ -10,6 +10,7 @@ CrcShowConfig = __import__('crc-show-config').CrcShowConfig
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
+    @skip('Requires slurm utilities')
     def test_clusters_are_valid_args(self):
         """Test clusters defined in common settings are valid values for the ``--cluster`` argument"""
 
