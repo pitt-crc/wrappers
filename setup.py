@@ -43,6 +43,8 @@ def get_meta():
     return author, version
 
 
+# Todo: add crc_scontrol.py
+# Todo: add crc_usage.pl
 _author, _version = get_meta()
 setup(
     name='demo-apps',
@@ -52,6 +54,17 @@ setup(
     python_requires='>=3.6',
     entry_points="""
         [console_scripts]
+        crc-idle=apps.CrcIdle:crc_idle.execute
+        crc-interactive=apps.CrcInteractive:crc_interactive.execute
+        crc-job-stats=apps.CrcJobStats:crc_job_stats.execute
+        crc-proposal-end=apps.CrcProposalEnd:crc_proposal_end.execute
+        crc-quota=apps.crc_quota:CrcQuota.execute
+        crc-scancel=apps.crc_scancel:CrcScancel.execute
+        crc-show-config=apps.crc_show_config:CrcShowConfig.execute
+        crc-sinfo=apps.crc_sinfo:CrcSinfo.execute
+        crc-squeue=apps.crc_squeue:CrcSqueue.execute
+        crc-sus=apps.crc_sus:CrcSus.execute
+        crc-usage=apps.crc_usage:CrcUsage.execute
     """,
     install_requires=get_requirements(),
     author=_author,
