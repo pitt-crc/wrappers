@@ -28,7 +28,7 @@ def get_meta():
         - license
     """
 
-    init_path = Path(__file__).resolve().parent / 'app/__init__.py'
+    init_path = Path(__file__).resolve().parent / 'apps/__init__.py'
     init_text = init_path.read_text()
 
     version_regex = re.compile("__version__ = '(.*?)'")
@@ -45,17 +45,17 @@ def get_meta():
 
 _author, _version = get_meta()
 setup(
-    name='demo-apps',
+    name='crc-wrappers',
     description='Command-line applications for interacting with HPC clusters at the Pitt CRC.',
     version=_version,
     packages=find_packages(),
     python_requires='>=3.6',
     entry_points="""
         [console_scripts]
-        crc-idle=apps.CrcIdle:crc_idle.execute
-        crc-interactive=apps.CrcInteractive:crc_interactive.execute
-        crc-job-stats=apps.CrcJobStats:crc_job_stats.execute
-        crc-proposal-end=apps.CrcProposalEnd:crc_proposal_end.execute
+        crc-idle=apps.crc_idle:CrcIdle.execute
+        crc-interactive=apps.crc_interactive:CrcInteractive.execute
+        crc-job-stats=apps.crc_job_stats:CrcJobStats.execute
+        crc-proposal-end=apps.crc_proposal_end:CrcProposalEnd.execute
         crc-quota=apps.crc_quota:CrcQuota.execute
         crc-scancel=apps.crc_scancel:CrcScancel.execute
         crc-show-config=apps.crc_show_config:CrcShowConfig.execute
@@ -67,7 +67,7 @@ setup(
     """,
     install_requires=get_requirements(),
     author=_author,
-    keyword='example, command-line, app',
+    keyword='Pitt, CRC, HPC, wrappers',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     # license=_license_type,
