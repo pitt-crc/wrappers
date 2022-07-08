@@ -1,8 +1,7 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Display the slurm configuration for a given cluster/partition"""
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from .base_parser import BaseParser
+from .system_info import Shell, SlurmInfo
 
 
 class CrcShowConfig(BaseParser):
@@ -81,7 +80,3 @@ class CrcShowConfig(BaseParser):
         else:
             # Summarize all available partitions
             print(Shell.run_command("scontrol -M {} show partition".format(args.cluster)))
-
-
-if __name__ == '__main__':
-    CrcShowConfig().execute()

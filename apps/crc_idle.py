@@ -1,8 +1,7 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line application for listing idle Slurm resources"""
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from .base_parser import BaseParser
+from .system_info import Shell, SlurmInfo
 
 
 class CrcIdle(BaseParser):
@@ -169,7 +168,3 @@ class CrcIdle(BaseParser):
             partitions_to_print = args.partition or SlurmInfo.get_partition_names(cluster)
             for partition in partitions_to_print:
                 self.print_partition_summary(cluster, partition)
-
-
-if __name__ == '__main__':
-    CrcIdle().execute()

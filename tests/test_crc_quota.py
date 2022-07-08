@@ -2,7 +2,7 @@
 
 import unittest
 
-AbstractQuota = __import__('crc-quota').AbstractFilesystemUsage
+from apps.crc_quota import AbstractFilesystemUsage
 
 
 class BytesUnitConversion(unittest.TestCase):
@@ -11,7 +11,7 @@ class BytesUnitConversion(unittest.TestCase):
     def test_zero_bytes(self):
         """Test the conversion of zero bytes"""
 
-        self.assertEqual('0.0 B', AbstractQuota.convert_size(0))
+        self.assertEqual('0.0 B', AbstractFilesystemUsage.convert_size(0))
 
     def test_integer_conversion(self):
         """Test the conversion from bytes to known integer units"""
@@ -20,7 +20,7 @@ class BytesUnitConversion(unittest.TestCase):
         outputs = ('1.0 B', '1.0 KB', '1.0 MB', '1.0 GB', '1.0 TB', '1.0 PB', '1.0 EB', '1.0 ZB', '1.0 YB')
 
         for inp, oup in zip(inputs, outputs):
-            self.assertEqual(oup, AbstractQuota.convert_size(inp))
+            self.assertEqual(oup, AbstractFilesystemUsage.convert_size(inp))
 
     def test_non_integer_values(self):
         """Test the conversion from bytes to known non-integer units"""
@@ -29,7 +29,7 @@ class BytesUnitConversion(unittest.TestCase):
         outputs = ('5.0 B', '488.28 KB', '47.68 MB', '4.66 GB', '4.55 TB')
 
         for inp, oup in zip(inputs, outputs):
-            self.assertEqual(oup, AbstractQuota.convert_size(inp))
+            self.assertEqual(oup, AbstractFilesystemUsage.convert_size(inp))
 
 
 if __name__ == '__main__':

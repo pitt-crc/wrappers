@@ -1,11 +1,10 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``squeue`` command"""
 
 from os import environ
 from time import sleep
 
-from _base_parser import BaseParser
-from _utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class CrcSqueue(BaseParser):
@@ -72,7 +71,3 @@ class CrcSqueue(BaseParser):
             sleep(self.watch_frequency)
             print()
             print(Shell.run_command(command))
-
-
-if __name__ == '__main__':
-    CrcSqueue().execute()

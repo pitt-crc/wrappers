@@ -1,0 +1,5 @@
+sphinx
+sphinx-argparse
+sphinx-autoap
+sphinx-copybutton
+sphinx-rtd-theme

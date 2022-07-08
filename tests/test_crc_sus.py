@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-CrcSus = __import__('crc-sus').CrcSus
+from apps.crc_sus import CrcSus
 
 
 class ArgumentParsing(TestCase):

@@ -1,10 +1,9 @@
-#!/usr/bin/env python
 """Print an account's service unit allocation"""
 
 import dataset
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from .base_parser import BaseParser
+from .system_info import Shell, SlurmInfo
 
 
 class CrcSus(BaseParser):
@@ -77,7 +76,3 @@ class CrcSus(BaseParser):
         account_info = self.get_allocation_info(args.account)
         output_string = self.build_output_string(args.account, **account_info)
         print(output_string)
-
-
-if __name__ == '__main__':
-    CrcSus().execute()

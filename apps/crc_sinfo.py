@@ -1,8 +1,7 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``sinfo`` command"""
 
-from _base_parser import BaseParser
-from _utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class CrcSinfo(BaseParser):
@@ -16,7 +15,3 @@ class CrcSinfo(BaseParser):
         """
 
         print(Shell.run_command("sinfo -M all"))
-
-
-if __name__ == '__main__':
-    CrcSinfo().execute()

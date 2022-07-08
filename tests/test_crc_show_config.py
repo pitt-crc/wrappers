@@ -2,9 +2,8 @@
 
 from unittest import TestCase, skip
 
-from _utils import SlurmInfo
-
-CrcShowConfig = __import__('crc-show-config').CrcShowConfig
+from apps.crc_show_config import CrcShowConfig
+from apps.system_info import SlurmInfo
 
 
 class ArgumentParsing(TestCase):

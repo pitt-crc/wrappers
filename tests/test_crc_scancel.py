@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-CrcScancel = __import__('crc-scancel').CrcScancel
+from apps.crc_scancel import CrcScancel
 
 
 class ArgumentParsing(TestCase):

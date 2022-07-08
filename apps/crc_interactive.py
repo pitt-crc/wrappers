@@ -1,10 +1,9 @@
-#!/usr/bin/python -E
 """A simple wrapper around the Slurm ``srun`` command"""
 
 from os import system
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from .base_parser import BaseParser
+from .system_info import Shell, SlurmInfo
 
 
 class CrcInteractive(BaseParser):
@@ -159,7 +158,3 @@ class CrcInteractive(BaseParser):
 
         else:
             system(srun_command)
-
-
-if __name__ == '__main__':
-    CrcInteractive().execute()

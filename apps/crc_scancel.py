@@ -1,11 +1,10 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``scancel`` command"""
 
 from os import environ
 from sys import stdout
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from .base_parser import BaseParser
+from .system_info import Shell, SlurmInfo
 
 
 class CrcScancel(BaseParser):
@@ -65,7 +64,3 @@ class CrcScancel(BaseParser):
         if Shell.readchar().lower() == 'y':
             self.cancel_job_on_cluster(cluster, args.job_id)
             print('Force Terminated job {}'.format(args.job_id))
-
-
-if __name__ == '__main__':
-    CrcScancel().execute()

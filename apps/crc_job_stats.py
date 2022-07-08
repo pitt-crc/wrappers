@@ -1,10 +1,9 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line utility for printing basic information about a running job."""
 
 from os import environ
 
-from _base_parser import BaseParser
-from _utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class CrcJobStats(BaseParser):
@@ -93,7 +92,3 @@ class CrcJobStats(BaseParser):
         self.exit_if_not_in_slurm()
         job_info = self.get_job_info()
         self.pretty_print_job_info(job_info)
-
-
-if __name__ == '__main__':
-    CrcJobStats().execute()

@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 """Command line interface that wraps the banking application"""
 
-from _base_parser import BaseParser
-from _utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class CrcUsage(BaseParser):
@@ -31,7 +30,3 @@ class CrcUsage(BaseParser):
 
         bank_info_command = '{} {}'.format(self.banking_executable, args.account)
         print(Shell.run_command(bank_info_command))
-
-
-if __name__ == '__main__':
-    CrcUsage().execute()

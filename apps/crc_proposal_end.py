@@ -1,10 +1,9 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Print the end date for an account's proposal"""
 
 import dataset
 
-from _base_parser import BaseParser
-from _utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class CrcProposalEnd(BaseParser):
@@ -49,7 +48,3 @@ class CrcProposalEnd(BaseParser):
         string_template = "Proposal ends on {1} for account {0} on H2P"
         output_string = string_template.format(args.account, end_date.strftime("%m/%d/%y"))
         print(output_string)
-
-
-if __name__ == '__main__':
-    CrcProposalEnd().execute()

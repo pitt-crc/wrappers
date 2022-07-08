@@ -5,6 +5,8 @@ import os
 import sys
 from argparse import ArgumentParser, HelpFormatter
 
+from . import __version__
+
 
 class BaseParser(ArgumentParser):
     """Base class for building command line applications"""
@@ -27,15 +29,8 @@ class BaseParser(ArgumentParser):
     def app_version(self):
         """Return the application name and version as a string"""
 
-        # Look for `version.txt` in the same directory as this file
-        file_directory = os.path.dirname(os.path.abspath(__file__))
-        version_file = os.path.join(file_directory, 'version.txt')
-
-        with open(version_file) as version_file:
-            semantic_version = version_file.readline().strip()
-
         program_name = os.path.splitext(self.prog)[0]
-        return '{} version {}'.format(program_name, semantic_version)
+        return '{} version {}'.format(program_name, __version__)
 
     @abc.abstractmethod
     def app_logic(self, args):
@@ -62,12 +57,14 @@ class BaseParser(ArgumentParser):
         sys.stderr.write('ERROR: {}\n'.format(message))
         sys.exit(2)
 
-    def execute(self):
+    @classmethod
+    def execute(cls):
         """Parse command line arguments and execute the application"""
 
+        app = cls()
         try:
-            args = self.parse_args()
-            self.app_logic(args)
+            args = app.parse_args()
+            app.app_logic(args)
 
         except KeyboardInterrupt:
-            exit('Interrupt detected! exiting...')
+            exit('Interrupt detected! Exiting...')

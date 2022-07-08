@@ -1,4 +1,4 @@
-name: Test Suite
+name: Run Test Suite
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
@@ -23,16 +23,14 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install package dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Install test dependencies
-        run: |
-          pip install coverage
+        run: pip install coverage
 
       - name: Run tests with coverage
         run: |
-          coverage run --omit="./tests/*" -m unittest discover 
+          coverage run -m unittest discover 
           coverage report
           coverage xml -o report_${{ matrix.python-version }}.xml
 

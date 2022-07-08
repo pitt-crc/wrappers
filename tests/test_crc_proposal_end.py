@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-CrcProposalEnd = __import__('crc-proposal-end').CrcProposalEnd
+from apps.crc_proposal_end import CrcProposalEnd
 
 
 class ArgumentParsing(TestCase):

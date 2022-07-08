@@ -3,7 +3,7 @@
 from os import environ
 from unittest import TestCase
 
-CrcSqueue = __import__('crc-squeue').CrcSqueue
+from apps.crc_squeue import CrcSqueue
 
 
 class ArgumentParsing(TestCase):

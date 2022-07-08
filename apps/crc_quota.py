@@ -1,12 +1,11 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line utility for checking a user's disk usage"""
 
 import json
 import math
 import sys
 
-from _base_parser import BaseParser
-from _utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class AbstractFilesystemUsage(object):
@@ -273,7 +272,3 @@ class CrcQuota(BaseParser):
             print(
                 'If you need additional storage, you can request up to 5TB on '
                 'BGFS, ZFS or IX!. Contact CRC for more details.')
-
-
-if __name__ == "__main__":
-    CrcQuota().execute()
