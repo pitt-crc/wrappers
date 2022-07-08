@@ -1,0 +1,61 @@
+:py:mod:`apps.crc_scancel`
+==========================
+
+.. py:module:: apps.crc_scancel
+
+.. autoapi-nested-parse::
+
+   A simple wrapper around the Slurm ``scancel`` command
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_scancel.CrcScancel
+
+
+
+
+.. py:class:: CrcScancel
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Command line application for canceling the user's running slurm jobs
+
+   .. py:attribute:: user
+      
+
+      
+
+   .. py:method:: cancel_job_on_cluster(cluster, job_id)
+      :staticmethod:
+
+      Cancel a running slurm job
+
+      Args:
+          cluster: The name of the cluster the job is running on
+          job_id: The ID of the slurm job to cancel
+
+
+   .. py:method:: get_cluster_for_job_id(self, job_id)
+
+      Return the name of the cluster a slurm job is running on
+
+      Exits the application with an error
+
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Namespace of parsed arguments from the command line
+
+
+

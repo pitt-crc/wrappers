@@ -1,0 +1,67 @@
+:py:mod:`apps.crc_job_stats`
+============================
+
+.. py:module:: apps.crc_job_stats
+
+.. autoapi-nested-parse::
+
+   Command line utility for printing basic information about a running job.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_job_stats.CrcJobStats
+
+
+
+
+.. py:class:: CrcJobStats
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   A commandline tool for tracking job information from with a Slurm job
+
+   .. py:attribute:: cluster
+      
+
+      
+
+   .. py:attribute:: job_id
+      
+
+      
+
+   .. py:method:: exit_if_not_in_slurm(self)
+
+      Error if the application is not running from within a slurm job
+
+
+   .. py:method:: get_job_info(self)
+
+      Return information about the running job as a dictionary
+
+
+   .. py:method:: pretty_print_job_info(self, job_info)
+
+      Print information about a running job in a readable format
+
+      Args:
+          job_info: A dictionary of information about the running job
+
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

@@ -1,0 +1,68 @@
+:py:mod:`apps.crc_sus`
+======================
+
+.. py:module:: apps.crc_sus
+
+.. autoapi-nested-parse::
+
+   Print an account's service unit allocation
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_sus.CrcSus
+
+
+
+
+.. py:class:: CrcSus
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Command line application for printing an account's service unit allocation
+
+   .. py:attribute:: banking_db_path
+      :annotation: = sqlite:////ihome/crc/bank/crc_bank.db
+
+      
+
+   .. py:method:: get_allocation_info(self, account)
+
+      Return the service unit allocation for a given account name
+
+      Args:
+          account: The name of the account
+
+      Returns:
+          A dictionary mapping cluster names to the number of service units
+
+
+   .. py:method:: build_output_string(account, **allocation)
+      :staticmethod:
+
+      Build a string describing an account's service unit allocation
+
+      Args:
+          account: The name of the account
+          allocation: The number of service units allocated for each cluster
+
+      Returns:
+          A string summarizing the account allocation
+
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

@@ -1,0 +1,70 @@
+:py:mod:`apps.base_parser`
+==========================
+
+.. py:module:: apps.base_parser
+
+.. autoapi-nested-parse::
+
+   Parent classes for building command line applications.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.base_parser.BaseParser
+
+
+
+
+.. py:class:: BaseParser
+
+   Bases: :py:obj:`argparse.ArgumentParser`
+
+   Base class for building command line applications
+
+   .. py:attribute:: help_width
+      :annotation: = 50
+
+      
+
+   .. py:method:: _get_formatter(self)
+
+      Returns a ``HelpFormatter`` object for formatting application help text
+
+
+   .. py:method:: app_version(self)
+      :property:
+
+      Return the application name and version as a string
+
+
+   .. py:method:: app_logic(self, args)
+      :abstractmethod:
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+   .. py:method:: error(self, message)
+
+      Print the error message to STDOUT and exit
+
+      Args:
+          message: The error message
+
+
+   .. py:method:: execute(cls)
+      :classmethod:
+
+      Parse command line arguments and execute the application
+
+
+

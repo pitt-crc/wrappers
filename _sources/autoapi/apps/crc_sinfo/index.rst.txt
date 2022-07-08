@@ -1,0 +1,39 @@
+:py:mod:`apps.crc_sinfo`
+========================
+
+.. py:module:: apps.crc_sinfo
+
+.. autoapi-nested-parse::
+
+   A simple wrapper around the Slurm ``sinfo`` command
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_sinfo.CrcSinfo
+
+
+
+
+.. py:class:: CrcSinfo
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Command line application for fetching data from the Slurm ``sinfo`` utility
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

@@ -1,0 +1,46 @@
+:py:mod:`apps`
+==============
+
+.. py:module:: apps
+
+.. autoapi-nested-parse::
+
+   Custom commandline applications built by the Center for Research Computing.
+
+
+
+Submodules
+----------
+.. toctree::
+   :titlesonly:
+   :maxdepth: 1
+
+   base_parser/index.rst
+   crc_idle/index.rst
+   crc_interactive/index.rst
+   crc_job_stats/index.rst
+   crc_proposal_end/index.rst
+   crc_quota/index.rst
+   crc_scancel/index.rst
+   crc_scontrol/index.rst
+   crc_show_config/index.rst
+   crc_sinfo/index.rst
+   crc_squeue/index.rst
+   crc_sus/index.rst
+   crc_usage/index.rst
+   system_info/index.rst
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+   :annotation: = 0.0.2
+
+   
+
+.. py:data:: __author__
+   :annotation: = Pitt Center for Research Computing
+
+   
+

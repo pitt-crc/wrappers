@@ -1,0 +1,72 @@
+:py:mod:`apps.crc_squeue`
+=========================
+
+.. py:module:: apps.crc_squeue
+
+.. autoapi-nested-parse::
+
+   A simple wrapper around the Slurm ``squeue`` command
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_squeue.CrcSqueue
+
+
+
+
+.. py:class:: CrcSqueue
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Command line application for fetching data from the Slurm ``squeue`` utility
+
+   .. py:attribute:: output_format_user
+      :annotation: = -o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R'
+
+      
+
+   .. py:attribute:: output_format_all
+      :annotation: = -o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.20R'
+
+      
+
+   .. py:attribute:: output_format_user_start
+      :annotation: = -o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R %.20S'
+
+      
+
+   .. py:attribute:: output_format_all_start
+      :annotation: = -o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.20R %.20S'
+
+      
+
+   .. py:attribute:: watch_frequency
+      :annotation: = 10
+
+      
+
+   .. py:method:: build_slurm_command(self, args)
+
+      Return an ``squeue`` command matching parsed command line arguments
+
+      Args:
+          args: Parsed command line arguments
+
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

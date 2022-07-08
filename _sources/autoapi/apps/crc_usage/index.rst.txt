@@ -1,0 +1,44 @@
+:py:mod:`apps.crc_usage`
+========================
+
+.. py:module:: apps.crc_usage
+
+.. autoapi-nested-parse::
+
+   Command line interface that wraps the banking application
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_usage.CrcUsage
+
+
+
+
+.. py:class:: CrcUsage
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Command line application for printing a slurm account's cluster usage
+
+   .. py:attribute:: banking_executable
+      :annotation: = /ihome/crc/bank/crc_bank.py usage
+
+      
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

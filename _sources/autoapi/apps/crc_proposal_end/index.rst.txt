@@ -1,0 +1,52 @@
+:py:mod:`apps.crc_proposal_end`
+===============================
+
+.. py:module:: apps.crc_proposal_end
+
+.. autoapi-nested-parse::
+
+   Print the end date for an account's proposal
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_proposal_end.CrcProposalEnd
+
+
+
+
+.. py:class:: CrcProposalEnd
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Command line application for printing an account's proposal end date
+
+   .. py:attribute:: banking_db_path
+      :annotation: = sqlite:////ihome/crc/bank/crc_bank.db
+
+      
+
+   .. py:method:: get_proposal_end_date(self, account)
+
+      Get the proposal end date for a given account
+
+      Args:
+          account: The name of the account
+
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

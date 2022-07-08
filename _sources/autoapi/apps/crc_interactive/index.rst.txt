@@ -1,0 +1,104 @@
+:py:mod:`apps.crc_interactive`
+==============================
+
+.. py:module:: apps.crc_interactive
+
+.. autoapi-nested-parse::
+
+   A simple wrapper around the Slurm ``srun`` command
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_interactive.CrcInteractive
+
+
+
+
+.. py:class:: CrcInteractive
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Commandline utility for launching an interactive slurm session
+
+   .. py:attribute:: min_mpi_nodes
+      :annotation: = 2
+
+      
+
+   .. py:attribute:: min_time
+      :annotation: = 1
+
+      
+
+   .. py:attribute:: max_time
+      :annotation: = 12
+
+      
+
+   .. py:attribute:: default_time
+      :annotation: = 1
+
+      
+
+   .. py:attribute:: default_nodes
+      :annotation: = 1
+
+      
+
+   .. py:attribute:: default_cores
+      :annotation: = 1
+
+      
+
+   .. py:attribute:: default_mem
+      :annotation: = 1
+
+      
+
+   .. py:attribute:: default_gpus
+      :annotation: = 0
+
+      
+
+   .. py:method:: _validate_arguments(self, args)
+
+      Exit the application if command-line arguments are invalid
+
+      Args:
+          args: Parsed commandline arguments
+
+
+   .. py:method:: x11_is_available()
+      :staticmethod:
+
+      Return whether x11 is available in the current runtime environment
+
+
+   .. py:method:: create_srun_command(self, args)
+
+      Create an ``srun`` command based on parsed commandline arguments
+
+      Args:
+          args: A dictionary of parsed command line parsed_args
+
+      Return:
+          The equivalent ``srun`` command as a string
+
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

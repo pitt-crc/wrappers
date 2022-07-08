@@ -1,0 +1,89 @@
+:py:mod:`apps.system_info`
+==========================
+
+.. py:module:: apps.system_info
+
+.. autoapi-nested-parse::
+
+   General utilities for fetching data and interacting with the parent system.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.system_info.Shell
+   apps.system_info.SlurmInfo
+
+
+
+
+.. py:class:: Shell
+
+   Methods for interacting with the runtime shell
+
+   .. py:method:: readchar()
+      :staticmethod:
+
+      Read a single character from the command line
+
+
+   .. py:method:: run_command(command, include_err=False)
+      :staticmethod:
+
+      Run a command in a dedicated shell
+
+      Args:
+          command: The command to execute as a string
+          include_err: Include output to stderr in the returned values
+
+      Returns:
+          The output to stdout and (optionally) stderr
+
+
+
+.. py:class:: SlurmInfo
+
+   Class for fetching Slurm config data
+
+   .. py:attribute:: ignore_clusters
+      
+
+      
+
+   .. py:attribute:: ignore_partitions
+      
+
+      
+
+   .. py:method:: get_cluster_names(cls, include_all_clusters=False)
+      :classmethod:
+
+      Return a tuple cluster names configured with slurm
+
+      Args:
+          include_all_clusters: Include clusters that are otherwise marked as ignored
+
+      Returns:
+          A set of cluster names
+
+
+   .. py:method:: get_partition_names(cls, cluster_name, include_all_partitions=False)
+      :classmethod:
+
+      Return a tuple of partition names associated with a given slurm cluster
+
+      Args:
+          cluster_name: The name of a slurm cluster
+          include_all_partitions: Include partitions that are otherwise marked as ignored
+
+      Returns:
+          A set of partition names
+
+
+

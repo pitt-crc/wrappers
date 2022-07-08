@@ -1,0 +1,40 @@
+:py:mod:`apps.crc_scontrol`
+===========================
+
+.. py:module:: apps.crc_scontrol
+
+.. autoapi-nested-parse::
+
+   This file is intended to be temporary. The original application has been
+   renamed. This placeholder instructs users to use the new command line app.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_scontrol.CrcSinfo
+
+
+
+
+.. py:class:: CrcSinfo
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Print a deprecation warning
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

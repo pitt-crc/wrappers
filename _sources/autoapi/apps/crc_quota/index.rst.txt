@@ -1,0 +1,166 @@
+:py:mod:`apps.crc_quota`
+========================
+
+.. py:module:: apps.crc_quota
+
+.. autoapi-nested-parse::
+
+   Command line utility for checking a user's disk usage
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   apps.crc_quota.AbstractFilesystemUsage
+   apps.crc_quota.GenericUsage
+   apps.crc_quota.BeegfsUsage
+   apps.crc_quota.IhomeUsage
+   apps.crc_quota.CrcQuota
+
+
+
+
+.. py:class:: AbstractFilesystemUsage(name, size_used, size_limit)
+
+   Bases: :py:obj:`object`
+
+   Base class for building object-oriented representations of file system quotas
+
+   .. py:method:: to_string(self, verbose=False)
+
+      Return a string representation of the quota usage
+
+      Args:
+          verbose: Return a more detailed representation
+
+
+   .. py:method:: _verbose_string(self)
+
+
+   .. py:method:: _short_string(self)
+
+
+   .. py:method:: convert_size(size)
+      :staticmethod:
+
+      Convert the given number of bytes to a human-readable string
+
+      Args:
+          size: An integer number of bytes
+
+      Returns:
+           A string representation of the given size with units
+
+
+
+.. py:class:: GenericUsage(name, size_used, size_limit)
+
+   Bases: :py:obj:`AbstractFilesystemUsage`
+
+   Disk storage quota for a generic file system
+
+   .. py:method:: from_path(cls, name, path)
+      :classmethod:
+
+      Return a quota object for a given file path
+
+      Args:
+          name: Name of the file system (e.g., zfs, ix, home)
+          path: The file path for create a quota for
+
+      Returns:
+          An instance of the parent class
+
+
+
+.. py:class:: BeegfsUsage(name, size_used, size_limit, chunk_used, chunk_limit)
+
+   Bases: :py:obj:`AbstractFilesystemUsage`
+
+   Disk storage quota for a BeeGFS file system
+
+   .. py:method:: _verbose_string(self)
+
+
+   .. py:method:: from_group(cls, name, group)
+      :classmethod:
+
+      Return a quota object for a given group name
+
+      Args:
+          name: Name of the file system (e.g., zfs, ix, home)
+          group: The group to create a quota for
+
+      Returns:
+          An instance of the parent class
+
+
+
+.. py:class:: IhomeUsage(name, size_used, size_limit, files, physical)
+
+   Bases: :py:obj:`AbstractFilesystemUsage`
+
+   Disk storage quota for the ihome file system
+
+   .. py:method:: _verbose_string(self)
+
+
+   .. py:method:: from_uid(cls, name, uid)
+      :classmethod:
+
+      Return a quota object for a given user id
+
+      Args:
+          name: Name of the file system (e.g., zfs, ix, home)
+          uid: The ID of the user
+
+      Returns:
+          An instance of the parent class
+
+
+
+.. py:class:: CrcQuota
+
+   Bases: :py:obj:`apps.base_parser.BaseParser`
+
+   Commandline tool for fetching a user's disk quota
+
+   .. py:method:: get_user_info(username=None)
+      :staticmethod:
+
+      Return system IDs for the current user
+
+      Args:
+          username: The name of the user to get IDs for (defaults to current user)
+
+      Returns:
+          Tuple with the user's name, user ID, group name, and group ID
+
+
+   .. py:method:: get_group_quotas(group)
+      :staticmethod:
+
+      Return quota information for the given group
+
+      Args:
+          group: The name of the group
+
+      Returns:
+          A tuple of ``Quota`` objects
+
+
+   .. py:method:: app_logic(self, args)
+
+      Logic to evaluate when executing the application
+
+      Args:
+          args: Parsed command line arguments
+
+
+

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>apps.crc_quota &mdash; CRC Wrapper Applications  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> CRC Wrapper Applications
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/base_parser/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.base_parser</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_idle/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_idle</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_interactive/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_interactive</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_job_stats/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_job_stats</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_proposal_end/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_proposal_end</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_quota/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_quota</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_scancel/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scancel</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_scontrol/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scontrol</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_show_config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_show_config</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_sinfo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sinfo</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_squeue/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_squeue</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_sus/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sus</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/crc_usage/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_usage</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/apps/system_info/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.system_info</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">CRC Wrapper Applications</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+          <li><a href="../apps.html">apps</a> &raquo;</li>
+      <li>apps.crc_quota</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for apps.crc_quota</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Command line utility for checking a user&#39;s disk usage&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">.base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">.system_info</span> <span class="k">import</span> <span class="n">Shell</span>
+
+
+<div class="viewcode-block" id="AbstractFilesystemUsage"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.AbstractFilesystemUsage">[docs]</a><span class="k">class</span> <span class="nc">AbstractFilesystemUsage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for building object-oriented representations of file system quotas&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">size_used</span><span class="p">,</span> <span class="n">size_limit</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new quota from known system metrics</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the file system (e.g., zfs, ix, home)</span>
+<span class="sd">            size_used: Disk space used by the user/group</span>
+<span class="sd">            size_limit: Maximum disk space allowed by the allocation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size_used</span> <span class="o">=</span> <span class="n">size_used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size_limit</span> <span class="o">=</span> <span class="n">size_limit</span>
+
+<div class="viewcode-block" id="AbstractFilesystemUsage.to_string"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.AbstractFilesystemUsage.to_string">[docs]</a>    <span class="k">def</span> <span class="nf">to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a string representation of the quota usage</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            verbose: Return a more detailed representation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbose_string</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_short_string</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AbstractFilesystemUsage._verbose_string"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.AbstractFilesystemUsage._verbose_string">[docs]</a>    <span class="k">def</span> <span class="nf">_verbose_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;-&gt; </span><span class="si">{}</span><span class="s2">: Bytes Used: </span><span class="si">{}</span><span class="s2">, Byte Limit: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">convert_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size_used</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">convert_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size_limit</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AbstractFilesystemUsage._short_string"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.AbstractFilesystemUsage._short_string">[docs]</a>    <span class="k">def</span> <span class="nf">_short_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;-&gt; </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2"> / </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">convert_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size_used</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">convert_size</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size_limit</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="AbstractFilesystemUsage.convert_size"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.AbstractFilesystemUsage.convert_size">[docs]</a>    <span class="k">def</span> <span class="nf">convert_size</span><span class="p">(</span><span class="n">size</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Convert the given number of bytes to a human-readable string</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            size: An integer number of bytes</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             A string representation of the given size with units</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;0.0 B&#39;</span>
+
+        <span class="n">size_units</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;KB&#39;</span><span class="p">,</span> <span class="s1">&#39;MB&#39;</span><span class="p">,</span> <span class="s1">&#39;GB&#39;</span><span class="p">,</span> <span class="s1">&#39;TB&#39;</span><span class="p">,</span> <span class="s1">&#39;PB&#39;</span><span class="p">,</span> <span class="s1">&#39;EB&#39;</span><span class="p">,</span> <span class="s1">&#39;ZB&#39;</span><span class="p">,</span> <span class="s1">&#39;YB&#39;</span><span class="p">)</span>
+
+        <span class="n">base_2_power</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)))</span>
+        <span class="n">conversion_factor</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">1024</span><span class="p">,</span> <span class="n">base_2_power</span><span class="p">)</span>
+        <span class="n">final_size</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">size</span> <span class="o">/</span> <span class="n">conversion_factor</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">final_size</span><span class="p">,</span> <span class="n">size_units</span><span class="p">[</span><span class="n">base_2_power</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="GenericUsage"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.GenericUsage">[docs]</a><span class="k">class</span> <span class="nc">GenericUsage</span><span class="p">(</span><span class="n">AbstractFilesystemUsage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Disk storage quota for a generic file system&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="GenericUsage.from_path"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.GenericUsage.from_path">[docs]</a>    <span class="k">def</span> <span class="nf">from_path</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a quota object for a given file path</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the file system (e.g., zfs, ix, home)</span>
+<span class="sd">            path: The file path for create a quota for</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">df_command</span> <span class="o">=</span> <span class="s2">&quot;df </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">quota_info_list</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="n">df_command</span><span class="p">)</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">quota_info_list</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">quota_info_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="BeegfsUsage"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.BeegfsUsage">[docs]</a><span class="k">class</span> <span class="nc">BeegfsUsage</span><span class="p">(</span><span class="n">AbstractFilesystemUsage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Disk storage quota for a BeeGFS file system&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">size_used</span><span class="p">,</span> <span class="n">size_limit</span><span class="p">,</span> <span class="n">chunk_used</span><span class="p">,</span> <span class="n">chunk_limit</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new BeeGFS quota from known system metrics</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the file system (e.g., zfs, ix, home)</span>
+<span class="sd">            size_used: Disk space used by the user/group</span>
+<span class="sd">            size_limit: Maximum disk space allowed by the allocation</span>
+<span class="sd">            chunk_used: Data chunk files used by the user/group</span>
+<span class="sd">            chunk_limit: Maximum chunks allowed by the allocation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">BeegfsUsage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">size_used</span><span class="p">,</span> <span class="n">size_limit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_used</span> <span class="o">=</span> <span class="n">chunk_used</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_limit</span> <span class="o">=</span> <span class="n">chunk_limit</span>
+
+<div class="viewcode-block" id="BeegfsUsage._verbose_string"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.BeegfsUsage._verbose_string">[docs]</a>    <span class="k">def</span> <span class="nf">_verbose_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;-&gt; </span><span class="si">{}</span><span class="s2">: Bytes Used: </span><span class="si">{}</span><span class="s2">, Byte Limit: </span><span class="si">{}</span><span class="s2">, Chunk Files Used: </span><span class="si">{}</span><span class="s2">, Chunk File Limit: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size_used</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size_limit</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chunk_used</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chunk_limit</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="BeegfsUsage.from_group"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.BeegfsUsage.from_group">[docs]</a>    <span class="k">def</span> <span class="nf">from_group</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a quota object for a given group name</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the file system (e.g., zfs, ix, home)</span>
+<span class="sd">            group: The group to create a quota for</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">allocation_out</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s2">&quot;df /bgfs/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">allocation_out</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">quota_info_cmd</span> <span class="o">=</span> <span class="s2">&quot;beegfs-ctl --getquota --gid </span><span class="si">{}</span><span class="s2"> --csv --storagepoolid=1&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+        <span class="n">quota_out</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="n">quota_info_cmd</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">quota_out</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span> <span class="n">result</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="IhomeUsage"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.IhomeUsage">[docs]</a><span class="k">class</span> <span class="nc">IhomeUsage</span><span class="p">(</span><span class="n">AbstractFilesystemUsage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Disk storage quota for the ihome file system&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">size_used</span><span class="p">,</span> <span class="n">size_limit</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">physical</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new ihome quota from known system metrics</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the file system (e.g., zfs, ix, home)</span>
+<span class="sd">            size_used: Disk space used by the user/group</span>
+<span class="sd">            size_limit: Maximum disk space allowed by the allocation</span>
+<span class="sd">            files: Number of files written to disk</span>
+<span class="sd">            physical: Physical size of the data on disk</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">IhomeUsage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">size_used</span><span class="p">,</span> <span class="n">size_limit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">files</span> <span class="o">=</span> <span class="n">files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physical</span> <span class="o">=</span> <span class="n">physical</span>
+
+<div class="viewcode-block" id="IhomeUsage._verbose_string"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.IhomeUsage._verbose_string">[docs]</a>    <span class="k">def</span> <span class="nf">_verbose_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;-&gt; </span><span class="si">{}</span><span class="s2">: Logical Bytes Used: </span><span class="si">{}</span><span class="s2">, Byte Limit: </span><span class="si">{}</span><span class="s2">, Num Files: </span><span class="si">{}</span><span class="s2">, Physical Bytes Used: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_used</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size_limit</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">files</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="IhomeUsage.from_uid"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.IhomeUsage.from_uid">[docs]</a>    <span class="k">def</span> <span class="nf">from_uid</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">uid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a quota object for a given user id</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name: Name of the file system (e.g., zfs, ix, home)</span>
+<span class="sd">            uid: The ID of the user</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            An instance of the parent class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the information from Isilon</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/ihome/crc/scripts/ihome_quota.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+
+        <span class="n">persona</span> <span class="o">=</span> <span class="s2">&quot;UID:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;quotas&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;persona&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;persona&quot;</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">persona</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;usage&quot;</span><span class="p">][</span><span class="s2">&quot;logical&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;thresholds&quot;</span><span class="p">][</span><span class="s2">&quot;hard&quot;</span><span class="p">],</span>
+                               <span class="n">item</span><span class="p">[</span><span class="s2">&quot;usage&quot;</span><span class="p">][</span><span class="s2">&quot;inodes&quot;</span><span class="p">],</span> <span class="n">item</span><span class="p">[</span><span class="s2">&quot;usage&quot;</span><span class="p">][</span><span class="s2">&quot;physical&quot;</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="CrcQuota"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.CrcQuota">[docs]</a><span class="k">class</span> <span class="nc">CrcQuota</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Commandline tool for fetching a user&#39;s disk quota&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Define arguments for the command line interface&quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">CrcQuota</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;username of quota to query&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;verbose quota output&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CrcQuota.get_user_info"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.CrcQuota.get_user_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_info</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return system IDs for the current user</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            username: The name of the user to get IDs for (defaults to current user)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple with the user&#39;s name, user ID, group name, and group ID</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">username</span> <span class="o">=</span> <span class="n">username</span> <span class="ow">or</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">check_user_cmd</span> <span class="o">=</span> <span class="s2">&quot;id -un </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">)</span>
+        <span class="n">user</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="n">check_user_cmd</span><span class="p">,</span> <span class="n">include_err</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s2">&quot;Could not find quota information for user </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s2">&quot;id -gn </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+        <span class="n">uid</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s2">&quot;id -u </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+        <span class="n">gid</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s2">&quot;id -g </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">username</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">user</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">gid</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="CrcQuota.get_group_quotas"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.CrcQuota.get_group_quotas">[docs]</a>    <span class="k">def</span> <span class="nf">get_group_quotas</span><span class="p">(</span><span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return quota information for the given group</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            group: The name of the group</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple of ``Quota`` objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">zfs1_quota</span> <span class="o">=</span> <span class="n">GenericUsage</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="s1">&#39;zfs1&#39;</span><span class="p">,</span> <span class="s1">&#39;/zfs1/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+        <span class="n">zfs2_quota</span> <span class="o">=</span> <span class="n">GenericUsage</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="s1">&#39;zfs2&#39;</span><span class="p">,</span> <span class="s1">&#39;/zfs2/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+        <span class="n">bgfs_quota</span> <span class="o">=</span> <span class="n">BeegfsUsage</span><span class="o">.</span><span class="n">from_group</span><span class="p">(</span><span class="s1">&#39;beegfs&#39;</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+        <span class="n">ix_quota</span> <span class="o">=</span> <span class="n">GenericUsage</span><span class="o">.</span><span class="n">from_path</span><span class="p">(</span><span class="s1">&#39;ix&#39;</span><span class="p">,</span> <span class="s1">&#39;/ix/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+
+        <span class="c1"># Only return quotas that exist for the given group (i.e., objects that are not None)</span>
+        <span class="n">all_quotas</span> <span class="o">=</span> <span class="p">(</span><span class="n">zfs1_quota</span><span class="p">,</span> <span class="n">zfs2_quota</span><span class="p">,</span> <span class="n">bgfs_quota</span><span class="p">,</span> <span class="n">ix_quota</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">all_quotas</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CrcQuota.app_logic"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.CrcQuota.app_logic">[docs]</a>    <span class="k">def</span> <span class="nf">app_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Logic to evaluate when executing the application</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Parsed command line arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get disk usage information for the given user</span>
+        <span class="n">user</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">gid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_user_info</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">ihome_quota</span> <span class="o">=</span> <span class="n">IhomeUsage</span><span class="o">.</span><span class="n">from_uid</span><span class="p">(</span><span class="s1">&#39;ihome&#39;</span><span class="p">,</span> <span class="n">uid</span><span class="p">)</span>
+        <span class="n">supp_quotas</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_group_quotas</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;User: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;User ID: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">ihome_quota</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Group: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">group</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Group ID: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gid</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">quota</span> <span class="ow">in</span> <span class="n">supp_quotas</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">quota</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">supp_quotas</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s1">&#39;If you need additional storage, you can request up to 5TB on &#39;</span>
+                <span class="s1">&#39;BGFS, ZFS or IX!. Contact CRC for more details.&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Pitt Center for Research Computing.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
