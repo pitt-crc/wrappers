@@ -85,6 +85,56 @@
   <section id="module-apps">
 <span id="apps"></span><h1><a class="reference internal" href="../../index.html#module-apps" title="apps"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps</span></code></a><a class="headerlink" href="#module-apps" title="Permalink to this heading"></a></h1>
 <p>Custom commandline applications built by the Center for Research Computing.</p>
+<p>The wrapper applications provide a simplified interface from running common
+tasks on Slurm based HPC clusters. The applications are built specifically for
+the CRC. Some applications may work out-of-the-box at other HPC facilities,
+but others may require some modification.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>The command line applications are installable via the pip (or pipx) package
+manager:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pitt</span><span class="o">-</span><span class="n">crc</span><span class="o">/</span><span class="n">wrappers</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</section>
+<section id="contributing-a-new-application">
+<h2>Contributing a New Application<a class="headerlink" href="#contributing-a-new-application" title="Permalink to this heading"></a></h2>
+<p>Command line applications are based on the <code class="docutils literal notranslate"><span class="pre">argparse</span></code> from the standard
+Python library. To create a new application, inherit from the <code class="docutils literal notranslate"><span class="pre">BaseParser</span></code>
+class and define the following:</p>
+<ol class="arabic simple">
+<li><p>Define the application description as class documentation</p></li>
+<li><p>Define the application arguments (and help text) in the class <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method</p></li>
+<li><p>Define the core application logic in the <code class="docutils literal notranslate"><span class="pre">app_logic</span></code> method</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">Namespace</span>
+
+<span class="kn">from</span> <span class="nn">apps.base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
+
+
+<span class="k">class</span> <span class="nc">ExampleApplication</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This docstring becomes the application description in the CLI help text.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Define arguments for the command line interface&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_arguments</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--foo&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;This is help text&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">app_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Logic to evaluate when executing the application</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Parsed command line arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">foo</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You will also need to add the new application to the <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> file under
+the <code class="docutils literal notranslate"><span class="pre">entry_points</span></code> option. The following example assumes the application
+class is located in <code class="docutils literal notranslate"><span class="pre">apps/example_module.py</span></code> and exposes the application as
+an executable called <code class="docutils literal notranslate"><span class="pre">executable-name</span></code>:</p>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
@@ -110,7 +160,7 @@
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Permalink to this heading"></a></h2>
 <dl class="py data">
 <dt class="sig sig-object py" id="apps.__version__">
-<span class="sig-prename descclassname"><span class="pre">apps.</span></span><span class="sig-name descname"><span class="pre">__version__</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">0.0.2</span></em><a class="reference internal" href="../../_modules/apps.html#__version__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.__version__" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">apps.</span></span><span class="sig-name descname"><span class="pre">__version__</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">0.4.0</span></em><a class="reference internal" href="../../_modules/apps.html#__version__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.__version__" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py data">
