@@ -68,9 +68,8 @@ class CrcIdle(BaseParser):
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            node_name, resource_data = node_info.split(',')
-            # Return values include: allocated, idle, other, total
-            _, idle, _, _ = [int(x) for x in resource_data.split('/')]
+            _, resource_data = node_info.split(',')  # Returns: node_name, resource_data
+            _, idle, _, _ = [int(x) for x in resource_data.split('/')]  # Returns: allocated, idle, other, total
             return_dict[idle] = return_dict.setdefault(idle, 0) + 1
 
         return return_dict
@@ -90,14 +89,16 @@ class CrcIdle(BaseParser):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = "sinfo -h -M {0} -p {1} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '".format(cluster, partition)
+        command = "sinfo -h -M {0} -p {1} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '".format(
+            cluster, partition)
+
         stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            # node_name, total, allocated, node state
+            # Returns: node_name, total, allocated, node state
             _, total, allocated, state = node_info.split('_')
 
             # If the node is in a downed state, report 0 resource availability.
