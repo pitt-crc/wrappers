@@ -43,8 +43,6 @@ def get_meta():
     return author, version
 
 
-# Todo: add crc_scontrol.py
-# Todo: add crc_usage.pl
 _author, _version = get_meta()
 setup(
     name='demo-apps',
@@ -65,6 +63,7 @@ setup(
         crc-squeue=apps.crc_squeue:CrcSqueue.execute
         crc-sus=apps.crc_sus:CrcSus.execute
         crc-usage=apps.crc_usage:CrcUsage.execute
+        crc-scontrol=apps.crc_scontrol:CrcScontrol.execute
     """,
     install_requires=get_requirements(),
     author=_author,
