@@ -158,7 +158,3 @@ class CrcInteractive(BaseParser):
 
         else:
             system(srun_command)
-
-
-if __name__ == '__main__':
-    CrcInteractive().execute()

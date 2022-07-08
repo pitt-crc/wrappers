@@ -80,7 +80,3 @@ class CrcShowConfig(BaseParser):
         else:
             # Summarize all available partitions
             print(Shell.run_command("scontrol -M {} show partition".format(args.cluster)))
-
-
-if __name__ == '__main__':
-    CrcShowConfig().execute()

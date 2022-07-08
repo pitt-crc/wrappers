@@ -15,7 +15,3 @@ class CrcSinfo(BaseParser):
         """
 
         print(Shell.run_command("sinfo -M all"))
-
-
-if __name__ == '__main__':
-    CrcSinfo().execute()

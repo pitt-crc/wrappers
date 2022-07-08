@@ -71,7 +71,3 @@ class CrcSqueue(BaseParser):
             sleep(self.watch_frequency)
             print()
             print(Shell.run_command(command))
-
-
-if __name__ == '__main__':
-    CrcSqueue().execute()

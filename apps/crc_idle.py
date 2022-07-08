@@ -168,7 +168,3 @@ class CrcIdle(BaseParser):
             partitions_to_print = args.partition or SlurmInfo.get_partition_names(cluster)
             for partition in partitions_to_print:
                 self.print_partition_summary(cluster, partition)
-
-
-if __name__ == '__main__':
-    CrcIdle().execute()

@@ -64,7 +64,3 @@ class CrcScancel(BaseParser):
         if Shell.readchar().lower() == 'y':
             self.cancel_job_on_cluster(cluster, args.job_id)
             print('Force Terminated job {}'.format(args.job_id))
-
-
-if __name__ == '__main__':
-    CrcScancel().execute()

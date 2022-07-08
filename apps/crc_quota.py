@@ -272,7 +272,3 @@ class CrcQuota(BaseParser):
             print(
                 'If you need additional storage, you can request up to 5TB on '
                 'BGFS, ZFS or IX!. Contact CRC for more details.')
-
-
-if __name__ == "__main__":
-    CrcQuota().execute()

@@ -92,7 +92,3 @@ class CrcJobStats(BaseParser):
         self.exit_if_not_in_slurm()
         job_info = self.get_job_info()
         self.pretty_print_job_info(job_info)
-
-
-if __name__ == '__main__':
-    CrcJobStats().execute()

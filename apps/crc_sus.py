@@ -76,7 +76,3 @@ class CrcSus(BaseParser):
         account_info = self.get_allocation_info(args.account)
         output_string = self.build_output_string(args.account, **account_info)
         print(output_string)
-
-
-if __name__ == '__main__':
-    CrcSus().execute()

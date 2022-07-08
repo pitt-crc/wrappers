@@ -30,7 +30,3 @@ class CrcUsage(BaseParser):
 
         bank_info_command = '{} {}'.format(self.banking_executable, args.account)
         print(Shell.run_command(bank_info_command))
-
-
-if __name__ == '__main__':
-    CrcUsage().execute()

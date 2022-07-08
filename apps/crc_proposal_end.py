@@ -48,7 +48,3 @@ class CrcProposalEnd(BaseParser):
         string_template = "Proposal ends on {1} for account {0} on H2P"
         output_string = string_template.format(args.account, end_date.strftime("%m/%d/%y"))
         print(output_string)
-
-
-if __name__ == '__main__':
-    CrcProposalEnd().execute()
