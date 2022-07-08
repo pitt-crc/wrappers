@@ -28,6 +28,8 @@ class and define the following:
 
 .. code-block::
 
+   from argparse import Namespace
+
    from apps.base_parser import BaseParser
 
 
@@ -39,7 +41,7 @@ class and define the following:
 
            self.add_arguments('-f', '--foo', help="This is help text")
 
-       def app_logic(self, args):
+       def app_logic(self, args: Namespace) -> None:
            \"""Logic to evaluate when executing the application
 
            Args:
