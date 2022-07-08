@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-CrcInteractive = __import__('crc-interactive').CrcInteractive
+from apps.crc_interactive import CrcInteractive
 
 
 class ArgumentParsing(TestCase):
