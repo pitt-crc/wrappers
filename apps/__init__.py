@@ -33,7 +33,7 @@ class and define the following:
    from apps.base_parser import BaseParser
 
 
-   class CrcInteractive(BaseParser):
+   class ExampleApplication(BaseParser):
        \"""This docstring becomes the application description in the CLI help text.\"""
 
        def __init__(self) -> None:
@@ -49,6 +49,19 @@ class and define the following:
            \"""
 
            print(args.foo)
+
+
+You will also need to add the new application to the ``setup.py`` file under
+the ``entry_points`` option. The following example assumes the application
+class is located in ``apps/example_module.py`` and exposes the application as
+an executable called ``executable-name``:
+
+.. code-block::
+   setup(
+       entry_points=\"""
+           [console_scripts]
+           executable-name=apps.example_module:ExampleApplication.execute
+       \"""
 """
 
 __version__ = '0.4.0'
