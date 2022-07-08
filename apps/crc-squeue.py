@@ -4,8 +4,8 @@
 from os import environ
 from time import sleep
 
-from _base_parser import BaseParser
-from _utils import Shell
+from ._base_parser import BaseParser
+from ._utils import Shell
 
 
 class CrcSqueue(BaseParser):

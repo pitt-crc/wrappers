@@ -1,8 +1,8 @@
 #!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line application for listing idle Slurm resources"""
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from ._base_parser import BaseParser
+from ._utils import Shell, SlurmInfo
 
 
 class CrcIdle(BaseParser):

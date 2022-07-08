@@ -3,8 +3,8 @@
 
 import dataset
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from ._base_parser import BaseParser
+from ._utils import Shell, SlurmInfo
 
 
 class CrcSus(BaseParser):

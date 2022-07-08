@@ -4,8 +4,8 @@
 from os import environ
 from sys import stdout
 
-from _base_parser import BaseParser
-from _utils import Shell, SlurmInfo
+from ._base_parser import BaseParser
+from ._utils import Shell, SlurmInfo
 
 
 class CrcScancel(BaseParser):

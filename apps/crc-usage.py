@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 """Command line interface that wraps the banking application"""
 
-from _base_parser import BaseParser
-from _utils import Shell
+from ._base_parser import BaseParser
+from ._utils import Shell
 
 
 class CrcUsage(BaseParser):

@@ -3,8 +3,8 @@
 
 from os import environ
 
-from _base_parser import BaseParser
-from _utils import Shell
+from ._base_parser import BaseParser
+from ._utils import Shell
 
 
 class CrcJobStats(BaseParser):
