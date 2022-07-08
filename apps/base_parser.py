@@ -18,6 +18,8 @@ class BaseParser(ArgumentParser):
         """Define arguments for the command line interface"""
 
         super(BaseParser, self).__init__()
+        self.description = self.__doc__
+
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
     def _get_formatter(self):
