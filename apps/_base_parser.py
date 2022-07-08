@@ -57,12 +57,14 @@ class BaseParser(ArgumentParser):
         sys.stderr.write('ERROR: {}\n'.format(message))
         sys.exit(2)
 
-    def execute(self):
+    @classmethod
+    def execute(cls):
         """Parse command line arguments and execute the application"""
 
+        app = cls()
         try:
-            args = self.parse_args()
-            self.app_logic(args)
+            args = app.parse_args()
+            app.app_logic(args)
 
         except KeyboardInterrupt:
-            exit('Interrupt detected! exiting...')
+            exit('Interrupt detected! Exiting...')
