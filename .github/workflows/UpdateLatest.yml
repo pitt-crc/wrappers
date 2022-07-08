@@ -7,12 +7,12 @@ on:
 
 jobs:
   update:
-
+    name: Deploy Documentation
     runs-on: ubuntu-latest
-    steps:
 
-      - name: Checkout
-        uses: actions/checkout@v3
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@master
 
       - name: Determine latest tag
         id: get-tag

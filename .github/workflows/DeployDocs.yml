@@ -7,10 +7,11 @@ on:
 
 jobs:
   Build:
+    name: Deploy Documentation
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout
+    - name: Checkout source
       uses: actions/checkout@master
       with:
         fetch-depth: 0 # Otherwise, you will fail to push refs to destination repo
