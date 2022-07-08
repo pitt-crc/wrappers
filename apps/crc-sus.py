@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Print an account's service unit allocation"""
 
 import dataset

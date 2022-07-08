@@ -1,4 +1,3 @@
-#!/usr/bin/python -E
 """A simple wrapper around the Slurm ``srun`` command"""
 
 from os import system

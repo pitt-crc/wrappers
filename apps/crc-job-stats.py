@@ -1,4 +1,3 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line utility for printing basic information about a running job."""
 
 from os import environ

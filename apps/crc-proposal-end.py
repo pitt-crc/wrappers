@@ -1,4 +1,3 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Print the end date for an account's proposal"""
 
 import dataset

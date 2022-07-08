@@ -1,4 +1,3 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """A simple wrapper around the Slurm ``sinfo`` command"""
 
 from ._base_parser import BaseParser

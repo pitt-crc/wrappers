@@ -1,4 +1,3 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Display the slurm configuration for a given cluster/partition"""
 
 from ._base_parser import BaseParser

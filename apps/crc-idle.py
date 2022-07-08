@@ -1,4 +1,3 @@
-#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line application for listing idle Slurm resources"""
 
 from ._base_parser import BaseParser

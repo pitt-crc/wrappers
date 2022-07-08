@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Command line interface that wraps the banking application"""
 
 from ._base_parser import BaseParser
