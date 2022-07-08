@@ -1,7 +1,7 @@
 """A simple wrapper around the Slurm ``sinfo`` command"""
 
-from ._base_parser import BaseParser
-from ._utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class CrcSinfo(BaseParser):

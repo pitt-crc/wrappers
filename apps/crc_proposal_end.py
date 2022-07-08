@@ -2,8 +2,8 @@
 
 import dataset
 
-from ._base_parser import BaseParser
-from ._utils import Shell
+from .base_parser import BaseParser
+from .system_info import Shell
 
 
 class CrcProposalEnd(BaseParser):

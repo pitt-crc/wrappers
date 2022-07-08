@@ -3,36 +3,36 @@ name: Update Release Branch
 on:
   workflow_dispatch:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   update:
 
     runs-on: ubuntu-latest
     steps:
-    
-    - name: Checkout
-      uses: actions/checkout@v3
-      
-    - name: Determine latest tag
-      id: get-tag
-      run: |
-        # Get new tags
-        git fetch --tags
 
-        # Determine latest tag name
-        latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
-        echo "Using tag $latestTag"
-        echo "::set-output name=latestTag::$latestTag"
-    
-    - name: Update branch content
-      run: |
-        # Checkout replace the `latest` branch with content from latest tag
-        git checkout -b latest ${{ steps.get-tag.outputs.latestTag }} 
-        
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: latest
-        force: true
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Determine latest tag
+        id: get-tag
+        run: |
+          # Get new tags
+          git fetch --tags
+          
+          # Determine latest tag name
+          latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Using tag $latestTag"
+          echo "::set-output name=latestTag::$latestTag"
+
+      - name: Update branch content
+        run: |
+          # Checkout replace the `latest` branch with content from latest tag
+          git checkout -b latest ${{ steps.get-tag.outputs.latestTag }} 
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: latest
+          force: true

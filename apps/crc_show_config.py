@@ -1,7 +1,7 @@
 """Display the slurm configuration for a given cluster/partition"""
 
-from ._base_parser import BaseParser
-from ._utils import Shell, SlurmInfo
+from .base_parser import BaseParser
+from .system_info import Shell, SlurmInfo
 
 
 class CrcShowConfig(BaseParser):

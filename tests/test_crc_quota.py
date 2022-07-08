@@ -4,6 +4,7 @@ import unittest
 
 from apps.crc_quota import AbstractFilesystemUsage
 
+
 class BytesUnitConversion(unittest.TestCase):
     """Test the conversion of bytes into human-readable units"""
 
