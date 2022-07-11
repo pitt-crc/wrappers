@@ -4,8 +4,8 @@ renamed. This placeholder instructs users to use the new command line app.
 from .base_parser import BaseParser
 
 
-class CrcSinfo(BaseParser):
-    """Print a deprecation warning"""
+class CrcScontrol(BaseParser):
+    """The `crc-scontrol` application has been deprecated. Please use the `crc-show-config` application instead."""
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
@@ -14,7 +14,4 @@ class CrcSinfo(BaseParser):
             args: Parsed command line arguments
         """
 
-        print(
-            'DEPRECATION ERROR: The `crc-scontrol` application has been deprecated. '
-            'Please use the `crc-show-config` application instead.'
-        )
+        print(self.__class__.__doc__)

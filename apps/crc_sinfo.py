@@ -5,7 +5,7 @@ from .system_info import Shell
 
 
 class CrcSinfo(BaseParser):
-    """Command line application for fetching data from the Slurm ``sinfo`` utility"""
+    """Display information about all available Slurm clusters."""
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application

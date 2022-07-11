@@ -7,7 +7,7 @@ from .system_info import Shell, SlurmInfo
 
 
 class CrcInteractive(BaseParser):
-    """Commandline utility for launching an interactive slurm session"""
+    """Launch an interactive Slurm session."""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
     min_time = 1  # Minimum limit on requested time in hours
@@ -20,46 +20,46 @@ class CrcInteractive(BaseParser):
     default_gpus = 0  # Default number of GPUs
 
     def __init__(self):
-        """Define arguments for the command line interface"""
+        """Define arguments for the command line interface."""
 
         super(CrcInteractive, self).__init__()
-        self.add_argument('-z', '--print-command', action='store_true', help='Simply print the command to be run')
+        self.add_argument('-z', '--print-command', action='store_true', help='print the equivalent slurm command and exit')
 
         # Arguments for specifying what cluster to start an interactive session on
         cluster_args = self.add_argument_group('Cluster Arguments')
-        cluster_args.add_argument('-s', '--smp', action='store_true', help='Interactive job on smp cluster')
-        cluster_args.add_argument('-g', '--gpu', action='store_true', help='Interactive job on gpu cluster')
-        cluster_args.add_argument('-m', '--mpi', action='store_true', help='Interactive job on mpi cluster')
-        cluster_args.add_argument('-i', '--invest', action='store_true', help='Interactive job on invest cluster')
-        cluster_args.add_argument('-d', '--htc', action='store_true', help='Interactive job on htc cluster')
-        cluster_args.add_argument('-p', '--partition', help='Specify non-default partition')
+        cluster_args.add_argument('-s', '--smp', action='store_true', help='launch a session on the smp cluster')
+        cluster_args.add_argument('-g', '--gpu', action='store_true', help='launch a session on the gpu cluster')
+        cluster_args.add_argument('-m', '--mpi', action='store_true', help='launch a session on the mpi cluster')
+        cluster_args.add_argument('-i', '--invest', action='store_true', help='launch a session on the invest cluster')
+        cluster_args.add_argument('-d', '--htc', action='store_true', help='launch a session on the htc cluster')
+        cluster_args.add_argument('-p', '--partition', help='run the session on a specific partition')
 
         # Arguments for requesting additional hardware resources
         resource_args = self.add_argument_group('Arguments for Increased Resources')
-        resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='Memory in GB')
+        resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
             '-t', '--time', type=int, default=self.default_time,
-            help='Run time in hours [default: {}]'.format(self.default_time))
+            help='run time in hours [default: {}]'.format(self.default_time))
 
         resource_args.add_argument(
             '-n', '--num-nodes', type=int, default=self.default_nodes,
-            help='Number of nodes [default: {}]'.format(self.default_nodes))
+            help='number of nodes [default: {}]'.format(self.default_nodes))
 
         resource_args.add_argument(
             '-c', '--num-cores', type=int, default=self.default_cores,
-            help='Number of cores per node [default: {}]'.format(self.default_cores))
+            help='number of cores per node [default: {}]'.format(self.default_cores))
 
         resource_args.add_argument(
             '-u', '--num-gpus', type=int, default=self.default_gpus,
-            help='If using -g, the number of GPUs [default: {}]'.format(self.default_gpus))
+            help='if using -g, the number of GPUs [default: {}]'.format(self.default_gpus))
 
         # A grab bag of other settings for configuring slurm jobs
         additional_args = self.add_argument_group('Additional Job Settings')
-        additional_args.add_argument('-a', '--account', help='Specify a non-default account')
-        additional_args.add_argument('-r', '--reservation', help='Specify a reservation name')
-        additional_args.add_argument('-l', '--license', help='Specify a license')
-        additional_args.add_argument('-f', '--feature', help='Specify a feature, e.g. `ti` for GPUs')
-        additional_args.add_argument('-o', '--openmp', action='store_true', help='Run using OpenMP style submission')
+        additional_args.add_argument('-a', '--account', help='specify a non-default account')
+        additional_args.add_argument('-r', '--reservation', help='specify a reservation name')
+        additional_args.add_argument('-l', '--license', help='specify a license')
+        additional_args.add_argument('-f', '--feature', help='specify a feature, e.g. `ti` for GPUs')
+        additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP style submission')
 
     def _validate_arguments(self, args):
         """Exit the application if command-line arguments are invalid
