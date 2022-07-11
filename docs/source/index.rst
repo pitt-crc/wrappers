@@ -16,4 +16,4 @@ CRC Wrapper Applications
    :caption: Applications:
    :glob:
 
-   autoapi/apps/**/*
+   autoapi/apps/[!_]**/*

@@ -1,7 +1,7 @@
 """Command line application for listing idle Slurm resources"""
 
-from .base_parser import BaseParser
-from .system_info import Shell, SlurmInfo
+from ._base_parser import BaseParser
+from ._system_info import Shell, SlurmInfo
 
 
 class CrcIdle(BaseParser):

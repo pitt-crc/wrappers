@@ -3,8 +3,8 @@
 from os import environ
 from time import sleep
 
-from .base_parser import BaseParser
-from .system_info import Shell
+from ._base_parser import BaseParser
+from ._system_info import Shell
 
 
 class CrcSqueue(BaseParser):

@@ -1,7 +1,7 @@
 """This file is intended to be temporary. The original application has been
 renamed. This placeholder instructs users to use the new command line app.
 """
-from .base_parser import BaseParser
+from ._base_parser import BaseParser
 
 
 class CrcScontrol(BaseParser):
