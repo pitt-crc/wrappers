@@ -1,3 +1,5 @@
+"""Tests for the ``Shell`` class"""
+
 from unittest import TestCase
 
 from apps.system_info import Shell

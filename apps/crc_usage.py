@@ -15,7 +15,8 @@ class CrcUsage(BaseParser):
         super(CrcUsage, self).__init__()
 
         default_group = Shell.run_command("id -gn")
-        self.add_argument('account', default=default_group, nargs='?', help=f'slurm account name [default: {default_group}]')
+        help_text = f'slurm account name [default: {default_group}]'
+        self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application
