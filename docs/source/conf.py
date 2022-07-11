@@ -24,6 +24,7 @@ author = u'Pitt Center for Research Computing'
 # Add any Sphinx extension module names here, as strings.
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
     'sphinx.ext.doctest',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
