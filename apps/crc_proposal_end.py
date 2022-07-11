@@ -7,7 +7,7 @@ from .system_info import Shell
 
 
 class CrcProposalEnd(BaseParser):
-    """Command line application for printing an account's proposal end date"""
+    """Display the end date for an account's current CRC proposal."""
 
     banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
@@ -17,7 +17,9 @@ class CrcProposalEnd(BaseParser):
         super(CrcProposalEnd, self).__init__()
 
         default_group = Shell.run_command("id -gn")
-        self.add_argument('account', default=default_group, nargs='?', help='the Slurm account')
+        self.add_argument(
+            'account', default=default_group, nargs='?',
+            help=f'the name of the Slurm account [default: {default_group}]')
 
     def get_proposal_end_date(self, account):
         """Get the proposal end date for a given account

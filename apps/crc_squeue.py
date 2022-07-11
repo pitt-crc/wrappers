@@ -8,7 +8,7 @@ from .system_info import Shell
 
 
 class CrcSqueue(BaseParser):
-    """Command line application for fetching data from the Slurm ``squeue`` utility"""
+    """Summarize currently running Slurm jobs."""
 
     # Formats for output data depending on user provided arguments
     output_format_user = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R'"
@@ -23,9 +23,9 @@ class CrcSqueue(BaseParser):
         """Define arguments for the command line interface"""
 
         super(CrcSqueue, self).__init__()
-        self.add_argument('-a', '--all', action='store_true', help="show all jobs")
+        self.add_argument('-a', '--all', action='store_true', help="show all jobs (defaults to current user only)")
         self.add_argument('-s', '--start', action='store_true', help="add the approximate start time")
-        self.add_argument('-w', '--watch', action='store_true', help="updates information every 10 seconds")
+        self.add_argument('-w', '--watch', action='store_true', help="update information every 10 seconds")
 
     def build_slurm_command(self, args):
         """Return an ``squeue`` command matching parsed command line arguments

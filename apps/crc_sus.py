@@ -7,7 +7,7 @@ from .system_info import Shell, SlurmInfo
 
 
 class CrcSus(BaseParser):
-    """Command line application for printing an account's service unit allocation"""
+    """Display the number of service units allocated to an account."""
 
     banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
@@ -17,7 +17,7 @@ class CrcSus(BaseParser):
         super(CrcSus, self).__init__()
 
         default_group = Shell.run_command("id -gn")
-        self.add_argument('account', default=default_group, nargs='?', help='slurm account name')
+        self.add_argument('account', default=default_group, nargs='?', help=f'slurm account name [default: {default_group}]')
 
     def get_allocation_info(self, account):
         """Return the service unit allocation for a given account name

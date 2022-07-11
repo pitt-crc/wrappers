@@ -7,13 +7,16 @@ from .system_info import Shell
 
 
 class CrcJobStats(BaseParser):
-    """A commandline tool for tracking job information from with a Slurm job"""
+    """Track job information from within a Slurm job.
+
+    Include this command at the end of your Slurm job scripts.
+    """
 
     cluster = environ.get('SLURM_CLUSTER_NAME')
     job_id = environ.get('SLURM_JOB_ID')
 
     def exit_if_not_in_slurm(self):
-        """Error if the application is not running from within a slurm job"""
+        """Exit the application is not running from within a slurm job"""
 
         if 'SLURM_JOB_ID' not in environ:
             print('This script is meant to be added at the bottom of your Slurm scripts!')

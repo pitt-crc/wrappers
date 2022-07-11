@@ -5,7 +5,7 @@ from .system_info import Shell, SlurmInfo
 
 
 class CrcShowConfig(BaseParser):
-    """Command line application for fetching data from the Slurm ``scontrol`` utility"""
+    """Display information about the current Slurm configuration."""
 
     def __init__(self):
         """Define arguments for the command line interface"""

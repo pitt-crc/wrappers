@@ -5,7 +5,7 @@ from .system_info import Shell
 
 
 class CrcUsage(BaseParser):
-    """Command line application for printing a slurm account's cluster usage"""
+    """Display a Slurm account's cluster usage."""
 
     banking_executable = '/ihome/crc/bank/crc_bank.py usage'
 
@@ -15,7 +15,7 @@ class CrcUsage(BaseParser):
         super(CrcUsage, self).__init__()
 
         default_group = Shell.run_command("id -gn")
-        self.add_argument('account', default=default_group, nargs='?', help='slurm account name')
+        self.add_argument('account', default=default_group, nargs='?', help=f'slurm account name [default: {default_group}]')
 
     def app_logic(self, args):
         """Logic to evaluate when executing the application

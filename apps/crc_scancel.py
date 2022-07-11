@@ -8,7 +8,7 @@ from .system_info import Shell, SlurmInfo
 
 
 class CrcScancel(BaseParser):
-    """Command line application for canceling the user's running slurm jobs"""
+    """Cancel a Slurm job submitted by the current user."""
 
     user = environ['USER']
 
@@ -19,7 +19,7 @@ class CrcScancel(BaseParser):
 
         # Argument must be a valid integer expressed as a string
         int_as_str = lambda x: str(int(x))
-        self.add_argument('job_id', type=int_as_str, help='the job\'s ID')
+        self.add_argument('job_id', type=int_as_str, help='the job ID to cancel')
 
     @staticmethod
     def cancel_job_on_cluster(cluster, job_id):

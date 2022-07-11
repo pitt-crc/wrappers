@@ -7,7 +7,7 @@ from .system_info import Shell, SlurmInfo
 
 
 class CrcInteractive(BaseParser):
-    """Launch an interactive slurm session"""
+    """Launch an interactive Slurm session."""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
     min_time = 1  # Minimum limit on requested time in hours
@@ -20,10 +20,10 @@ class CrcInteractive(BaseParser):
     default_gpus = 0  # Default number of GPUs
 
     def __init__(self):
-        """Define arguments for the command line interface"""
+        """Define arguments for the command line interface."""
 
         super(CrcInteractive, self).__init__()
-        self.add_argument('-z', '--print-command', action='store_true', help='Simply print the command to be run')
+        self.add_argument('-z', '--print-command', action='store_true', help='print the equivalent slurm command and exit')
 
         # Arguments for specifying what cluster to start an interactive session on
         cluster_args = self.add_argument_group('Cluster Arguments')
@@ -36,7 +36,7 @@ class CrcInteractive(BaseParser):
 
         # Arguments for requesting additional hardware resources
         resource_args = self.add_argument_group('Arguments for Increased Resources')
-        resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='Memory in GB')
+        resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
             '-t', '--time', type=int, default=self.default_time,
             help='run time in hours [default: {}]'.format(self.default_time))

@@ -190,14 +190,14 @@ class IhomeUsage(AbstractFilesystemUsage):
 
 
 class CrcQuota(BaseParser):
-    """Commandline tool for fetching a user's disk quota"""
+    """Display a user's disk quota."""
 
     def __init__(self):
         """Define arguments for the command line interface"""
 
         super(CrcQuota, self).__init__()
-        self.add_argument('user', default=None, nargs='?', help='username of quota to query')
-        self.add_argument('--verbose', action='store_true', help='verbose quota output')
+        self.add_argument('user', default=None, nargs='?', help='username to query disk usage for')
+        self.add_argument('--verbose', action='store_true', help='use verbose output')
 
     @staticmethod
     def get_user_info(username=None):
