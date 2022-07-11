@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from apps.system_info import Shell
+from apps._system_info import Shell
 
 
 class FileDescriptors(TestCase):
