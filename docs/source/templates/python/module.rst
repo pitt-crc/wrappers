@@ -5,8 +5,6 @@
 {{ obj.name }}
 =========={{ "=" * obj.name|length }}
 
-.. py:module:: {{ obj.name }}
-
 {% if obj.docstring %}
 .. autoapi-nested-parse::
 
