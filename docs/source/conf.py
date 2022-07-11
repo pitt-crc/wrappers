@@ -6,9 +6,12 @@ import sys
 
 from pathlib import Path
 
+# Add the project source code to the working python environment
 conf_dir = Path(__file__).resolve().parent
-source_dir = conf_dir.parent.parent
-sys.path.insert(0, str(source_dir))
+project_root = conf_dir.parent.parent
+apps_dir = project_root / 'apps'
+
+sys.path.insert(0, str(project_root))
 
 # -- Project information -----------------------------------------------------
 
@@ -29,7 +32,7 @@ extensions = [
 
 # Configure automatic documentation of commandline applications
 autoapi_type = 'python'
-autoapi_dirs = [str(source_dir / 'apps')]
+autoapi_dirs = [str(apps_dir)]
 autoapi_add_toctree_entry = False
 
 # Add any paths that contain templates here, relative to this directory.
