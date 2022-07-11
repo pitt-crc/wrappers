@@ -128,11 +128,14 @@ class CrcIdle(BaseParser):
             A dictionary mapping idle resources to number of nodes
         """
 
-        if self.cluster_types.get(cluster, self.default_type) == 'GPUs':
+        cluster_type = self.cluster_types.get(cluster, self.default_type)
+        if cluster_type == 'GPUs':
             return self._idle_gpu_resources(cluster, partition)
 
-        else:
+        elif cluster_type == 'cores':
             return self._idle_cpu_resources(cluster, partition)
+
+        raise ValueError(f'Unknown cluster type: {cluster}')
 
     def print_partition_summary(self, cluster, partition):
         """Print a summary of idle resources in a single partition
