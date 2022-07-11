@@ -35,7 +35,7 @@ the following:
 
    from argparse import Namespace
 
-   from apps.base_parser import BaseParser
+   from apps._base_parser import BaseParser
 
 
    class ExampleApplication(BaseParser):
@@ -71,6 +71,13 @@ an executable called ``executable-name``:
        \"""
        ...
    )
+
+.. note::
+
+   For both clarity and historical reasons, application names are defined
+   in files starting with the prefix ``crc_``. Python modules containing
+   reusable utilities (and not a dedicated command line app) are named using a
+   leading underscore.
 """
 
 __version__ = '0.4.0'
