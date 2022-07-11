@@ -1,7 +1,7 @@
-apps._base_parser
-===========================
+apps.base_parser
+==========================
 
-.. py:module:: apps._base_parser
+.. py:module:: apps.base_parser
 
 .. autoapi-nested-parse::
 
