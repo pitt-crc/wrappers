@@ -92,7 +92,7 @@
 
 
 <div class="viewcode-block" id="CrcProposalEnd"><a class="viewcode-back" href="../../autoapi/apps/crc_proposal_end/index.html#apps.crc_proposal_end.CrcProposalEnd">[docs]</a><span class="k">class</span> <span class="nc">CrcProposalEnd</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Command line application for printing an account&#39;s proposal end date&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Display the end date for an account&#39;s current CRC proposal.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CrcProposalEnd.banking_db_path"><a class="viewcode-back" href="../../autoapi/apps/crc_proposal_end/index.html#apps.crc_proposal_end.CrcProposalEnd.banking_db_path">[docs]</a>    <span class="n">banking_db_path</span> <span class="o">=</span> <span class="s1">&#39;sqlite:////ihome/crc/bank/crc_bank.db&#39;</span></div>
 
@@ -102,7 +102,9 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">CrcProposalEnd</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="n">default_group</span> <span class="o">=</span> <span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s2">&quot;id -gn&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;account&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_group</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;the Slurm account&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s1">&#39;account&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_group</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="n">f</span><span class="s1">&#39;the name of the Slurm account [default: </span><span class="si">{default_group}</span><span class="s1">]&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CrcProposalEnd.get_proposal_end_date"><a class="viewcode-back" href="../../autoapi/apps/crc_proposal_end/index.html#apps.crc_proposal_end.CrcProposalEnd.get_proposal_end_date">[docs]</a>    <span class="k">def</span> <span class="nf">get_proposal_end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">account</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get the proposal end date for a given account</span>

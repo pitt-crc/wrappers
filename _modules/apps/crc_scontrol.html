@@ -89,20 +89,17 @@
 <span class="kn">from</span> <span class="nn">.base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
 
 
-<div class="viewcode-block" id="CrcSinfo"><a class="viewcode-back" href="../../autoapi/apps/crc_scontrol/index.html#apps.crc_scontrol.CrcSinfo">[docs]</a><span class="k">class</span> <span class="nc">CrcSinfo</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print a deprecation warning&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CrcScontrol"><a class="viewcode-back" href="../../autoapi/apps/crc_scontrol/index.html#apps.crc_scontrol.CrcScontrol">[docs]</a><span class="k">class</span> <span class="nc">CrcScontrol</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The `crc-scontrol` application has been deprecated. Please use the `crc-show-config` application instead.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CrcSinfo.app_logic"><a class="viewcode-back" href="../../autoapi/apps/crc_scontrol/index.html#apps.crc_scontrol.CrcSinfo.app_logic">[docs]</a>    <span class="k">def</span> <span class="nf">app_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="CrcScontrol.app_logic"><a class="viewcode-back" href="../../autoapi/apps/crc_scontrol/index.html#apps.crc_scontrol.CrcScontrol.app_logic">[docs]</a>    <span class="k">def</span> <span class="nf">app_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Logic to evaluate when executing the application</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            args: Parsed command line arguments</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="s1">&#39;DEPRECATION ERROR: The `crc-scontrol` application has been deprecated. &#39;</span>
-            <span class="s1">&#39;Please use the `crc-show-config` application instead.&#39;</span>
-        <span class="p">)</span></div></div>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

@@ -129,7 +129,7 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Commandline tool for fetching a user's disk quota
+   Display a user's disk quota.
 
    .. py:method:: get_user_info(username=None)
       :staticmethod:

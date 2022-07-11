@@ -84,27 +84,32 @@
   <h1>Source code for apps</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Custom commandline applications built by the Center for Research Computing.</span>
 
-<span class="sd">The wrapper applications provide a simplified interface from running common</span>
-<span class="sd">tasks on Slurm based HPC clusters. The applications are built specifically for</span>
-<span class="sd">the CRC. Some applications may work out-of-the-box at other HPC facilities,</span>
-<span class="sd">but others may require some modification.</span>
+<span class="sd">The wrapper applications provide a simplified interface for running common</span>
+<span class="sd">HPC tasks on Slurm based clusters. The applications are built specifically for</span>
+<span class="sd">the CRC and are not designed to work out-of-the-box at other HPC facilities.</span>
 
 <span class="sd">Installation</span>
 <span class="sd">------------</span>
 
-<span class="sd">The command line applications are installable via the pip (or pipx) package</span>
-<span class="sd">manager:</span>
+<span class="sd">The command line applications are installable as a collective set via the</span>
+<span class="sd">pip (or pipx) package manager:</span>
 
 <span class="sd">.. code-block::</span>
 
-<span class="sd">   pip install git+https://github.com/pitt-crc/wrappers.git</span>
+<span class="sd">   pipx install git+https://github.com/pitt-crc/wrappers.git</span>
+
+<span class="sd">The ``pipx`` utility is recommended for system administrators working in a</span>
+<span class="sd">multi-tenancy environment.</span>
 
 <span class="sd">Contributing a New Application</span>
 <span class="sd">------------------------------</span>
 
-<span class="sd">Command line applications are based on the ``argparse`` from the standard</span>
-<span class="sd">Python library. To create a new application, inherit from the ``BaseParser``</span>
-<span class="sd">class and define the following:</span>
+<span class="sd">Wrapper applications are based on the ``argparse`` package from the standard</span>
+<span class="sd">Python library. The ``BaseParser`` class extends this functionality and</span>
+<span class="sd">ensures all applications share the same fundamental behavior.</span>
+
+<span class="sd">To create a new application, inherit from the ``BaseParser`` class and define</span>
+<span class="sd">the following:</span>
 
 <span class="sd">1. Define the application description as class documentation</span>
 <span class="sd">2. Define the application arguments (and help text) in the class ``__init__`` method</span>
@@ -123,7 +128,7 @@
 <span class="s2">       def __init__(self) -&gt; None:</span>
 <span class="s2">           </span><span class="se">\&quot;</span><span class="s2">&quot;&quot;Define arguments for the command line interface</span><span class="se">\&quot;</span><span class="s2">&quot;&quot;</span>
 
-<span class="s2">           self.add_arguments(&#39;-f&#39;, &#39;--foo&#39;, help=&quot;This is help text&quot;)</span>
+<span class="s2">           self.add_arguments(&#39;-f&#39;, &#39;--foo&#39;, help=&quot;This is help text for foo&quot;)</span>
 
 <span class="s2">       def app_logic(self, args: Namespace) -&gt; None:</span>
 <span class="s2">           </span><span class="se">\&quot;</span><span class="s2">&quot;&quot;Logic to evaluate when executing the application</span>

@@ -26,7 +26,7 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Command line application for canceling the user's running slurm jobs
+   Cancel a Slurm job submitted by the current user.
 
    .. py:attribute:: user
       

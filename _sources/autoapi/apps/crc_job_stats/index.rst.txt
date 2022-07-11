@@ -26,7 +26,9 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   A commandline tool for tracking job information from with a Slurm job
+   Track job information from within a Slurm job.
+
+   Include this command at the end of your Slurm job scripts.
 
    .. py:attribute:: cluster
       
@@ -40,7 +42,7 @@ Classes
 
    .. py:method:: exit_if_not_in_slurm(self)
 
-      Error if the application is not running from within a slurm job
+      Exit the application is not running from within a slurm job
 
 
    .. py:method:: get_job_info(self)

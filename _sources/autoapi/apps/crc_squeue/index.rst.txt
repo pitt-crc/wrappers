@@ -26,7 +26,7 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Command line application for fetching data from the Slurm ``squeue`` utility
+   Summarize currently running Slurm jobs.
 
    .. py:attribute:: output_format_user
       :annotation: = -o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R'

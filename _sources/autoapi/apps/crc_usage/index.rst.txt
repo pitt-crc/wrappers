@@ -26,7 +26,7 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Command line application for printing a slurm account's cluster usage
+   Display a Slurm account's cluster usage.
 
    .. py:attribute:: banking_executable
       :annotation: = /ihome/crc/bank/crc_bank.py usage

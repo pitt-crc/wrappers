@@ -103,7 +103,7 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats" title="apps.crc_job_stats.CrcJobStats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrcJobStats</span></code></a></p></td>
-<td><p>A commandline tool for tracking job information from with a Slurm job</p></td>
+<td><p>Track job information from within a Slurm job.</p></td>
 </tr>
 </tbody>
 </table>
@@ -111,7 +111,8 @@
 <dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_job_stats.</span></span><span class="sig-name descname"><span class="pre">CrcJobStats</span></span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base_parser/index.html#apps.base_parser.BaseParser" title="apps.base_parser.BaseParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apps.base_parser.BaseParser</span></code></a></p>
-<p>A commandline tool for tracking job information from with a Slurm job</p>
+<p>Track job information from within a Slurm job.</p>
+<p>Include this command at the end of your Slurm job scripts.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.cluster">
 <span class="sig-name descname"><span class="pre">cluster</span></span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.cluster" title="Permalink to this definition"></a></dt>
@@ -125,7 +126,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.exit_if_not_in_slurm">
 <span class="sig-name descname"><span class="pre">exit_if_not_in_slurm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.exit_if_not_in_slurm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.exit_if_not_in_slurm" title="Permalink to this definition"></a></dt>
-<dd><p>Error if the application is not running from within a slurm job</p>
+<dd><p>Exit the application is not running from within a slurm job</p>
 </dd></dl>
 
 <dl class="py method">

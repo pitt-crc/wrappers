@@ -103,7 +103,7 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#apps.crc_idle.CrcIdle" title="apps.crc_idle.CrcIdle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrcIdle</span></code></a></p></td>
-<td><p>Command line application for listing idle Slurm resources</p></td>
+<td><p>Display idle Slurm resources.</p></td>
 </tr>
 </tbody>
 </table>
@@ -111,7 +111,7 @@
 <dt class="sig sig-object py" id="apps.crc_idle.CrcIdle">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_idle.</span></span><span class="sig-name descname"><span class="pre">CrcIdle</span></span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="../base_parser/index.html#apps.base_parser.BaseParser" title="apps.base_parser.BaseParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apps.base_parser.BaseParser</span></code></a></p>
-<p>Command line application for listing idle Slurm resources</p>
+<p>Display idle Slurm resources.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.cluster_types">
 <span class="sig-name descname"><span class="pre">cluster_types</span></span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.cluster_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.cluster_types" title="Permalink to this definition"></a></dt>
@@ -124,14 +124,14 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.get_cluster_list">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_cluster_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.get_cluster_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.get_cluster_list" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_cluster_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.get_cluster_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.get_cluster_list" title="Permalink to this definition"></a></dt>
 <dd><p>Return a list of clusters specified in the command line arguments</p>
 <p>Returns a tuple of clusters specified by command line arguments. If no
 clusters were specified, then return a tuple of all cluster names.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>args: Parsed command line arguments</p>
 </dd>
-<dt>Returns:</dt><dd><p>A tuple fo cluster names</p>
+<dt>Returns:</dt><dd><p>A tuple of cluster names</p>
 </dd>
 </dl>
 </dd></dl>

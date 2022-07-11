@@ -26,7 +26,7 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Command line application for fetching data from the Slurm ``sinfo`` utility
+   Display information about all available Slurm clusters.
 
    .. py:method:: app_logic(self, args)
 

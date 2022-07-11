@@ -26,7 +26,7 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Commandline utility for launching an interactive slurm session
+   Launch an interactive Slurm session.
 
    .. py:attribute:: min_mpi_nodes
       :annotation: = 2

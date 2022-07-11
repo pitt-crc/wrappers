@@ -26,7 +26,7 @@ Classes
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Command line application for listing idle Slurm resources
+   Display idle Slurm resources.
 
    .. py:attribute:: cluster_types
       
@@ -38,8 +38,7 @@ Classes
 
       
 
-   .. py:method:: get_cluster_list(args)
-      :staticmethod:
+   .. py:method:: get_cluster_list(self, args)
 
       Return a list of clusters specified in the command line arguments
 
@@ -50,7 +49,7 @@ Classes
           args: Parsed command line arguments
 
       Returns:
-          A tuple fo cluster names
+          A tuple of cluster names
 
 
    .. py:method:: _idle_cpu_resources(cluster, partition)

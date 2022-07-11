@@ -275,14 +275,14 @@
 
 
 <div class="viewcode-block" id="CrcQuota"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.CrcQuota">[docs]</a><span class="k">class</span> <span class="nc">CrcQuota</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commandline tool for fetching a user&#39;s disk quota&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Display a user&#39;s disk quota.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Define arguments for the command line interface&quot;&quot;&quot;</span>
 
         <span class="nb">super</span><span class="p">(</span><span class="n">CrcQuota</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;username of quota to query&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;verbose quota output&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;username to query disk usage for&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;use verbose output&#39;</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
 <div class="viewcode-block" id="CrcQuota.get_user_info"><a class="viewcode-back" href="../../autoapi/apps/crc_quota/index.html#apps.crc_quota.CrcQuota.get_user_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_user_info</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>

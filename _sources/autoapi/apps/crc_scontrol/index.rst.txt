@@ -18,16 +18,16 @@ Classes
 
 .. autoapisummary::
 
-   apps.crc_scontrol.CrcSinfo
+   apps.crc_scontrol.CrcScontrol
 
 
 
 
-.. py:class:: CrcSinfo
+.. py:class:: CrcScontrol
 
    Bases: :py:obj:`apps.base_parser.BaseParser`
 
-   Print a deprecation warning
+   The `crc-scontrol` application has been deprecated. Please use the `crc-show-config` application instead.
 
    .. py:method:: app_logic(self, args)
 
