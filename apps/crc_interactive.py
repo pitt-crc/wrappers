@@ -23,7 +23,9 @@ class CrcInteractive(BaseParser):
         """Define arguments for the command line interface."""
 
         super(CrcInteractive, self).__init__()
-        self.add_argument('-z', '--print-command', action='store_true', help='print the equivalent slurm command and exit')
+        self.add_argument(
+            '-z', '--print-command', action='store_true',
+            help='print the equivalent slurm command and exit')
 
         # Arguments for specifying what cluster to start an interactive session on
         cluster_args = self.add_argument_group('Cluster Arguments')
