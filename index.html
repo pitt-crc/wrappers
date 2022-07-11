@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="apps.base_parser" href="autoapi/apps/base_parser/index.html" /> 
+    <link rel="next" title="apps.crc_idle" href="autoapi/apps/crc_idle/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,7 +43,6 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="autoapi/apps/base_parser/index.html">apps.base_parser</a></li>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/apps/crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/apps/crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/apps/crc_job_stats/index.html">apps.crc_job_stats</a></li>
@@ -56,7 +55,6 @@
 <li class="toctree-l1"><a class="reference internal" href="autoapi/apps/crc_squeue/index.html">apps.crc_squeue</a></li>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/apps/crc_sus/index.html">apps.crc_sus</a></li>
 <li class="toctree-l1"><a class="reference internal" href="autoapi/apps/crc_usage/index.html">apps.crc_usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="autoapi/apps/system_info/index.html">apps.system_info</a></li>
 </ul>
 
         </div>
@@ -113,7 +111,7 @@ the following:</p>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">Namespace</span>
 
-<span class="kn">from</span> <span class="nn">apps.base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">apps._base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
 
 
 <span class="k">class</span> <span class="nc">ExampleApplication</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
@@ -148,6 +146,13 @@ an executable called <code class="docutils literal notranslate"><span class="pre
 <span class="p">)</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For both clarity and historical reasons, application names are defined
+in files starting with the prefix <code class="docutils literal notranslate"><span class="pre">crc_</span></code>. Python modules containing
+reusable utilities (and not a dedicated command line app) are named using a
+leading underscore.</p>
+</div>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -159,7 +164,7 @@ an executable called <code class="docutils literal notranslate"><span class="pre
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="autoapi/apps/base_parser/index.html" class="btn btn-neutral float-right" title="apps.base_parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="autoapi/apps/crc_idle/index.html" class="btn btn-neutral float-right" title="apps.crc_idle" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

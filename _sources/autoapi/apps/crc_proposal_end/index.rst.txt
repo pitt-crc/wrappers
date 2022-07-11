@@ -16,7 +16,7 @@ Module Contents
 
 .. py:class:: CrcProposalEnd
 
-   Bases: :py:obj:`apps.base_parser.BaseParser`
+   Bases: :py:obj:`apps._base_parser.BaseParser`
 
    Display the end date for an account's current CRC proposal.
 

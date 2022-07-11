@@ -16,7 +16,7 @@ Module Contents
 
 .. py:class:: CrcJobStats
 
-   Bases: :py:obj:`apps.base_parser.BaseParser`
+   Bases: :py:obj:`apps._base_parser.BaseParser`
 
    Track job information from within a Slurm job.
 
