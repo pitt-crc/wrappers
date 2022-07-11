@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_squeue`
+apps.crc_squeue
 =========================
 
 .. py:module:: apps.crc_squeue
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_squeue.CrcSqueue
-
-
-
 
 .. py:class:: CrcSqueue
 
@@ -57,16 +49,15 @@ Classes
 
       Return an ``squeue`` command matching parsed command line arguments
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
 
 
    .. py:method:: app_logic(self, args)
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
+
 
 
 

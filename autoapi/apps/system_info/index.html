@@ -43,24 +43,31 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../base_parser/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.base_parser</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_idle</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_interactive</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_job_stats</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_proposal_end/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_proposal_end</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_quota/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_quota</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_scancel/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scancel</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_scontrol/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scontrol</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_show_config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_show_config</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_sinfo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sinfo</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_squeue/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_squeue</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_sus/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sus</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_usage/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_usage</span></code></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.system_info</span></code></a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../base_parser/index.html">apps.base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html">apps.crc_job_stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_proposal_end/index.html">apps.crc_proposal_end</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_quota/index.html">apps.crc_quota</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_scancel/index.html">apps.crc_scancel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_scontrol/index.html">apps.crc_scontrol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_show_config/index.html">apps.crc_show_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_sinfo/index.html">apps.crc_sinfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_squeue/index.html">apps.crc_squeue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_sus/index.html">apps.crc_sus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_usage/index.html">apps.crc_usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">apps.system_info</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.Shell">Shell</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.SlurmInfo">SlurmInfo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.system_info.Shell">Shell</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.Shell.readchar">readchar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.Shell.run_command">run_command</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.system_info.SlurmInfo">SlurmInfo</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.SlurmInfo.ignore_clusters">ignore_clusters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.SlurmInfo.ignore_partitions">ignore_partitions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.SlurmInfo.get_cluster_names">get_cluster_names</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.system_info.SlurmInfo.get_partition_names">get_partition_names</a></li>
 </ul>
 </li>
 </ul>
@@ -83,7 +90,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.system_info</span></code></li>
+      <li>apps.system_info</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/system_info/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -94,22 +101,10 @@
            <div itemprop="articleBody">
              
   <section id="module-apps.system_info">
-<span id="apps-system-info"></span><h1><a class="reference internal" href="#module-apps.system_info" title="apps.system_info"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.system_info</span></code></a><a class="headerlink" href="#module-apps.system_info" title="Permalink to this heading"></a></h1>
+<span id="apps-system-info"></span><h1>apps.system_info<a class="headerlink" href="#module-apps.system_info" title="Permalink to this heading"></a></h1>
 <p>General utilities for fetching data and interacting with the parent system.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
-<section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apps.system_info.Shell" title="apps.system_info.Shell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Shell</span></code></a></p></td>
-<td><p>Methods for interacting with the runtime shell</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apps.system_info.SlurmInfo" title="apps.system_info.SlurmInfo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SlurmInfo</span></code></a></p></td>
-<td><p>Class for fetching Slurm config data</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="py class">
 <dt class="sig sig-object py" id="apps.system_info.Shell">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.system_info.</span></span><span class="sig-name descname"><span class="pre">Shell</span></span><a class="reference internal" href="../../../_modules/apps/system_info.html#Shell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.system_info.Shell" title="Permalink to this definition"></a></dt>
@@ -124,11 +119,15 @@
 <dt class="sig sig-object py" id="apps.system_info.Shell.run_command">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_err</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/system_info.html#Shell.run_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.system_info.Shell.run_command" title="Permalink to this definition"></a></dt>
 <dd><p>Run a command in a dedicated shell</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>command: The command to execute as a string
-include_err: Include output to stderr in the returned values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> – The command to execute as a string</p></li>
+<li><p><strong>include_err</strong> – Include output to stderr in the returned values</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>The output to stdout and (optionally) stderr</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output to stdout and (optionally) stderr</p>
 </dd>
 </dl>
 </dd></dl>
@@ -153,10 +152,12 @@ include_err: Include output to stderr in the returned values</p>
 <dt class="sig sig-object py" id="apps.system_info.SlurmInfo.get_cluster_names">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_cluster_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_all_clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/system_info.html#SlurmInfo.get_cluster_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.system_info.SlurmInfo.get_cluster_names" title="Permalink to this definition"></a></dt>
 <dd><p>Return a tuple cluster names configured with slurm</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>include_all_clusters: Include clusters that are otherwise marked as ignored</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>include_all_clusters</strong> – Include clusters that are otherwise marked as ignored</p>
 </dd>
-<dt>Returns:</dt><dd><p>A set of cluster names</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A set of cluster names</p>
 </dd>
 </dl>
 </dd></dl>
@@ -165,18 +166,21 @@ include_err: Include output to stderr in the returned values</p>
 <dt class="sig sig-object py" id="apps.system_info.SlurmInfo.get_partition_names">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_partition_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_all_partitions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/system_info.html#SlurmInfo.get_partition_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.system_info.SlurmInfo.get_partition_names" title="Permalink to this definition"></a></dt>
 <dd><p>Return a tuple of partition names associated with a given slurm cluster</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>cluster_name: The name of a slurm cluster
-include_all_partitions: Include partitions that are otherwise marked as ignored</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster_name</strong> – The name of a slurm cluster</p></li>
+<li><p><strong>include_all_partitions</strong> – Include partitions that are otherwise marked as ignored</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>A set of partition names</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A set of partition names</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-</section>
 </section>
 </section>
 

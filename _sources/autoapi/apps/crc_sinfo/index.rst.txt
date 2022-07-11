@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_sinfo`
+apps.crc_sinfo
 ========================
 
 .. py:module:: apps.crc_sinfo
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_sinfo.CrcSinfo
-
-
-
 
 .. py:class:: CrcSinfo
 
@@ -32,8 +24,8 @@ Classes
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
+
 
 
 

@@ -44,29 +44,32 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../base_parser/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.base_parser</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_idle</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_interactive</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_job_stats</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_proposal_end/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_proposal_end</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_quota/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_quota</span></code></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scancel</span></code></a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../base_parser/index.html">apps.base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html">apps.crc_job_stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_proposal_end/index.html">apps.crc_proposal_end</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_quota/index.html">apps.crc_quota</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">apps.crc_scancel</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel">CrcScancel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.crc_scancel.CrcScancel">CrcScancel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.user">user</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.cancel_job_on_cluster">cancel_job_on_cluster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.get_cluster_for_job_id">get_cluster_for_job_id</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.app_logic">app_logic</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_scontrol/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scontrol</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_show_config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_show_config</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_sinfo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sinfo</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_squeue/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_squeue</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_sus/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sus</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_usage/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_usage</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../system_info/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.system_info</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_scontrol/index.html">apps.crc_scontrol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_show_config/index.html">apps.crc_show_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_sinfo/index.html">apps.crc_sinfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_squeue/index.html">apps.crc_squeue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_sus/index.html">apps.crc_sus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_usage/index.html">apps.crc_usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../system_info/index.html">apps.system_info</a></li>
 </ul>
 
         </div>
@@ -83,7 +86,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scancel</span></code></li>
+      <li>apps.crc_scancel</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/crc_scancel/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -94,19 +97,10 @@
            <div itemprop="articleBody">
              
   <section id="module-apps.crc_scancel">
-<span id="apps-crc-scancel"></span><h1><a class="reference internal" href="#module-apps.crc_scancel" title="apps.crc_scancel"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scancel</span></code></a><a class="headerlink" href="#module-apps.crc_scancel" title="Permalink to this heading"></a></h1>
+<span id="apps-crc-scancel"></span><h1>apps.crc_scancel<a class="headerlink" href="#module-apps.crc_scancel" title="Permalink to this heading"></a></h1>
 <p>A simple wrapper around the Slurm <code class="docutils literal notranslate"><span class="pre">scancel</span></code> command</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
-<section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apps.crc_scancel.CrcScancel" title="apps.crc_scancel.CrcScancel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrcScancel</span></code></a></p></td>
-<td><p>Cancel a Slurm job submitted by the current user.</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="py class">
 <dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_scancel.</span></span><span class="sig-name descname"><span class="pre">CrcScancel</span></span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel" title="Permalink to this definition"></a></dt>
@@ -121,9 +115,12 @@
 <dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel.cancel_job_on_cluster">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cancel_job_on_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel.cancel_job_on_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel.cancel_job_on_cluster" title="Permalink to this definition"></a></dt>
 <dd><p>Cancel a running slurm job</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>cluster: The name of the cluster the job is running on
-job_id: The ID of the slurm job to cancel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster</strong> – The name of the cluster the job is running on</p></li>
+<li><p><strong>job_id</strong> – The ID of the slurm job to cancel</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -139,15 +136,15 @@ job_id: The ID of the slurm job to cancel</p>
 <dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel.app_logic">
 <span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>args: Namespace of parsed arguments from the command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – Namespace of parsed arguments from the command line</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-</section>
 </section>
 </section>
 

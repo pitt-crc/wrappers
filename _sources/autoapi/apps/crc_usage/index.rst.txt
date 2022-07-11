@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_usage`
+apps.crc_usage
 ========================
 
 .. py:module:: apps.crc_usage
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_usage.CrcUsage
-
-
-
 
 .. py:class:: CrcUsage
 
@@ -37,8 +29,8 @@ Classes
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
+
 
 
 

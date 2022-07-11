@@ -1,4 +1,4 @@
-:py:mod:`apps.base_parser`
+apps.base_parser
 ==========================
 
 .. py:module:: apps.base_parser
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.base_parser.BaseParser
-
-
-
 
 .. py:class:: BaseParser
 
@@ -49,22 +41,21 @@ Classes
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
 
 
    .. py:method:: error(self, message)
 
       Print the error message to STDOUT and exit
 
-      Args:
-          message: The error message
+      :param message: The error message
 
 
    .. py:method:: execute(cls)
       :classmethod:
 
       Parse command line arguments and execute the application
+
 
 
 

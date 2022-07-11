@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>apps.crc_sinfo &mdash; CRC Wrapper Applications  documentation</title>
+  <title>&lt;no title&gt; &mdash; CRC Wrapper Applications  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -71,10 +72,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../index.html">Module code</a> &raquo;</li>
-          <li><a href="../apps.html">apps</a> &raquo;</li>
-      <li>apps.crc_sinfo</li>
+      <li>&lt;no title&gt;</li>
       <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/templates/python/module.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -82,25 +82,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for apps.crc_sinfo</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;A simple wrapper around the Slurm ``sinfo`` command&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">.base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
-<span class="kn">from</span> <span class="nn">.system_info</span> <span class="k">import</span> <span class="n">Shell</span>
-
-
-<div class="viewcode-block" id="CrcSinfo"><a class="viewcode-back" href="../../autoapi/apps/crc_sinfo/index.html#apps.crc_sinfo.CrcSinfo">[docs]</a><span class="k">class</span> <span class="nc">CrcSinfo</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Display information about all available Slurm clusters.&quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="CrcSinfo.app_logic"><a class="viewcode-back" href="../../autoapi/apps/crc_sinfo/index.html#apps.crc_sinfo.CrcSinfo.app_logic">[docs]</a>    <span class="k">def</span> <span class="nf">app_logic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Logic to evaluate when executing the application</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            args: Parsed command line arguments</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="n">Shell</span><span class="o">.</span><span class="n">run_command</span><span class="p">(</span><span class="s2">&quot;sinfo -M all&quot;</span><span class="p">))</span></div></div>
+  <p>{% if not obj.display %}
+:orphan:</p>
+<p>{% endif %}
+{{ obj.name }}
+=========={{ “=” * obj.name|length }}</p>
+<p>{% if obj.docstring %}
+.. autoapi-nested-parse:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{{</span> <span class="n">obj</span><span class="o">.</span><span class="n">docstring</span><span class="o">|</span><span class="n">indent</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="p">}}</span>
 </pre></div>
+</div>
+<p>{% endif %}</p>
+<p>{% block content %}</p>
+<p>{% if obj.all is not none %}
+{% set visible_children = obj.children|selectattr(“short_name”, “in”, obj.all)|list %}
+{% else %}
+{% set visible_children = obj.children|selectattr(“display”)|rejectattr(“imported”)|list %}
+{% endif %}</p>
+<p>{% if visible_children %}
+Module Contents
+—————</p>
+<p>{% for obj_item in visible_children %}
+{{ obj_item.render()|indent(0) }}
+{% endfor %}</p>
+<p>{% endif %}
+{% endblock %}</p>
+
 
            </div>
           </div>

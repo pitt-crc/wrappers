@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_job_stats`
+apps.crc_job_stats
 ============================
 
 .. py:module:: apps.crc_job_stats
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_job_stats.CrcJobStats
-
-
-
 
 .. py:class:: CrcJobStats
 
@@ -54,16 +46,15 @@ Classes
 
       Print information about a running job in a readable format
 
-      Args:
-          job_info: A dictionary of information about the running job
+      :param job_info: A dictionary of information about the running job
 
 
    .. py:method:: app_logic(self, args)
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
+
 
 
 

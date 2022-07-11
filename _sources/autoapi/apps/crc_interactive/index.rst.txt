@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_interactive`
+apps.crc_interactive
 ==============================
 
 .. py:module:: apps.crc_interactive
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_interactive.CrcInteractive
-
-
-
 
 .. py:class:: CrcInteractive
 
@@ -72,8 +64,7 @@ Classes
 
       Exit the application if command-line arguments are invalid
 
-      Args:
-          args: Parsed commandline arguments
+      :param args: Parsed commandline arguments
 
 
    .. py:method:: x11_is_available()
@@ -86,19 +77,17 @@ Classes
 
       Create an ``srun`` command based on parsed commandline arguments
 
-      Args:
-          args: A dictionary of parsed command line parsed_args
+      :param args: A dictionary of parsed command line parsed_args
 
-      Return:
-          The equivalent ``srun`` command as a string
+      :returns: The equivalent ``srun`` command as a string
 
 
    .. py:method:: app_logic(self, args)
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
+
 
 
 

@@ -1,4 +1,4 @@
-:py:mod:`apps.system_info`
+apps.system_info
 ==========================
 
 .. py:module:: apps.system_info
@@ -9,19 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.system_info.Shell
-   apps.system_info.SlurmInfo
-
-
-
 
 .. py:class:: Shell
 
@@ -38,12 +29,10 @@ Classes
 
       Run a command in a dedicated shell
 
-      Args:
-          command: The command to execute as a string
-          include_err: Include output to stderr in the returned values
+      :param command: The command to execute as a string
+      :param include_err: Include output to stderr in the returned values
 
-      Returns:
-          The output to stdout and (optionally) stderr
+      :returns: The output to stdout and (optionally) stderr
 
 
 
@@ -66,11 +55,9 @@ Classes
 
       Return a tuple cluster names configured with slurm
 
-      Args:
-          include_all_clusters: Include clusters that are otherwise marked as ignored
+      :param include_all_clusters: Include clusters that are otherwise marked as ignored
 
-      Returns:
-          A set of cluster names
+      :returns: A set of cluster names
 
 
    .. py:method:: get_partition_names(cls, cluster_name, include_all_partitions=False)
@@ -78,12 +65,11 @@ Classes
 
       Return a tuple of partition names associated with a given slurm cluster
 
-      Args:
-          cluster_name: The name of a slurm cluster
-          include_all_partitions: Include partitions that are otherwise marked as ignored
+      :param cluster_name: The name of a slurm cluster
+      :param include_all_partitions: Include partitions that are otherwise marked as ignored
 
-      Returns:
-          A set of partition names
+      :returns: A set of partition names
+
 
 
 

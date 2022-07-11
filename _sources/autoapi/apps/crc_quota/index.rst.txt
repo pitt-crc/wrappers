@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_quota`
+apps.crc_quota
 ========================
 
 .. py:module:: apps.crc_quota
@@ -9,22 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_quota.AbstractFilesystemUsage
-   apps.crc_quota.GenericUsage
-   apps.crc_quota.BeegfsUsage
-   apps.crc_quota.IhomeUsage
-   apps.crc_quota.CrcQuota
-
-
-
 
 .. py:class:: AbstractFilesystemUsage(name, size_used, size_limit)
 
@@ -36,8 +24,7 @@ Classes
 
       Return a string representation of the quota usage
 
-      Args:
-          verbose: Return a more detailed representation
+      :param verbose: Return a more detailed representation
 
 
    .. py:method:: _verbose_string(self)
@@ -51,11 +38,9 @@ Classes
 
       Convert the given number of bytes to a human-readable string
 
-      Args:
-          size: An integer number of bytes
+      :param size: An integer number of bytes
 
-      Returns:
-           A string representation of the given size with units
+      :returns: A string representation of the given size with units
 
 
 
@@ -70,12 +55,10 @@ Classes
 
       Return a quota object for a given file path
 
-      Args:
-          name: Name of the file system (e.g., zfs, ix, home)
-          path: The file path for create a quota for
+      :param name: Name of the file system (e.g., zfs, ix, home)
+      :param path: The file path for create a quota for
 
-      Returns:
-          An instance of the parent class
+      :returns: An instance of the parent class
 
 
 
@@ -93,12 +76,10 @@ Classes
 
       Return a quota object for a given group name
 
-      Args:
-          name: Name of the file system (e.g., zfs, ix, home)
-          group: The group to create a quota for
+      :param name: Name of the file system (e.g., zfs, ix, home)
+      :param group: The group to create a quota for
 
-      Returns:
-          An instance of the parent class
+      :returns: An instance of the parent class
 
 
 
@@ -116,12 +97,10 @@ Classes
 
       Return a quota object for a given user id
 
-      Args:
-          name: Name of the file system (e.g., zfs, ix, home)
-          uid: The ID of the user
+      :param name: Name of the file system (e.g., zfs, ix, home)
+      :param uid: The ID of the user
 
-      Returns:
-          An instance of the parent class
+      :returns: An instance of the parent class
 
 
 
@@ -136,11 +115,9 @@ Classes
 
       Return system IDs for the current user
 
-      Args:
-          username: The name of the user to get IDs for (defaults to current user)
+      :param username: The name of the user to get IDs for (defaults to current user)
 
-      Returns:
-          Tuple with the user's name, user ID, group name, and group ID
+      :returns: Tuple with the user's name, user ID, group name, and group ID
 
 
    .. py:method:: get_group_quotas(group)
@@ -148,19 +125,17 @@ Classes
 
       Return quota information for the given group
 
-      Args:
-          group: The name of the group
+      :param group: The name of the group
 
-      Returns:
-          A tuple of ``Quota`` objects
+      :returns: A tuple of ``Quota`` objects
 
 
    .. py:method:: app_logic(self, args)
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
+
 
 
 

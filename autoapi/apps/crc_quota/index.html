@@ -44,33 +44,52 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../base_parser/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.base_parser</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_idle</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_interactive</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_job_stats</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_proposal_end/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_proposal_end</span></code></a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_quota</span></code></a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../base_parser/index.html">apps.base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html">apps.crc_job_stats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_proposal_end/index.html">apps.crc_proposal_end</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">apps.crc_quota</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.AbstractFilesystemUsage">AbstractFilesystemUsage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.GenericUsage">GenericUsage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.BeegfsUsage">BeegfsUsage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.IhomeUsage">IhomeUsage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.CrcQuota">CrcQuota</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.crc_quota.AbstractFilesystemUsage">AbstractFilesystemUsage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.AbstractFilesystemUsage.to_string">to_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.AbstractFilesystemUsage._verbose_string">_verbose_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.AbstractFilesystemUsage._short_string">_short_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.AbstractFilesystemUsage.convert_size">convert_size</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.crc_quota.GenericUsage">GenericUsage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.GenericUsage.from_path">from_path</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.crc_quota.BeegfsUsage">BeegfsUsage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.BeegfsUsage._verbose_string">_verbose_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.BeegfsUsage.from_group">from_group</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.crc_quota.IhomeUsage">IhomeUsage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.IhomeUsage._verbose_string">_verbose_string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.IhomeUsage.from_uid">from_uid</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#apps.crc_quota.CrcQuota">CrcQuota</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.CrcQuota.get_user_info">get_user_info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.CrcQuota.get_group_quotas">get_group_quotas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apps.crc_quota.CrcQuota.app_logic">app_logic</a></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_scancel/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scancel</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_scontrol/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_scontrol</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_show_config/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_show_config</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_sinfo/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sinfo</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_squeue/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_squeue</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_sus/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_sus</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../crc_usage/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_usage</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="../system_info/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.system_info</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_scancel/index.html">apps.crc_scancel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_scontrol/index.html">apps.crc_scontrol</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_show_config/index.html">apps.crc_show_config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_sinfo/index.html">apps.crc_sinfo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_squeue/index.html">apps.crc_squeue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_sus/index.html">apps.crc_sus</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crc_usage/index.html">apps.crc_usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../system_info/index.html">apps.system_info</a></li>
 </ul>
 
         </div>
@@ -87,7 +106,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_quota</span></code></li>
+      <li>apps.crc_quota</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/crc_quota/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -98,31 +117,10 @@
            <div itemprop="articleBody">
              
   <section id="module-apps.crc_quota">
-<span id="apps-crc-quota"></span><h1><a class="reference internal" href="#module-apps.crc_quota" title="apps.crc_quota"><code class="xref py py-mod docutils literal notranslate"><span class="pre">apps.crc_quota</span></code></a><a class="headerlink" href="#module-apps.crc_quota" title="Permalink to this heading"></a></h1>
+<span id="apps-crc-quota"></span><h1>apps.crc_quota<a class="headerlink" href="#module-apps.crc_quota" title="Permalink to this heading"></a></h1>
 <p>Command line utility for checking a user’s disk usage</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
-<section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading"></a></h3>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apps.crc_quota.AbstractFilesystemUsage" title="apps.crc_quota.AbstractFilesystemUsage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractFilesystemUsage</span></code></a></p></td>
-<td><p>Base class for building object-oriented representations of file system quotas</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apps.crc_quota.GenericUsage" title="apps.crc_quota.GenericUsage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GenericUsage</span></code></a></p></td>
-<td><p>Disk storage quota for a generic file system</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apps.crc_quota.BeegfsUsage" title="apps.crc_quota.BeegfsUsage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BeegfsUsage</span></code></a></p></td>
-<td><p>Disk storage quota for a BeeGFS file system</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#apps.crc_quota.IhomeUsage" title="apps.crc_quota.IhomeUsage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IhomeUsage</span></code></a></p></td>
-<td><p>Disk storage quota for the ihome file system</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#apps.crc_quota.CrcQuota" title="apps.crc_quota.CrcQuota"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CrcQuota</span></code></a></p></td>
-<td><p>Display a user's disk quota.</p></td>
-</tr>
-</tbody>
-</table>
 <dl class="py class">
 <dt class="sig sig-object py" id="apps.crc_quota.AbstractFilesystemUsage">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_quota.</span></span><span class="sig-name descname"><span class="pre">AbstractFilesystemUsage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_used</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_limit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#AbstractFilesystemUsage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.AbstractFilesystemUsage" title="Permalink to this definition"></a></dt>
@@ -132,8 +130,9 @@
 <dt class="sig sig-object py" id="apps.crc_quota.AbstractFilesystemUsage.to_string">
 <span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#AbstractFilesystemUsage.to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.AbstractFilesystemUsage.to_string" title="Permalink to this definition"></a></dt>
 <dd><p>Return a string representation of the quota usage</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>verbose: Return a more detailed representation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>verbose</strong> – Return a more detailed representation</p>
 </dd>
 </dl>
 </dd></dl>
@@ -152,10 +151,12 @@
 <dt class="sig sig-object py" id="apps.crc_quota.AbstractFilesystemUsage.convert_size">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">convert_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#AbstractFilesystemUsage.convert_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.AbstractFilesystemUsage.convert_size" title="Permalink to this definition"></a></dt>
 <dd><p>Convert the given number of bytes to a human-readable string</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>size: An integer number of bytes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>size</strong> – An integer number of bytes</p>
 </dd>
-<dt>Returns:</dt><dd><p>A string representation of the given size with units</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A string representation of the given size with units</p>
 </dd>
 </dl>
 </dd></dl>
@@ -171,11 +172,15 @@
 <dt class="sig sig-object py" id="apps.crc_quota.GenericUsage.from_path">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#GenericUsage.from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.GenericUsage.from_path" title="Permalink to this definition"></a></dt>
 <dd><p>Return a quota object for a given file path</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name: Name of the file system (e.g., zfs, ix, home)
-path: The file path for create a quota for</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name of the file system (e.g., zfs, ix, home)</p></li>
+<li><p><strong>path</strong> – The file path for create a quota for</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>An instance of the parent class</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the parent class</p>
 </dd>
 </dl>
 </dd></dl>
@@ -196,11 +201,15 @@ path: The file path for create a quota for</p>
 <dt class="sig sig-object py" id="apps.crc_quota.BeegfsUsage.from_group">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#BeegfsUsage.from_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.BeegfsUsage.from_group" title="Permalink to this definition"></a></dt>
 <dd><p>Return a quota object for a given group name</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name: Name of the file system (e.g., zfs, ix, home)
-group: The group to create a quota for</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name of the file system (e.g., zfs, ix, home)</p></li>
+<li><p><strong>group</strong> – The group to create a quota for</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>An instance of the parent class</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the parent class</p>
 </dd>
 </dl>
 </dd></dl>
@@ -221,11 +230,15 @@ group: The group to create a quota for</p>
 <dt class="sig sig-object py" id="apps.crc_quota.IhomeUsage.from_uid">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_uid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#IhomeUsage.from_uid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.IhomeUsage.from_uid" title="Permalink to this definition"></a></dt>
 <dd><p>Return a quota object for a given user id</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>name: Name of the file system (e.g., zfs, ix, home)
-uid: The ID of the user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – Name of the file system (e.g., zfs, ix, home)</p></li>
+<li><p><strong>uid</strong> – The ID of the user</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><p>An instance of the parent class</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of the parent class</p>
 </dd>
 </dl>
 </dd></dl>
@@ -241,10 +254,12 @@ uid: The ID of the user</p>
 <dt class="sig sig-object py" id="apps.crc_quota.CrcQuota.get_user_info">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_user_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#CrcQuota.get_user_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.CrcQuota.get_user_info" title="Permalink to this definition"></a></dt>
 <dd><p>Return system IDs for the current user</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>username: The name of the user to get IDs for (defaults to current user)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>username</strong> – The name of the user to get IDs for (defaults to current user)</p>
 </dd>
-<dt>Returns:</dt><dd><p>Tuple with the user’s name, user ID, group name, and group ID</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple with the user’s name, user ID, group name, and group ID</p>
 </dd>
 </dl>
 </dd></dl>
@@ -253,10 +268,12 @@ uid: The ID of the user</p>
 <dt class="sig sig-object py" id="apps.crc_quota.CrcQuota.get_group_quotas">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_group_quotas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#CrcQuota.get_group_quotas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.CrcQuota.get_group_quotas" title="Permalink to this definition"></a></dt>
 <dd><p>Return quota information for the given group</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>group: The name of the group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>group</strong> – The name of the group</p>
 </dd>
-<dt>Returns:</dt><dd><p>A tuple of <code class="docutils literal notranslate"><span class="pre">Quota</span></code> objects</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple of <code class="docutils literal notranslate"><span class="pre">Quota</span></code> objects</p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,15 +282,15 @@ uid: The ID of the user</p>
 <dt class="sig sig-object py" id="apps.crc_quota.CrcQuota.app_logic">
 <span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_quota.html#CrcQuota.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_quota.CrcQuota.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>args: Parsed command line arguments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – Parsed command line arguments</p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-</section>
 </section>
 </section>
 

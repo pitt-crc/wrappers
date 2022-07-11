@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_proposal_end`
+apps.crc_proposal_end
 ===============================
 
 .. py:module:: apps.crc_proposal_end
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_proposal_end.CrcProposalEnd
-
-
-
 
 .. py:class:: CrcProposalEnd
 
@@ -37,16 +29,15 @@ Classes
 
       Get the proposal end date for a given account
 
-      Args:
-          account: The name of the account
+      :param account: The name of the account
 
 
    .. py:method:: app_logic(self, args)
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Parsed command line arguments
+      :param args: Parsed command line arguments
+
 
 
 

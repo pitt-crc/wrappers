@@ -1,4 +1,4 @@
-:py:mod:`apps.crc_scancel`
+apps.crc_scancel
 ==========================
 
 .. py:module:: apps.crc_scancel
@@ -9,18 +9,10 @@
 
 
 
+
+
 Module Contents
 ---------------
-
-Classes
-~~~~~~~
-
-.. autoapisummary::
-
-   apps.crc_scancel.CrcScancel
-
-
-
 
 .. py:class:: CrcScancel
 
@@ -38,9 +30,8 @@ Classes
 
       Cancel a running slurm job
 
-      Args:
-          cluster: The name of the cluster the job is running on
-          job_id: The ID of the slurm job to cancel
+      :param cluster: The name of the cluster the job is running on
+      :param job_id: The ID of the slurm job to cancel
 
 
    .. py:method:: get_cluster_for_job_id(self, job_id)
@@ -54,8 +45,8 @@ Classes
 
       Logic to evaluate when executing the application
 
-      Args:
-          args: Namespace of parsed arguments from the command line
+      :param args: Namespace of parsed arguments from the command line
+
 
 
 
