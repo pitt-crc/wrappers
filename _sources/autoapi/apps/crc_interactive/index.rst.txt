@@ -16,7 +16,7 @@ Module Contents
 
 .. py:class:: CrcInteractive
 
-   Bases: :py:obj:`apps._base_parser.BaseParser`
+   Bases: :py:obj:`apps.base_parser.BaseParser`
 
    Launch an interactive Slurm session.
 

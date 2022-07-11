@@ -112,7 +112,7 @@ the following:</p>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">Namespace</span>
 
-<span class="kn">from</span> <span class="nn">apps._base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">apps.base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
 
 
 <span class="k">class</span> <span class="nc">ExampleApplication</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
@@ -146,13 +146,6 @@ an executable called <code class="docutils literal notranslate"><span class="pre
     <span class="o">...</span>
 <span class="p">)</span>
 </pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For both clarity and historical reasons, application names are defined
-in files starting with the prefix <code class="docutils literal notranslate"><span class="pre">crc_</span></code>. Python modules containing
-reusable utilities (and not a dedicated command line app) are named using a
-leading underscore.</p>
 </div>
 </section>
 <section id="module-contents">

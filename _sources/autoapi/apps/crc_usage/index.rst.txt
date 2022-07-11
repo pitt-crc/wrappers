@@ -16,7 +16,7 @@ Module Contents
 
 .. py:class:: CrcUsage
 
-   Bases: :py:obj:`apps._base_parser.BaseParser`
+   Bases: :py:obj:`apps.base_parser.BaseParser`
 
    Display a Slurm account's cluster usage.
 

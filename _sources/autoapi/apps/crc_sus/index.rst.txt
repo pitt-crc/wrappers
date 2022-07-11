@@ -16,7 +16,7 @@ Module Contents
 
 .. py:class:: CrcSus
 
-   Bases: :py:obj:`apps._base_parser.BaseParser`
+   Bases: :py:obj:`apps.base_parser.BaseParser`
 
    Display the number of service units allocated to an account.
 

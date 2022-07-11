@@ -16,7 +16,7 @@ Module Contents
 
 .. py:class:: CrcShowConfig
 
-   Bases: :py:obj:`apps._base_parser.BaseParser`
+   Bases: :py:obj:`apps.base_parser.BaseParser`
 
    Display information about the current Slurm configuration.
 
