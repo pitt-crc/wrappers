@@ -5,7 +5,7 @@ from .system_info import Shell, SlurmInfo
 
 
 class CrcIdle(BaseParser):
-    """Command line application for listing idle Slurm resources"""
+    """Application for listing idle Slurm resources"""
 
     # The type of resource available on a cluster
     # Either ``cores`` or ``GPUs`` depending on the cluster type
@@ -26,10 +26,9 @@ class CrcIdle(BaseParser):
         self.add_argument('-m', '--mpi', action='store_true', help='show idle resources on the mpi cluster')
         self.add_argument('-i', '--invest', action='store_true', help='show idle resources on the invest cluster')
         self.add_argument('-d', '--htc', action='store_true', help='show idle resources on the htc cluster')
-        self.add_argument('-p', '--partition', nargs='+', help='Specify non-default partition')
+        self.add_argument('-p', '--partition', nargs='+', help='only include information for specific partitions')
 
-    @staticmethod
-    def get_cluster_list(args):
+    def get_cluster_list(self, args):
         """Return a list of clusters specified in the command line arguments
 
         Returns a tuple of clusters specified by command line arguments. If no
@@ -39,10 +38,10 @@ class CrcIdle(BaseParser):
             args: Parsed command line arguments
 
         Returns:
-            A tuple fo cluster names
+            A tuple of cluster names
         """
 
-        argument_options = ('smp', 'gpu', 'mpi', 'invest', 'htc')
+        argument_options = self.cluster_types
         argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), argument_options))
 
         # Default to returning all clusters
