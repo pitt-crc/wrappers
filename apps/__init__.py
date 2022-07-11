@@ -1,26 +1,31 @@
 """Custom commandline applications built by the Center for Research Computing.
 
-The wrapper applications provide a simplified interface from running common
-tasks on Slurm based HPC clusters. The applications are built specifically for
-the CRC. Some applications may work out-of-the-box at other HPC facilities,
-but others may require some modification.
+The wrapper applications provide a simplified interface for running common
+HPC tasks on Slurm based clusters. The applications are built specifically for
+the CRC and are not designed to work out-of-the-box at other HPC facilities.
 
 Installation
 ------------
 
-The command line applications are installable via the pip (or pipx) package
-manager:
+The command line applications are installable as a collective set via the
+pip (or pipx) package manager:
 
 .. code-block::
 
-   pip install git+https://github.com/pitt-crc/wrappers.git
+   pipx install git+https://github.com/pitt-crc/wrappers.git
+
+The ``pipx`` utility is recommended for system administrators working in a
+multi-tenancy environment.
 
 Contributing a New Application
 ------------------------------
 
-Command line applications are based on the ``argparse`` from the standard
-Python library. To create a new application, inherit from the ``BaseParser``
-class and define the following:
+Wrapper applications are based on the ``argparse`` package from the standard
+Python library. The ``BaseParser`` class extends this functionality and
+ensures all applications share the same fundamental behavior.
+
+To create a new application, inherit from the ``BaseParser`` class and define
+the following:
 
 1. Define the application description as class documentation
 2. Define the application arguments (and help text) in the class ``__init__`` method
@@ -39,7 +44,7 @@ class and define the following:
        def __init__(self) -> None:
            \"""Define arguments for the command line interface\"""
 
-           self.add_arguments('-f', '--foo', help="This is help text")
+           self.add_arguments('-f', '--foo', help="This is help text for foo")
 
        def app_logic(self, args: Namespace) -> None:
            \"""Logic to evaluate when executing the application
