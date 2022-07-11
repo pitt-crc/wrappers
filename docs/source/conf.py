@@ -37,6 +37,9 @@ autoapi_dirs = [str(apps_dir)]
 autoapi_add_toctree_entry = False
 autoapi_template_dir = 'templates'
 
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ['templates']
+
 # The suffix(es) of source filenames.
 source_suffix = '.rst'
 
