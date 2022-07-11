@@ -1,8 +1,6 @@
 apps.crc_scancel
 ==========================
 
-.. py:module:: apps.crc_scancel
-
 .. autoapi-nested-parse::
 
    A simple wrapper around the Slurm ``scancel`` command

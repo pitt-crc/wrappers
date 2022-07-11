@@ -1,8 +1,6 @@
 apps.crc_show_config
 ==============================
 
-.. py:module:: apps.crc_show_config
-
 .. autoapi-nested-parse::
 
    Display the slurm configuration for a given cluster/partition

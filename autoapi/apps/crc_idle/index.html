@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="apps.crc_interactive" href="../crc_interactive/index.html" />
-    <link rel="prev" title="CRC Wrapper Applications" href="../../../index.html" /> 
+    <link rel="prev" title="apps._system_info" href="../_system_info/index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -29,7 +29,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> CRC Wrapper Applications
+            <a href="../index.html" class="icon icon-home"> CRC Wrapper Applications
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -40,21 +40,23 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../_base_parser/index.html">apps._base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">apps.crc_idle</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#apps.crc_idle.CrcIdle">CrcIdle</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle.cluster_types">cluster_types</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle.default_type">default_type</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle.get_cluster_list">get_cluster_list</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle._idle_cpu_resources">_idle_cpu_resources</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle._idle_gpu_resources">_idle_gpu_resources</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle.count_idle_resources">count_idle_resources</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle.print_partition_summary">print_partition_summary</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_idle.CrcIdle.app_logic">app_logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#CrcIdle">CrcIdle</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle.cluster_types">cluster_types</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle.default_type">default_type</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle.get_cluster_list">get_cluster_list</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle._idle_cpu_resources">_idle_cpu_resources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle._idle_gpu_resources">_idle_gpu_resources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle.count_idle_resources">count_idle_resources</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle.print_partition_summary">print_partition_summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcIdle.app_logic">app_logic</a></li>
 </ul>
 </li>
 </ul>
@@ -80,14 +82,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">CRC Wrapper Applications</a>
+          <a href="../index.html">CRC Wrapper Applications</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>apps.crc_idle</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/crc_idle/index.rst.txt" rel="nofollow"> View page source</a>
@@ -98,29 +100,29 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-apps.crc_idle">
-<span id="apps-crc-idle"></span><h1>apps.crc_idle<a class="headerlink" href="#module-apps.crc_idle" title="Permalink to this heading"></a></h1>
+  <section id="apps-crc-idle">
+<h1>apps.crc_idle<a class="headerlink" href="#apps-crc-idle" title="Permalink to this heading"></a></h1>
 <p>Command line application for listing idle Slurm resources</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_idle.</span></span><span class="sig-name descname"><span class="pre">CrcIdle</span></span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../_base_parser/index.html#apps._base_parser.BaseParser" title="apps._base_parser.BaseParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></a></p>
+<dt class="sig sig-object py" id="CrcIdle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CrcIdle</span></span><a class="headerlink" href="#CrcIdle" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></p>
 <p>Display idle Slurm resources.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.cluster_types">
-<span class="sig-name descname"><span class="pre">cluster_types</span></span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.cluster_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.cluster_types" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle.cluster_types">
+<span class="sig-name descname"><span class="pre">cluster_types</span></span><a class="headerlink" href="#CrcIdle.cluster_types" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.default_type">
-<span class="sig-name descname"><span class="pre">default_type</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">cores</span></em><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.default_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.default_type" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle.default_type">
+<span class="sig-name descname"><span class="pre">default_type</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">cores</span></em><a class="headerlink" href="#CrcIdle.default_type" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.get_cluster_list">
-<span class="sig-name descname"><span class="pre">get_cluster_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.get_cluster_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.get_cluster_list" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle.get_cluster_list">
+<span class="sig-name descname"><span class="pre">get_cluster_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcIdle.get_cluster_list" title="Permalink to this definition"></a></dt>
 <dd><p>Return a list of clusters specified in the command line arguments</p>
 <p>Returns a tuple of clusters specified by command line arguments. If no
 clusters were specified, then return a tuple of all cluster names.</p>
@@ -135,8 +137,8 @@ clusters were specified, then return a tuple of all cluster names.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle._idle_cpu_resources">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_idle_cpu_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle._idle_cpu_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle._idle_cpu_resources" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle._idle_cpu_resources">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_idle_cpu_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcIdle._idle_cpu_resources" title="Permalink to this definition"></a></dt>
 <dd><p>Return the idle CPU resources on a given cluster partition</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -152,8 +154,8 @@ clusters were specified, then return a tuple of all cluster names.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle._idle_gpu_resources">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_idle_gpu_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle._idle_gpu_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle._idle_gpu_resources" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle._idle_gpu_resources">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_idle_gpu_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcIdle._idle_gpu_resources" title="Permalink to this definition"></a></dt>
 <dd><p>Return the idle GPU resources on a given cluster partition</p>
 <blockquote>
 <div><p>If the host node is in ‘drain’ state, the GPUs are reported as unavailable.</p>
@@ -172,8 +174,8 @@ clusters were specified, then return a tuple of all cluster names.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.count_idle_resources">
-<span class="sig-name descname"><span class="pre">count_idle_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.count_idle_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.count_idle_resources" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle.count_idle_resources">
+<span class="sig-name descname"><span class="pre">count_idle_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcIdle.count_idle_resources" title="Permalink to this definition"></a></dt>
 <dd><p>Determine the number of idle resources on a given cluster partition</p>
 <p>The returned dictionary maps the number of idle resources (e.g., cores)
 to the number of nodes in the partition having that many resources idle.</p>
@@ -191,8 +193,8 @@ to the number of nodes in the partition having that many resources idle.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.print_partition_summary">
-<span class="sig-name descname"><span class="pre">print_partition_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.print_partition_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.print_partition_summary" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle.print_partition_summary">
+<span class="sig-name descname"><span class="pre">print_partition_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partition</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcIdle.print_partition_summary" title="Permalink to this definition"></a></dt>
 <dd><p>Print a summary of idle resources in a single partition</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -205,8 +207,8 @@ to the number of nodes in the partition having that many resources idle.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_idle.CrcIdle.app_logic">
-<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_idle.html#CrcIdle.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_idle.CrcIdle.app_logic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcIdle.app_logic">
+<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcIdle.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -224,7 +226,7 @@ to the number of nodes in the partition having that many resources idle.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../../../index.html" class="btn btn-neutral float-left" title="CRC Wrapper Applications" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../_system_info/index.html" class="btn btn-neutral float-left" title="apps._system_info" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../crc_interactive/index.html" class="btn btn-neutral float-right" title="apps.crc_interactive" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

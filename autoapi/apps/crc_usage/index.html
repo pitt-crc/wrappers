@@ -28,7 +28,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> CRC Wrapper Applications
+            <a href="../index.html" class="icon icon-home"> CRC Wrapper Applications
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -39,10 +39,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../_base_parser/index.html">apps._base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html">apps.crc_job_stats</a></li>
@@ -56,9 +58,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../crc_sus/index.html">apps.crc_sus</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">apps.crc_usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#apps.crc_usage.CrcUsage">CrcUsage</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_usage.CrcUsage.banking_executable">banking_executable</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_usage.CrcUsage.app_logic">app_logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#CrcUsage">CrcUsage</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CrcUsage.banking_executable">banking_executable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcUsage.app_logic">app_logic</a></li>
 </ul>
 </li>
 </ul>
@@ -73,14 +75,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">CRC Wrapper Applications</a>
+          <a href="../index.html">CRC Wrapper Applications</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>apps.crc_usage</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/crc_usage/index.rst.txt" rel="nofollow"> View page source</a>
@@ -91,24 +93,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-apps.crc_usage">
-<span id="apps-crc-usage"></span><h1>apps.crc_usage<a class="headerlink" href="#module-apps.crc_usage" title="Permalink to this heading"></a></h1>
+  <section id="apps-crc-usage">
+<h1>apps.crc_usage<a class="headerlink" href="#apps-crc-usage" title="Permalink to this heading"></a></h1>
 <p>Command line interface that wraps the banking application</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="apps.crc_usage.CrcUsage">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_usage.</span></span><span class="sig-name descname"><span class="pre">CrcUsage</span></span><a class="reference internal" href="../../../_modules/apps/crc_usage.html#CrcUsage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_usage.CrcUsage" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../_base_parser/index.html#apps._base_parser.BaseParser" title="apps._base_parser.BaseParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></a></p>
+<dt class="sig sig-object py" id="CrcUsage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CrcUsage</span></span><a class="headerlink" href="#CrcUsage" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></p>
 <p>Display a Slurm account’s cluster usage.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_usage.CrcUsage.banking_executable">
-<span class="sig-name descname"><span class="pre">banking_executable</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">/ihome/crc/bank/crc_bank.py</span> <span class="pre">usage</span></em><a class="reference internal" href="../../../_modules/apps/crc_usage.html#CrcUsage.banking_executable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_usage.CrcUsage.banking_executable" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcUsage.banking_executable">
+<span class="sig-name descname"><span class="pre">banking_executable</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">/ihome/crc/bank/crc_bank.py</span> <span class="pre">usage</span></em><a class="headerlink" href="#CrcUsage.banking_executable" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_usage.CrcUsage.app_logic">
-<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_usage.html#CrcUsage.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_usage.CrcUsage.app_logic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcUsage.app_logic">
+<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcUsage.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

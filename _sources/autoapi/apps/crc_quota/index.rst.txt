@@ -1,8 +1,6 @@
 apps.crc_quota
 ========================
 
-.. py:module:: apps.crc_quota
-
 .. autoapi-nested-parse::
 
    Command line utility for checking a user's disk usage

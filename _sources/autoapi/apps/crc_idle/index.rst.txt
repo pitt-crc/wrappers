@@ -1,8 +1,6 @@
 apps.crc_idle
 =======================
 
-.. py:module:: apps.crc_idle
-
 .. autoapi-nested-parse::
 
    Command line application for listing idle Slurm resources

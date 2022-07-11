@@ -1,8 +1,6 @@
 apps.crc_squeue
 =========================
 
-.. py:module:: apps.crc_squeue
-
 .. autoapi-nested-parse::
 
    A simple wrapper around the Slurm ``squeue`` command

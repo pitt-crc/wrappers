@@ -1,8 +1,6 @@
 apps.crc_proposal_end
 ===============================
 
-.. py:module:: apps.crc_proposal_end
-
 .. autoapi-nested-parse::
 
    Print the end date for an account's proposal

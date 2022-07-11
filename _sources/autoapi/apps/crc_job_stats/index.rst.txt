@@ -1,8 +1,6 @@
 apps.crc_job_stats
 ============================
 
-.. py:module:: apps.crc_job_stats
-
 .. autoapi-nested-parse::
 
    Command line utility for printing basic information about a running job.

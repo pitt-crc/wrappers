@@ -1,8 +1,6 @@
 apps.crc_scontrol
 ===========================
 
-.. py:module:: apps.crc_scontrol
-
 .. autoapi-nested-parse::
 
    This file is intended to be temporary. The original application has been

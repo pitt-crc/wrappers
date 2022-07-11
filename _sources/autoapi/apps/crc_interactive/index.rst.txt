@@ -1,8 +1,6 @@
 apps.crc_interactive
 ==============================
 
-.. py:module:: apps.crc_interactive
-
 .. autoapi-nested-parse::
 
    A simple wrapper around the Slurm ``srun`` command

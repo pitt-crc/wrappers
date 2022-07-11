@@ -1,8 +1,6 @@
 apps.crc_sus
 ======================
 
-.. py:module:: apps.crc_sus
-
 .. autoapi-nested-parse::
 
    Print an account's service unit allocation

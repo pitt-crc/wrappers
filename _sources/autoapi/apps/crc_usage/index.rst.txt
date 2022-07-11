@@ -1,8 +1,6 @@
 apps.crc_usage
 ========================
 
-.. py:module:: apps.crc_usage
-
 .. autoapi-nested-parse::
 
    Command line interface that wraps the banking application

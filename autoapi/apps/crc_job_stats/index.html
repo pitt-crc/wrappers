@@ -29,7 +29,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> CRC Wrapper Applications
+            <a href="../index.html" class="icon icon-home"> CRC Wrapper Applications
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -40,21 +40,23 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../_base_parser/index.html">apps._base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">apps.crc_job_stats</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats">CrcJobStats</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats.cluster">cluster</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats.job_id">job_id</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats.exit_if_not_in_slurm">exit_if_not_in_slurm</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats.get_job_info">get_job_info</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats.pretty_print_job_info">pretty_print_job_info</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_job_stats.CrcJobStats.app_logic">app_logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#CrcJobStats">CrcJobStats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CrcJobStats.cluster">cluster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcJobStats.job_id">job_id</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcJobStats.exit_if_not_in_slurm">exit_if_not_in_slurm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcJobStats.get_job_info">get_job_info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcJobStats.pretty_print_job_info">pretty_print_job_info</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcJobStats.app_logic">app_logic</a></li>
 </ul>
 </li>
 </ul>
@@ -78,14 +80,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">CRC Wrapper Applications</a>
+          <a href="../index.html">CRC Wrapper Applications</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>apps.crc_job_stats</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/crc_job_stats/index.rst.txt" rel="nofollow"> View page source</a>
@@ -96,42 +98,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-apps.crc_job_stats">
-<span id="apps-crc-job-stats"></span><h1>apps.crc_job_stats<a class="headerlink" href="#module-apps.crc_job_stats" title="Permalink to this heading"></a></h1>
+  <section id="apps-crc-job-stats">
+<h1>apps.crc_job_stats<a class="headerlink" href="#apps-crc-job-stats" title="Permalink to this heading"></a></h1>
 <p>Command line utility for printing basic information about a running job.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_job_stats.</span></span><span class="sig-name descname"><span class="pre">CrcJobStats</span></span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../_base_parser/index.html#apps._base_parser.BaseParser" title="apps._base_parser.BaseParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></a></p>
+<dt class="sig sig-object py" id="CrcJobStats">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CrcJobStats</span></span><a class="headerlink" href="#CrcJobStats" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></p>
 <p>Track job information from within a Slurm job.</p>
 <p>Include this command at the end of your Slurm job scripts.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.cluster">
-<span class="sig-name descname"><span class="pre">cluster</span></span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.cluster" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcJobStats.cluster">
+<span class="sig-name descname"><span class="pre">cluster</span></span><a class="headerlink" href="#CrcJobStats.cluster" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.job_id">
-<span class="sig-name descname"><span class="pre">job_id</span></span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.job_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.job_id" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcJobStats.job_id">
+<span class="sig-name descname"><span class="pre">job_id</span></span><a class="headerlink" href="#CrcJobStats.job_id" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.exit_if_not_in_slurm">
-<span class="sig-name descname"><span class="pre">exit_if_not_in_slurm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.exit_if_not_in_slurm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.exit_if_not_in_slurm" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcJobStats.exit_if_not_in_slurm">
+<span class="sig-name descname"><span class="pre">exit_if_not_in_slurm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcJobStats.exit_if_not_in_slurm" title="Permalink to this definition"></a></dt>
 <dd><p>Exit the application is not running from within a slurm job</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.get_job_info">
-<span class="sig-name descname"><span class="pre">get_job_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.get_job_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.get_job_info" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcJobStats.get_job_info">
+<span class="sig-name descname"><span class="pre">get_job_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcJobStats.get_job_info" title="Permalink to this definition"></a></dt>
 <dd><p>Return information about the running job as a dictionary</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.pretty_print_job_info">
-<span class="sig-name descname"><span class="pre">pretty_print_job_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_info</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.pretty_print_job_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.pretty_print_job_info" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcJobStats.pretty_print_job_info">
+<span class="sig-name descname"><span class="pre">pretty_print_job_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcJobStats.pretty_print_job_info" title="Permalink to this definition"></a></dt>
 <dd><p>Print information about a running job in a readable format</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -141,8 +143,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_job_stats.CrcJobStats.app_logic">
-<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_job_stats.html#CrcJobStats.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_job_stats.CrcJobStats.app_logic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcJobStats.app_logic">
+<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcJobStats.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

@@ -1,8 +1,6 @@
 apps.crc_sinfo
 ========================
 
-.. py:module:: apps.crc_sinfo
-
 .. autoapi-nested-parse::
 
    A simple wrapper around the Slurm ``sinfo`` command

@@ -19,7 +19,9 @@
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" /> 
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="apps._system_info" href="../_system_info/index.html" />
+    <link rel="prev" title="apps" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -27,7 +29,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> CRC Wrapper Applications
+            <a href="../index.html" class="icon icon-home"> CRC Wrapper Applications
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -38,10 +40,26 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
-<ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">apps._base_parser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#BaseParser">BaseParser</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#BaseParser.help_width">help_width</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BaseParser._get_formatter">_get_formatter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BaseParser.app_version">app_version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BaseParser.app_logic">app_logic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BaseParser.error">error</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#BaseParser.execute">execute</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html">apps.crc_job_stats</a></li>
@@ -62,14 +80,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">CRC Wrapper Applications</a>
+          <a href="../index.html">CRC Wrapper Applications</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>apps._base_parser</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/_base_parser/index.rst.txt" rel="nofollow"> View page source</a>
@@ -80,36 +98,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-apps._base_parser">
-<span id="apps-base-parser"></span><h1>apps._base_parser<a class="headerlink" href="#module-apps._base_parser" title="Permalink to this heading"></a></h1>
+  <section id="apps-base-parser">
+<h1>apps._base_parser<a class="headerlink" href="#apps-base-parser" title="Permalink to this heading"></a></h1>
 <p>Parent classes for building command line applications.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="apps._base_parser.BaseParser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps._base_parser.</span></span><span class="sig-name descname"><span class="pre">BaseParser</span></span><a class="reference internal" href="../../../_modules/apps/_base_parser.html#BaseParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps._base_parser.BaseParser" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="BaseParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseParser</span></span><a class="headerlink" href="#BaseParser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code></p>
 <p>Base class for building command line applications</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps._base_parser.BaseParser.help_width">
-<span class="sig-name descname"><span class="pre">help_width</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">50</span></em><a class="reference internal" href="../../../_modules/apps/_base_parser.html#BaseParser.help_width"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps._base_parser.BaseParser.help_width" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="BaseParser.help_width">
+<span class="sig-name descname"><span class="pre">help_width</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">50</span></em><a class="headerlink" href="#BaseParser.help_width" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps._base_parser.BaseParser._get_formatter">
-<span class="sig-name descname"><span class="pre">_get_formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/_base_parser.html#BaseParser._get_formatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps._base_parser.BaseParser._get_formatter" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="BaseParser._get_formatter">
+<span class="sig-name descname"><span class="pre">_get_formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BaseParser._get_formatter" title="Permalink to this definition"></a></dt>
 <dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">HelpFormatter</span></code> object for formatting application help text</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps._base_parser.BaseParser.app_version">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">app_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/_base_parser.html#BaseParser.app_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps._base_parser.BaseParser.app_version" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="BaseParser.app_version">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">app_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BaseParser.app_version" title="Permalink to this definition"></a></dt>
 <dd><p>Return the application name and version as a string</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps._base_parser.BaseParser.app_logic">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/_base_parser.html#BaseParser.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps._base_parser.BaseParser.app_logic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="BaseParser.app_logic">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BaseParser.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -119,8 +137,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps._base_parser.BaseParser.error">
-<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/_base_parser.html#BaseParser.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps._base_parser.BaseParser.error" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="BaseParser.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BaseParser.error" title="Permalink to this definition"></a></dt>
 <dd><p>Print the error message to STDOUT and exit</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -130,8 +148,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps._base_parser.BaseParser.execute">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/_base_parser.html#BaseParser.execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps._base_parser.BaseParser.execute" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="BaseParser.execute">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#BaseParser.execute" title="Permalink to this definition"></a></dt>
 <dd><p>Parse command line arguments and execute the application</p>
 </dd></dl>
 
@@ -143,7 +161,10 @@
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="apps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../_system_info/index.html" class="btn btn-neutral float-right" title="apps._system_info" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

@@ -1,8 +1,6 @@
 apps._base_parser
 ===========================
 
-.. py:module:: apps._base_parser
-
 .. autoapi-nested-parse::
 
    Parent classes for building command line applications.

@@ -29,7 +29,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> CRC Wrapper Applications
+            <a href="../index.html" class="icon icon-home"> CRC Wrapper Applications
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -40,10 +40,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../_base_parser/index.html">apps._base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html">apps.crc_job_stats</a></li>
@@ -55,14 +57,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../crc_sinfo/index.html">apps.crc_sinfo</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">apps.crc_squeue</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue">CrcSqueue</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue.output_format_user">output_format_user</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue.output_format_all">output_format_all</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue.output_format_user_start">output_format_user_start</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue.output_format_all_start">output_format_all_start</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue.watch_frequency">watch_frequency</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue.build_slurm_command">build_slurm_command</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_squeue.CrcSqueue.app_logic">app_logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#CrcSqueue">CrcSqueue</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CrcSqueue.output_format_user">output_format_user</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcSqueue.output_format_all">output_format_all</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcSqueue.output_format_user_start">output_format_user_start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcSqueue.output_format_all_start">output_format_all_start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcSqueue.watch_frequency">watch_frequency</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcSqueue.build_slurm_command">build_slurm_command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcSqueue.app_logic">app_logic</a></li>
 </ul>
 </li>
 </ul>
@@ -79,14 +81,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">CRC Wrapper Applications</a>
+          <a href="../index.html">CRC Wrapper Applications</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>apps.crc_squeue</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/crc_squeue/index.rst.txt" rel="nofollow"> View page source</a>
@@ -97,44 +99,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-apps.crc_squeue">
-<span id="apps-crc-squeue"></span><h1>apps.crc_squeue<a class="headerlink" href="#module-apps.crc_squeue" title="Permalink to this heading"></a></h1>
+  <section id="apps-crc-squeue">
+<h1>apps.crc_squeue<a class="headerlink" href="#apps-crc-squeue" title="Permalink to this heading"></a></h1>
 <p>A simple wrapper around the Slurm <code class="docutils literal notranslate"><span class="pre">squeue</span></code> command</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_squeue.</span></span><span class="sig-name descname"><span class="pre">CrcSqueue</span></span><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../_base_parser/index.html#apps._base_parser.BaseParser" title="apps._base_parser.BaseParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></a></p>
+<dt class="sig sig-object py" id="CrcSqueue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CrcSqueue</span></span><a class="headerlink" href="#CrcSqueue" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></p>
 <p>Summarize currently running Slurm jobs.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue.output_format_user">
-<span class="sig-name descname"><span class="pre">output_format_user</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R'</span></em><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue.output_format_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue.output_format_user" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcSqueue.output_format_user">
+<span class="sig-name descname"><span class="pre">output_format_user</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R'</span></em><a class="headerlink" href="#CrcSqueue.output_format_user" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue.output_format_all">
-<span class="sig-name descname"><span class="pre">output_format_all</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.6a</span> <span class="pre">%.6u</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R'</span></em><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue.output_format_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue.output_format_all" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcSqueue.output_format_all">
+<span class="sig-name descname"><span class="pre">output_format_all</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.6a</span> <span class="pre">%.6u</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R'</span></em><a class="headerlink" href="#CrcSqueue.output_format_all" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue.output_format_user_start">
-<span class="sig-name descname"><span class="pre">output_format_user_start</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R</span> <span class="pre">%.20S'</span></em><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue.output_format_user_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue.output_format_user_start" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcSqueue.output_format_user_start">
+<span class="sig-name descname"><span class="pre">output_format_user_start</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R</span> <span class="pre">%.20S'</span></em><a class="headerlink" href="#CrcSqueue.output_format_user_start" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue.output_format_all_start">
-<span class="sig-name descname"><span class="pre">output_format_all_start</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.6a</span> <span class="pre">%.6u</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R</span> <span class="pre">%.20S'</span></em><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue.output_format_all_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue.output_format_all_start" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcSqueue.output_format_all_start">
+<span class="sig-name descname"><span class="pre">output_format_all_start</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">-o</span> <span class="pre">'%.7i</span> <span class="pre">%.3P</span> <span class="pre">%.6a</span> <span class="pre">%.6u</span> <span class="pre">%.35j</span> <span class="pre">%.2t</span> <span class="pre">%.12M</span> <span class="pre">%.6D</span> <span class="pre">%.4C</span> <span class="pre">%.20R</span> <span class="pre">%.20S'</span></em><a class="headerlink" href="#CrcSqueue.output_format_all_start" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue.watch_frequency">
-<span class="sig-name descname"><span class="pre">watch_frequency</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">10</span></em><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue.watch_frequency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue.watch_frequency" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcSqueue.watch_frequency">
+<span class="sig-name descname"><span class="pre">watch_frequency</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">10</span></em><a class="headerlink" href="#CrcSqueue.watch_frequency" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue.build_slurm_command">
-<span class="sig-name descname"><span class="pre">build_slurm_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue.build_slurm_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue.build_slurm_command" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcSqueue.build_slurm_command">
+<span class="sig-name descname"><span class="pre">build_slurm_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcSqueue.build_slurm_command" title="Permalink to this definition"></a></dt>
 <dd><p>Return an <code class="docutils literal notranslate"><span class="pre">squeue</span></code> command matching parsed command line arguments</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -144,8 +146,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_squeue.CrcSqueue.app_logic">
-<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_squeue.html#CrcSqueue.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_squeue.CrcSqueue.app_logic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcSqueue.app_logic">
+<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcSqueue.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

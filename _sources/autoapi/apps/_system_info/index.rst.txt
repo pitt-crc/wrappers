@@ -1,8 +1,6 @@
 apps._system_info
 ===========================
 
-.. py:module:: apps._system_info
-
 .. autoapi-nested-parse::
 
    General utilities for fetching data and interacting with the parent system.

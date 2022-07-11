@@ -29,7 +29,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> CRC Wrapper Applications
+            <a href="../index.html" class="icon icon-home"> CRC Wrapper Applications
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -40,10 +40,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Overview</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../_base_parser/index.html">apps._base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../crc_job_stats/index.html">apps.crc_job_stats</a></li>
@@ -51,11 +53,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../crc_quota/index.html">apps.crc_quota</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">apps.crc_scancel</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#apps.crc_scancel.CrcScancel">CrcScancel</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.user">user</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.cancel_job_on_cluster">cancel_job_on_cluster</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.get_cluster_for_job_id">get_cluster_for_job_id</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#apps.crc_scancel.CrcScancel.app_logic">app_logic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#CrcScancel">CrcScancel</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#CrcScancel.user">user</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcScancel.cancel_job_on_cluster">cancel_job_on_cluster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcScancel.get_cluster_for_job_id">get_cluster_for_job_id</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#CrcScancel.app_logic">app_logic</a></li>
 </ul>
 </li>
 </ul>
@@ -76,14 +78,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">CRC Wrapper Applications</a>
+          <a href="../index.html">CRC Wrapper Applications</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
       <li>apps.crc_scancel</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../../_sources/autoapi/apps/crc_scancel/index.rst.txt" rel="nofollow"> View page source</a>
@@ -94,24 +96,24 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-apps.crc_scancel">
-<span id="apps-crc-scancel"></span><h1>apps.crc_scancel<a class="headerlink" href="#module-apps.crc_scancel" title="Permalink to this heading"></a></h1>
+  <section id="apps-crc-scancel">
+<h1>apps.crc_scancel<a class="headerlink" href="#apps-crc-scancel" title="Permalink to this heading"></a></h1>
 <p>A simple wrapper around the Slurm <code class="docutils literal notranslate"><span class="pre">scancel</span></code> command</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">apps.crc_scancel.</span></span><span class="sig-name descname"><span class="pre">CrcScancel</span></span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../_base_parser/index.html#apps._base_parser.BaseParser" title="apps._base_parser.BaseParser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></a></p>
+<dt class="sig sig-object py" id="CrcScancel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CrcScancel</span></span><a class="headerlink" href="#CrcScancel" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">apps._base_parser.BaseParser</span></code></p>
 <p>Cancel a Slurm job submitted by the current user.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel.user">
-<span class="sig-name descname"><span class="pre">user</span></span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel.user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel.user" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcScancel.user">
+<span class="sig-name descname"><span class="pre">user</span></span><a class="headerlink" href="#CrcScancel.user" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel.cancel_job_on_cluster">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cancel_job_on_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel.cancel_job_on_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel.cancel_job_on_cluster" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcScancel.cancel_job_on_cluster">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cancel_job_on_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcScancel.cancel_job_on_cluster" title="Permalink to this definition"></a></dt>
 <dd><p>Cancel a running slurm job</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -124,15 +126,15 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel.get_cluster_for_job_id">
-<span class="sig-name descname"><span class="pre">get_cluster_for_job_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel.get_cluster_for_job_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel.get_cluster_for_job_id" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcScancel.get_cluster_for_job_id">
+<span class="sig-name descname"><span class="pre">get_cluster_for_job_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcScancel.get_cluster_for_job_id" title="Permalink to this definition"></a></dt>
 <dd><p>Return the name of the cluster a slurm job is running on</p>
 <p>Exits the application with an error</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="apps.crc_scancel.CrcScancel.app_logic">
-<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/apps/crc_scancel.html#CrcScancel.app_logic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apps.crc_scancel.CrcScancel.app_logic" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="CrcScancel.app_logic">
+<span class="sig-name descname"><span class="pre">app_logic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CrcScancel.app_logic" title="Permalink to this definition"></a></dt>
 <dd><p>Logic to evaluate when executing the application</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
