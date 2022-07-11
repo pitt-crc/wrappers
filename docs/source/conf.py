@@ -27,16 +27,14 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
-    'autoapi.extension'
+    'autoapi.extension',
 ]
 
 # Configure automatic documentation of commandline applications
 autoapi_type = 'python'
 autoapi_dirs = [str(apps_dir)]
 autoapi_add_toctree_entry = False
-
-# Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+autoapi_template_dir = 'templates'
 
 # The suffix(es) of source filenames.
 source_suffix = '.rst'
