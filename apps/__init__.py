@@ -62,11 +62,15 @@ class is located in ``apps/example_module.py`` and exposes the application as
 an executable called ``executable-name``:
 
 .. code-block::
+
    setup(
+       ...
        entry_points=\"""
            [console_scripts]
            executable-name=apps.example_module:ExampleApplication.execute
        \"""
+       ...
+   )
 """
 
 __version__ = '0.4.0'
