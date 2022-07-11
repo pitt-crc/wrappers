@@ -41,7 +41,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/base_parser/index.html">apps.base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/_base_parser/index.html">apps._base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/crc_job_stats/index.html">apps.crc_job_stats</a></li>
@@ -54,7 +55,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/crc_squeue/index.html">apps.crc_squeue</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/crc_sus/index.html">apps.crc_sus</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/crc_usage/index.html">apps.crc_usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../autoapi/apps/system_info/index.html">apps.system_info</a></li>
 </ul>
 
         </div>
@@ -119,7 +119,7 @@
 
 <span class="sd">   from argparse import Namespace</span>
 
-<span class="sd">   from apps.base_parser import BaseParser</span>
+<span class="sd">   from apps._base_parser import BaseParser</span>
 
 
 <span class="sd">   class ExampleApplication(BaseParser):</span>
@@ -155,6 +155,13 @@
 <span class="s2">       </span><span class="se">\&quot;</span><span class="s2">&quot;&quot;</span>
 <span class="s2">       ...</span>
 <span class="s2">   )</span>
+
+<span class="s2">.. note::</span>
+
+<span class="s2">   For both clarity and historical reasons, application names are defined</span>
+<span class="s2">   in files starting with the prefix ``crc_``. Python modules containing</span>
+<span class="s2">   reusable utilities (and not a dedicated command line app) are named using a</span>
+<span class="s2">   leading underscore.</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="__version__"><a class="viewcode-back" href="../autoapi/apps/index.html#apps.__version__">[docs]</a><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.4.0&#39;</span></div>

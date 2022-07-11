@@ -106,7 +106,7 @@ Module Contents
 
 .. py:class:: CrcQuota
 
-   Bases: :py:obj:`apps.base_parser.BaseParser`
+   Bases: :py:obj:`apps._base_parser.BaseParser`
 
    Display a user's disk quota.
 

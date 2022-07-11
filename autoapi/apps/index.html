@@ -42,7 +42,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Applications:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="base_parser/index.html">apps.base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_base_parser/index.html">apps._base_parser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="_system_info/index.html">apps._system_info</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crc_idle/index.html">apps.crc_idle</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crc_interactive/index.html">apps.crc_interactive</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crc_job_stats/index.html">apps.crc_job_stats</a></li>
@@ -55,7 +56,6 @@
 <li class="toctree-l1"><a class="reference internal" href="crc_squeue/index.html">apps.crc_squeue</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crc_sus/index.html">apps.crc_sus</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crc_usage/index.html">apps.crc_usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="system_info/index.html">apps.system_info</a></li>
 </ul>
 
         </div>
@@ -112,7 +112,7 @@ the following:</p>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">argparse</span> <span class="k">import</span> <span class="n">Namespace</span>
 
-<span class="kn">from</span> <span class="nn">apps.base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">apps._base_parser</span> <span class="k">import</span> <span class="n">BaseParser</span>
 
 
 <span class="k">class</span> <span class="nc">ExampleApplication</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
@@ -146,6 +146,13 @@ an executable called <code class="docutils literal notranslate"><span class="pre
     <span class="o">...</span>
 <span class="p">)</span>
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For both clarity and historical reasons, application names are defined
+in files starting with the prefix <code class="docutils literal notranslate"><span class="pre">crc_</span></code>. Python modules containing
+reusable utilities (and not a dedicated command line app) are named using a
+leading underscore.</p>
 </div>
 </section>
 <section id="module-contents">

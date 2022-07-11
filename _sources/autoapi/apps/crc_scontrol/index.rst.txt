@@ -17,7 +17,7 @@ Module Contents
 
 .. py:class:: CrcScontrol
 
-   Bases: :py:obj:`apps.base_parser.BaseParser`
+   Bases: :py:obj:`apps._base_parser.BaseParser`
 
    The `crc-scontrol` application has been deprecated. Please use the `crc-show-config` application instead.
 
