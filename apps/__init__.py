@@ -1,4 +1,23 @@
-"""Custom commandline applications built by the Center for Research Computing.
+"""
+CRC Wrapper Applications
+========================
+
+.. toctree::
+   :hidden:
+
+   Overview<self>
+
+.. Source files for documenting individual applications are generated
+   dynamically by the sphinx-autoapi plugin. These files are edded below.
+
+.. toctree::
+   :hidden:
+   :caption: Applications:
+   :glob:
+
+   **/*
+
+Custom commandline applications built by the Center for Research Computing.
 
 The wrapper applications provide a simplified interface for running common
 HPC tasks on Slurm based clusters. The applications are built specifically for
