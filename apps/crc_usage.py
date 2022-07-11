@@ -1,7 +1,7 @@
 """Command line interface that wraps the banking application"""
 
-from .base_parser import BaseParser
-from .system_info import Shell
+from ._base_parser import BaseParser
+from ._system_info import Shell
 
 
 class CrcUsage(BaseParser):
