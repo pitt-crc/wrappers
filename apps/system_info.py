@@ -45,10 +45,13 @@ class Shell:
         command_list = split(command)
         process = Popen(command_list, stdout=PIPE, stderr=PIPE, shell=False)
         std_out, std_err = process.communicate()
-        if include_err:
-            return std_out.strip(), std_err.strip()
+        out_decoded = std_out.decode().strip()
+        err_decoded = std_err.decode().strip()
 
-        return std_out.strip()
+        if include_err:
+            return out_decoded, err_decoded
+
+        return out_decoded
 
 
 class SlurmInfo:
