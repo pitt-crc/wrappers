@@ -52,9 +52,9 @@ the following:
 
 .. doctest::
 
-    >>> from argparse import Namespace
+   >>> from argparse import Namespace
 
-    >>> from apps._base_parser import BaseParser
+   >>> from apps._base_parser import BaseParser
 
 
    >>> class ExampleApplication(BaseParser):
@@ -83,14 +83,14 @@ an executable called ``executable-name``:
 
 .. code-block::
 
-   setup(
-       ...
-       entry_points=\"""
-           [console_scripts]
-           executable-name=apps.example_module:ExampleApplication.execute
-       \"""
-       ...
-   )
+   >>> from setuptools import setup
+
+   >>> setup(
+   ...    entry_points=\"""
+   ...        [console_scripts]
+   ...        executable-name=apps.example_module:ExampleApplication.execute
+   ...    \"""
+   ...)
 
 .. note::
 
