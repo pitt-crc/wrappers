@@ -30,7 +30,6 @@ extensions = [
     'sphinx.ext.githubpages',
     'autoapi.extension',
     'sphinx_copybutton',
-    'sphinxarg.ext',
 ]
 
 # Configure automatic documentation of commandline applications
