@@ -1,6 +1,7 @@
 """Print an account's service unit allocation"""
 
 from argparse import Namespace
+from typing import Dict
 
 import dataset
 
@@ -22,7 +23,7 @@ class CrcSus(BaseParser):
         help_text = f'slurm account name [default: {default_group}]'
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def get_allocation_info(self, account: str) -> dict[str, int]:
+    def get_allocation_info(self, account: str) -> Dict[str, int]:
         """Return the service unit allocation for a given account name
 
         Args:

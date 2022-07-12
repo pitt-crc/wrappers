@@ -6,7 +6,7 @@ import json
 import math
 import sys
 from argparse import Namespace
-from typing import Optional
+from typing import Optional, Tuple
 
 from ._base_parser import BaseParser
 from ._system_info import Shell
@@ -204,7 +204,7 @@ class CrcQuota(BaseParser):
         self.add_argument('--verbose', action='store_true', help='use verbose output')
 
     @staticmethod
-    def get_user_info(username: Optional[str] = None) -> tuple[str, int, str, int]:
+    def get_user_info(username: Optional[str] = None) -> Tuple[str, int, str, int]:
         """Return system IDs for the current user
 
         Args:
@@ -228,7 +228,7 @@ class CrcQuota(BaseParser):
         return user, int(uid), group, int(gid)
 
     @staticmethod
-    def get_group_quotas(group: str) -> tuple[GenericUsage]:
+    def get_group_quotas(group: str) -> Tuple[GenericUsage]:
         """Return quota information for the given group
 
         Args:
