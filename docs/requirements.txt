@@ -1,5 +1,4 @@
 sphinx
-sphinx-argparse
 sphinx-autoapi
 sphinx-copybutton
 sphinx-rtd-theme

@@ -1,14 +1,4 @@
-"""Command line interface that wraps the banking application
-
-Command Line Interface
-----------------------
-
-.. argparse::
-   :nodescription:
-   :module: apps.crc_usage
-   :func: CrcUsage
-   :prog: crc-usage
-"""
+"""Command line interface that wraps the banking application"""
 
 from ._base_parser import BaseParser
 from ._system_info import Shell

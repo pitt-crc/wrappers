@@ -1,14 +1,4 @@
-"""Command line application for listing idle Slurm resources
-
-Command Line Interface
-----------------------
-
-.. argparse::
-   :nodescription:
-   :module: apps.crc_idle
-   :func: CrcIdle
-   :prog: crc-idle
-"""
+"""Command line application for listing idle Slurm resources"""
 
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo

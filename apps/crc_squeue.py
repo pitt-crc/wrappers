@@ -1,14 +1,4 @@
-"""A simple wrapper around the Slurm ``squeue`` command
-
-Command Line Interface
-----------------------
-
-.. argparse::
-   :nodescription:
-   :module: apps.crc_squeue
-   :func: CrcSqueue
-   :prog: crc-squeue
-"""
+"""A simple wrapper around the Slurm ``squeue`` command"""
 
 from os import environ
 from time import sleep

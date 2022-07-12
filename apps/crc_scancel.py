@@ -1,14 +1,4 @@
-"""A simple wrapper around the Slurm ``scancel`` command
-
-Command Line Interface
-----------------------
-
-.. argparse::
-   :nodescription:
-   :module: apps.crc_scancel
-   :func: CrcScancel
-   :prog: crc-scancel
-"""
+"""A simple wrapper around the Slurm ``scancel`` command"""
 
 from os import environ
 from sys import stdout

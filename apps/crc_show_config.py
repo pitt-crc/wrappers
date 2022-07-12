@@ -1,14 +1,4 @@
-"""Display the slurm configuration for a given cluster/partition
-
-Command Line Interface
-----------------------
-
-.. argparse::
-   :nodescription:
-   :module: apps.crc_show_config
-   :func: CrcShowConfig
-   :prog: crc-show-config
-"""
+"""Display the slurm configuration for a given cluster/partition"""
 
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo

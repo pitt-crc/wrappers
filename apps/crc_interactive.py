@@ -1,14 +1,4 @@
-"""A simple wrapper around the Slurm ``srun`` command
-
-Command Line Interface
-----------------------
-
-.. argparse::
-   :nodescription:
-   :module: apps.crc_interactive
-   :func: CrcInteractive
-   :prog: crc-interactive
-"""
+"""A simple wrapper around the Slurm ``srun`` command"""
 
 from os import system
 
