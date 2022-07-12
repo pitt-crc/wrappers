@@ -1,4 +1,4 @@
-"""Parent classes for building command line applications."""
+"""Parent classes used when building command line applications."""
 
 import abc
 import os
