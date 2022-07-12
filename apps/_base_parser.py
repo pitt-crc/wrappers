@@ -3,7 +3,8 @@
 import abc
 import os
 import sys
-from argparse import ArgumentParser, HelpFormatter, Namespace
+from argparse import ArgumentParser, Namespace, RawTextHelpFormatter
+from textwrap import dedent
 
 from . import __version__
 
@@ -18,14 +19,18 @@ class BaseParser(ArgumentParser):
         """Define arguments for the command line interface"""
 
         super(BaseParser, self).__init__()
-        self.description = self.__doc__
+
+        # Strip indent from class docs and use as application description
+        first_line, *other_lines = self.__doc__.split('\n')
+        dedent_other_lines = dedent('\n'.join(other_lines))
+        self.description = '\n'.join((first_line, dedent_other_lines))
 
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
-    def _get_formatter(self) -> HelpFormatter:
+    def _get_formatter(self) -> RawTextHelpFormatter:
         """Returns a ``HelpFormatter`` object for formatting application help text"""
 
-        return HelpFormatter(self.prog, max_help_position=self.help_width)
+        return RawTextHelpFormatter(self.prog, max_help_position=self.help_width)
 
     @property
     def app_version(self) -> str:
