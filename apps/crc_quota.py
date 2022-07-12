@@ -1,8 +1,12 @@
 """Command line utility for checking a user's disk usage"""
 
+from __future__ import annotations
+
 import json
 import math
 import sys
+from argparse import Namespace
+from typing import Optional, Tuple
 
 from ._base_parser import BaseParser
 from ._system_info import Shell
@@ -11,7 +15,7 @@ from ._system_info import Shell
 class AbstractFilesystemUsage(object):
     """Base class for building object-oriented representations of file system quotas"""
 
-    def __init__(self, name, size_used, size_limit):
+    def __init__(self, name: str, size_used: int, size_limit: int) -> None:
         """Create a new quota from known system metrics
 
         Args:
@@ -36,13 +40,13 @@ class AbstractFilesystemUsage(object):
 
         return self._short_string()
 
-    def _verbose_string(self):
+    def _verbose_string(self) -> str:
         return "-> {}: Bytes Used: {}, Byte Limit: {}".format(
             self.name,
             self.convert_size(self.size_used),
             self.convert_size(self.size_limit))
 
-    def _short_string(self):
+    def _short_string(self) -> str:
         return "-> {}: {} / {}".format(
             self.name,
             self.convert_size(self.size_used),
@@ -50,7 +54,7 @@ class AbstractFilesystemUsage(object):
         )
 
     @staticmethod
-    def convert_size(size):
+    def convert_size(size: int) -> str:
         """Convert the given number of bytes to a human-readable string
 
         Args:
@@ -75,7 +79,7 @@ class GenericUsage(AbstractFilesystemUsage):
     """Disk storage quota for a generic file system"""
 
     @classmethod
-    def from_path(cls, name, path):
+    def from_path(cls, name: str, path: str) -> Optional[GenericUsage]:
         """Return a quota object for a given file path
 
         Args:
@@ -98,7 +102,7 @@ class GenericUsage(AbstractFilesystemUsage):
 class BeegfsUsage(AbstractFilesystemUsage):
     """Disk storage quota for a BeeGFS file system"""
 
-    def __init__(self, name, size_used, size_limit, chunk_used, chunk_limit):
+    def __init__(self, name: str, size_used: int, size_limit: int, chunk_used: int, chunk_limit: int) -> None:
         """Create a new BeeGFS quota from known system metrics
 
         Args:
@@ -113,7 +117,7 @@ class BeegfsUsage(AbstractFilesystemUsage):
         self.chunk_used = chunk_used
         self.chunk_limit = chunk_limit
 
-    def _verbose_string(self):
+    def _verbose_string(self) -> str:
         return "-> {}: Bytes Used: {}, Byte Limit: {}, Chunk Files Used: {}, Chunk File Limit: {}".format(
             self.name,
             self.size_used,
@@ -122,7 +126,7 @@ class BeegfsUsage(AbstractFilesystemUsage):
             self.chunk_limit)
 
     @classmethod
-    def from_group(cls, name, group):
+    def from_group(cls, name: str, group: str) -> Optional[BeegfsUsage]:
         """Return a quota object for a given group name
 
         Args:
@@ -140,13 +144,13 @@ class BeegfsUsage(AbstractFilesystemUsage):
         quota_info_cmd = "beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group)
         quota_out = Shell.run_command(quota_info_cmd)
         result = quota_out.splitlines()[1].split(',')
-        return cls(name, int(result[2]), int(result[3]), int(result[4]), result[5])
+        return cls(name, int(result[2]), int(result[3]), int(result[4]), int(result[5]))
 
 
 class IhomeUsage(AbstractFilesystemUsage):
     """Disk storage quota for the ihome file system"""
 
-    def __init__(self, name, size_used, size_limit, files, physical):
+    def __init__(self, name: str, size_used: int, size_limit: int, files: int, physical: int) -> None:
         """Create a new ihome quota from known system metrics
 
         Args:
@@ -161,12 +165,12 @@ class IhomeUsage(AbstractFilesystemUsage):
         self.files = files
         self.physical = physical
 
-    def _verbose_string(self):
+    def _verbose_string(self) -> str:
         return "-> {}: Logical Bytes Used: {}, Byte Limit: {}, Num Files: {}, Physical Bytes Used: {}".format(
             self.name, self.size_used, self.size_limit, self.files, self.physical)
 
     @classmethod
-    def from_uid(cls, name, uid):
+    def from_uid(cls, name: str, uid: int) -> Optional[IhomeUsage]:
         """Return a quota object for a given user id
 
         Args:
@@ -192,7 +196,7 @@ class IhomeUsage(AbstractFilesystemUsage):
 class CrcQuota(BaseParser):
     """Display a user's disk quota."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcQuota, self).__init__()
@@ -200,7 +204,7 @@ class CrcQuota(BaseParser):
         self.add_argument('--verbose', action='store_true', help='use verbose output')
 
     @staticmethod
-    def get_user_info(username=None):
+    def get_user_info(username: Optional[str] = None) -> Tuple[str, int, str, int]:
         """Return system IDs for the current user
 
         Args:
@@ -221,10 +225,10 @@ class CrcQuota(BaseParser):
         uid = Shell.run_command("id -u {}".format(username))
         gid = Shell.run_command("id -g {}".format(username))
 
-        return user, uid, group, gid
+        return user, int(uid), group, int(gid)
 
     @staticmethod
-    def get_group_quotas(group):
+    def get_group_quotas(group: str) -> Tuple[GenericUsage]:
         """Return quota information for the given group
 
         Args:
@@ -243,7 +247,7 @@ class CrcQuota(BaseParser):
         all_quotas = (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota)
         return tuple(filter(None, all_quotas))
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

@@ -1,6 +1,8 @@
 """Command line utility for printing basic information about a running job."""
 
+from argparse import Namespace
 from os import environ
+from typing import Dict
 
 from ._base_parser import BaseParser
 from ._system_info import Shell
@@ -15,14 +17,14 @@ class CrcJobStats(BaseParser):
     cluster = environ.get('SLURM_CLUSTER_NAME')
     job_id = environ.get('SLURM_JOB_ID')
 
-    def exit_if_not_in_slurm(self):
+    def exit_if_not_in_slurm(self) -> None:
         """Exit the application is not running from within a slurm job"""
 
         if 'SLURM_JOB_ID' not in environ:
             print('This script is meant to be added at the bottom of your Slurm scripts!')
             self.exit()
 
-    def get_job_info(self):
+    def get_job_info(self) -> Dict[str, str]:
         """Return information about the running job as a dictionary"""
 
         # Get job information from the ``scontrol`` utility
@@ -50,7 +52,7 @@ class CrcJobStats(BaseParser):
 
         return job_info
 
-    def pretty_print_job_info(self, job_info):
+    def pretty_print_job_info(self, job_info: dict) -> None:
         """Print information about a running job in a readable format
 
         Args:
@@ -85,7 +87,7 @@ class CrcJobStats(BaseParser):
         # End the table
         print(horizontal_border)
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

@@ -6,13 +6,14 @@ import termios
 import tty
 from shlex import split
 from subprocess import Popen, PIPE
+from typing import Union, Tuple, Set
 
 
 class Shell:
     """Methods for interacting with the runtime shell"""
 
     @staticmethod
-    def readchar():
+    def readchar() -> str:
         """Read a single character from the command line"""
 
         # Get the current settings of the standard input file descriptor
@@ -31,7 +32,7 @@ class Shell:
         return character
 
     @staticmethod
-    def run_command(command, include_err=False):
+    def run_command(command: str, include_err: bool = False) -> Union[str, Tuple[str, str]]:
         """Run a command in a dedicated shell
 
         Args:
@@ -71,7 +72,7 @@ class SlurmInfo:
     }
 
     @classmethod
-    def get_cluster_names(cls, include_all_clusters=False):
+    def get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]:
         """Return a tuple cluster names configured with slurm
 
         Args:
@@ -92,7 +93,7 @@ class SlurmInfo:
         return cluster_names
 
     @classmethod
-    def get_partition_names(cls, cluster_name, include_all_partitions=False):
+    def get_partition_names(cls, cluster_name: str, include_all_partitions: bool = False) -> Set[str]:
         """Return a tuple of partition names associated with a given slurm cluster
 
         Args:

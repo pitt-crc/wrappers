@@ -1,5 +1,5 @@
 """A simple wrapper around the Slurm ``scancel`` command"""
-
+from argparse import Namespace
 from os import environ
 from sys import stdout
 
@@ -12,7 +12,7 @@ class CrcScancel(BaseParser):
 
     user = environ['USER']
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcScancel, self).__init__()
@@ -22,7 +22,7 @@ class CrcScancel(BaseParser):
         self.add_argument('job_id', type=int_as_str, help='the job ID to cancel')
 
     @staticmethod
-    def cancel_job_on_cluster(cluster, job_id):
+    def cancel_job_on_cluster(cluster: str, job_id: int) -> None:
         """Cancel a running slurm job
 
         Args:
@@ -32,7 +32,7 @@ class CrcScancel(BaseParser):
 
         Shell.run_command('scancel -M {} {}'.format(cluster, job_id))
 
-    def get_cluster_for_job_id(self, job_id):
+    def get_cluster_for_job_id(self, job_id: int) -> str:
         """Return the name of the cluster a slurm job is running on
 
         Exits the application with an error
@@ -49,7 +49,7 @@ class CrcScancel(BaseParser):
             if job_id in Shell.run_command(command):
                 return cluster
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

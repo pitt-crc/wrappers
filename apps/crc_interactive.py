@@ -1,5 +1,6 @@
 """A simple wrapper around the Slurm ``srun`` command"""
 
+from argparse import Namespace
 from os import system
 
 from ._base_parser import BaseParser
@@ -19,7 +20,7 @@ class CrcInteractive(BaseParser):
     default_mem = 1  # Default memory in GB
     default_gpus = 0  # Default number of GPUs
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface."""
 
         super(CrcInteractive, self).__init__()
@@ -63,7 +64,7 @@ class CrcInteractive(BaseParser):
         additional_args.add_argument('-f', '--feature', help='specify a feature, e.g. `ti` for GPUs')
         additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP style submission')
 
-    def _validate_arguments(self, args):
+    def _validate_arguments(self, args: Namespace) -> None:
         """Exit the application if command-line arguments are invalid
 
         Args:
@@ -83,7 +84,7 @@ class CrcInteractive(BaseParser):
             self.error('You must specify a partition when using the Investor cluster')
 
     @staticmethod
-    def x11_is_available():
+    def x11_is_available() -> bool:
         """Return whether x11 is available in the current runtime environment"""
 
         try:
@@ -95,7 +96,7 @@ class CrcInteractive(BaseParser):
 
         return False
 
-    def create_srun_command(self, args):
+    def create_srun_command(self, args: Namespace) -> str:
         """Create an ``srun`` command based on parsed commandline arguments
 
         Args:
@@ -136,7 +137,7 @@ class CrcInteractive(BaseParser):
         cluster_to_run = next(cluster for cluster in SlurmInfo.get_cluster_names() if getattr(args, cluster))
         return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> str:
         """Logic to evaluate when executing the application
 
         Args:

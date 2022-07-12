@@ -1,5 +1,8 @@
 """Command line application for listing idle Slurm resources"""
 
+from argparse import Namespace
+from typing import Tuple, Dict
+
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo
 
@@ -17,7 +20,7 @@ class CrcIdle(BaseParser):
     }
     default_type = 'cores'
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcIdle, self).__init__()
@@ -28,7 +31,7 @@ class CrcIdle(BaseParser):
         self.add_argument('-d', '--htc', action='store_true', help='list idle resources on the htc cluster')
         self.add_argument('-p', '--partition', nargs='+', help='only include information for specific partitions')
 
-    def get_cluster_list(self, args):
+    def get_cluster_list(self, args: Namespace) -> Tuple[str]:
         """Return a list of clusters specified in the command line arguments
 
         Returns a tuple of clusters specified by command line arguments. If no
@@ -48,7 +51,7 @@ class CrcIdle(BaseParser):
         return argument_clusters or argument_options
 
     @staticmethod
-    def _idle_cpu_resources(cluster, partition):
+    def _idle_cpu_resources(cluster: str, partition: str) -> Dict[int, int]:
         """Return the idle CPU resources on a given cluster partition
 
         Args:
@@ -74,7 +77,7 @@ class CrcIdle(BaseParser):
         return return_dict
 
     @staticmethod
-    def _idle_gpu_resources(cluster, partition):
+    def _idle_gpu_resources(cluster: str, partition: str) -> Dict[int, int]:
         """Return the idle GPU resources on a given cluster partition
 
            If the host node is in 'drain' state, the GPUs are reported as unavailable.
@@ -113,7 +116,7 @@ class CrcIdle(BaseParser):
 
         return return_dict
 
-    def count_idle_resources(self, cluster, partition):
+    def count_idle_resources(self, cluster: str, partition: str) -> Dict[int, int]:
         """Determine the number of idle resources on a given cluster partition
 
         The returned dictionary maps the number of idle resources (e.g., cores)
@@ -136,7 +139,7 @@ class CrcIdle(BaseParser):
 
         raise ValueError(f'Unknown cluster type: {cluster}')
 
-    def print_partition_summary(self, cluster, partition):
+    def print_partition_summary(self, cluster: str, partition: str) -> None:
         """Print a summary of idle resources in a single partition
 
         Args:
@@ -160,7 +163,7 @@ class CrcIdle(BaseParser):
 
         print('')
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

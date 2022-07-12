@@ -1,5 +1,8 @@
 """Print the end date for an account's proposal"""
 
+from argparse import Namespace
+from datetime import datetime
+
 import dataset
 
 from ._base_parser import BaseParser
@@ -11,7 +14,7 @@ class CrcProposalEnd(BaseParser):
 
     banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcProposalEnd, self).__init__()
@@ -21,7 +24,7 @@ class CrcProposalEnd(BaseParser):
             'account', default=default_group, nargs='?',
             help=f'the name of the Slurm account [default: {default_group}]')
 
-    def get_proposal_end_date(self, account):
+    def get_proposal_end_date(self, account: str) -> datetime:
         """Get the proposal end date for a given account
 
         Args:
@@ -37,7 +40,7 @@ class CrcProposalEnd(BaseParser):
 
         return db_record['end_date']
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

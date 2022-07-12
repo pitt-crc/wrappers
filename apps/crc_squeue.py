@@ -1,5 +1,6 @@
 """A simple wrapper around the Slurm ``squeue`` command"""
 
+from argparse import Namespace
 from os import environ
 from time import sleep
 
@@ -19,7 +20,7 @@ class CrcSqueue(BaseParser):
     # Frequency (in seconds) to refresh output when user specifies ``--watch``
     watch_frequency = 10
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcSqueue, self).__init__()
@@ -27,7 +28,7 @@ class CrcSqueue(BaseParser):
         self.add_argument('-s', '--start', action='store_true', help="add the approximate start time")
         self.add_argument('-w', '--watch', action='store_true', help="update information every 10 seconds")
 
-    def build_slurm_command(self, args):
+    def build_slurm_command(self, args: Namespace) -> str:
         """Return an ``squeue`` command matching parsed command line arguments
 
         Args:
@@ -57,7 +58,7 @@ class CrcSqueue(BaseParser):
 
         return ' '.join(command_options)
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

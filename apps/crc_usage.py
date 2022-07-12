@@ -1,5 +1,7 @@
 """Command line interface that wraps the banking application"""
 
+from argparse import Namespace
+
 from ._base_parser import BaseParser
 from ._system_info import Shell
 
@@ -9,7 +11,7 @@ class CrcUsage(BaseParser):
 
     banking_executable = '/ihome/crc/bank/crc_bank.py usage'
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcUsage, self).__init__()
@@ -18,7 +20,7 @@ class CrcUsage(BaseParser):
         help_text = f'slurm account name [default: {default_group}]'
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:
