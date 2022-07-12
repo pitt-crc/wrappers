@@ -1,7 +1,6 @@
 """Display the slurm configuration for a given cluster/partition"""
 
 from argparse import Namespace
-from typing import Dict
 
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo
@@ -24,7 +23,7 @@ class CrcShowConfig(BaseParser):
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
 
     @staticmethod
-    def get_partition_info(cluster: str, partition: str) -> Dict[str, str]:
+    def get_partition_info(cluster: str, partition: str) -> dict[str, str]:
         """Return a dictionary of Slurm settings as configured on a given partition
 
         Args:

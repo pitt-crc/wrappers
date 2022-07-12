@@ -2,7 +2,6 @@
 
 from argparse import Namespace
 from os import environ
-from typing import Dict
 
 from ._base_parser import BaseParser
 from ._system_info import Shell
@@ -24,7 +23,7 @@ class CrcJobStats(BaseParser):
             print('This script is meant to be added at the bottom of your Slurm scripts!')
             self.exit()
 
-    def get_job_info(self) -> Dict[str, str]:
+    def get_job_info(self) -> dict[str, str]:
         """Return information about the running job as a dictionary"""
 
         # Get job information from the ``scontrol`` utility
