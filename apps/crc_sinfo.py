@@ -1,4 +1,14 @@
-"""A simple wrapper around the Slurm ``sinfo`` command"""
+"""A simple wrapper around the Slurm ``sinfo`` command
+
+Command Line Interface
+----------------------
+
+.. argparse::
+   :nodescription:
+   :module: apps.crc_sinfo
+   :func: CrcSinfo
+   :prog: crc-sinfo
+"""
 
 from ._base_parser import BaseParser
 from ._system_info import Shell

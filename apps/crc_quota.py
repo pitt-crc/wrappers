@@ -1,4 +1,14 @@
-"""Command line utility for checking a user's disk usage"""
+"""Command line utility for checking a user's disk usage
+
+Command Line Interface
+----------------------
+
+.. argparse::
+   :nodescription:
+   :module: apps.crc_quota
+   :func: CrcQuota
+   :prog: crc-quota
+"""
 
 import json
 import math

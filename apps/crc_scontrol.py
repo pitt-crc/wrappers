@@ -1,6 +1,16 @@
 """This file is intended to be temporary. The original application has been
 renamed. This placeholder instructs users to use the new command line app.
+
+Command Line Interface
+----------------------
+
+.. argparse::
+   :nodescription:
+   :module: apps.crc_scontrol
+   :func: CrcScontrol
+   :prog: crc-scontrol
 """
+
 from ._base_parser import BaseParser
 
 

@@ -29,7 +29,8 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'autoapi.extension',
-    'sphinx_copybutton'
+    'sphinx_copybutton',
+    'sphinxarg.ext',
 ]
 
 # Configure automatic documentation of commandline applications

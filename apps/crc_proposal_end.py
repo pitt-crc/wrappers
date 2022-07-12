@@ -1,4 +1,14 @@
-"""Print the end date for an account's proposal"""
+"""Print the end date for an account's proposal
+
+Command Line Interface
+----------------------
+
+.. argparse::
+   :nodescription:
+   :module: apps.crc_proposal_end
+   :func: CrcProposalEnd
+   :prog: crc-proposal-end
+"""
 
 import dataset
 

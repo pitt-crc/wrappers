@@ -1,4 +1,14 @@
-"""Command line utility for printing basic information about a running job."""
+"""Command line utility for printing basic information about a running job.
+
+Command Line Interface
+----------------------
+
+.. argparse::
+   :nodescription:
+   :module: apps.crc_job_stats
+   :func: CrcJobStats
+   :prog: crc-job-stats
+"""
 
 from os import environ
 

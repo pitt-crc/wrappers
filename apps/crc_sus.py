@@ -1,4 +1,14 @@
-"""Print an account's service unit allocation"""
+"""Print an account's service unit allocation
+
+Command Line Interface
+----------------------
+
+.. argparse::
+   :nodescription:
+   :module: apps.crc_sus
+   :func: CrcSus
+   :prog: crc-sus
+"""
 
 import dataset
 
