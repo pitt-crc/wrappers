@@ -23,7 +23,7 @@ jobs:
 
   Test-Examples:
     name: Test Examples
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
