@@ -13,19 +13,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build documentation
-        shell: bash -leo pipefail {0}
         working-directory: ./docs
         run: make html SPHINXOPTS="-W --keep-going"  # Raise warnings as errors, but keep building anyway.
 
   Test-Examples:
     name: Test Examples
     runs-on: self-hosted
-    needs: Set-Up-Environment
     steps:
       - name: Checkout source
         uses: actions/checkout@v2
 
       - name: Run doctest
         working-directory: ./docs
-        shell: bash -leo pipefail {0}
         run: make doctest
