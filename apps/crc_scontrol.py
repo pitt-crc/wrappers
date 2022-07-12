@@ -2,7 +2,6 @@
 renamed. This placeholder instructs users to use the new command line app.
 """
 
-
 from argparse import Namespace
 
 from ._base_parser import BaseParser

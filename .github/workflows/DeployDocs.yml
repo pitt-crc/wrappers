@@ -11,23 +11,23 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout source
-      uses: actions/checkout@master
-      with:
-        fetch-depth: 0 # Otherwise, you will fail to push refs to destination repo
-      
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-        pip install -r docs/requirements.txt
-   
-    - name: Build and commit
-      uses: sphinx-notes/pages@master
-      with:
-        documentation_path: docs/source
+      - name: Checkout source
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0 # Otherwise, you will fail to push refs to destination repo
 
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: gh-pages
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r docs/requirements.txt
+
+      - name: Build and commit
+        uses: sphinx-notes/pages@master
+        with:
+          documentation_path: docs/source
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
