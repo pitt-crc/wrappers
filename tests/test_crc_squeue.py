@@ -64,25 +64,25 @@ class OutputFormat(TestCase):
         slurm_command = self.get_slurm_command([''])
         self.assertIn(CrcSqueue.output_format_user, slurm_command)
 
-    def test_format_for_user_flag(self) -> None:
+    def test_user_flag(self) -> None:
         """Test the application defaults to using the ``output_format_user`` format"""
 
         slurm_command = self.get_slurm_command(['--user'])
         self.assertIn(CrcSqueue.output_format_user, slurm_command)
 
-    def test_format_for_all_flag(self) -> None:
+    def test_all_flag(self) -> None:
         """Test the application defaults to using the ``output_format_all`` format"""
 
         slurm_command = self.get_slurm_command(['--all'])
         self.assertIn(CrcSqueue.output_format_all, slurm_command)
 
-    def test_format_for_user_and_start_flag(self) -> None:
+    def test_user_and_start_flag(self) -> None:
         """Test the application defaults to using the ``output_format_user_start`` format"""
 
         slurm_command = self.get_slurm_command(['--user', '--start'])
         self.assertIn(CrcSqueue.output_format_user_start, slurm_command)
 
-    def test_format_for_all_and_start_flags(self) -> None:
+    def test_all_and_start_flags(self) -> None:
         """Test the application defaults to using the ``output_format_all_start`` format"""
 
         slurm_command = self.get_slurm_command(['--all', '--start'])

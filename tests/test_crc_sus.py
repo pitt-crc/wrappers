@@ -21,7 +21,7 @@ class ArgumentParsing(TestCase):
 class OutputStringFormatting(TestCase):
     """Test the formatting of the output string"""
 
-    def test_output_matches_manual_string(self) -> None:
+    def test_output_matches_string(self) -> None:
         """Compare output string from the app with manually constructed expectation"""
 
         output_string = CrcSus().build_output_string(account='sam', smp=10, htc=20)

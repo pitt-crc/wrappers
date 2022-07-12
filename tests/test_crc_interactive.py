@@ -8,7 +8,7 @@ from apps.crc_interactive import CrcInteractive
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
-    def test_defaults_match_class_settings(self) -> None:
+    def test_args_match_class_settings(self) -> None:
         """Test parsed args default to the values defined as class settings"""
 
         args, _ = CrcInteractive().parse_known_args(['--mpi'])

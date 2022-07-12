@@ -91,7 +91,8 @@ class CrcIdle(BaseParser):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = f"sinfo -h -M {cluster} -p {partition} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '"
+        command = f"sinfo -h -M {cluster} -p {partition} -N " \
+                  f"--Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '"
 
         stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
