@@ -8,7 +8,7 @@ CRC Wrapper Applications
    Overview<self>
 
 .. Source files for documenting individual applications are generated
-   dynamically by the sphinx-autoapi plugin. These files are edded below.
+   dynamically by the sphinx-autoapi plugin. These files are added below.
 
 .. toctree::
    :hidden:

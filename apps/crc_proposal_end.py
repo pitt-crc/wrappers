@@ -50,5 +50,5 @@ class CrcProposalEnd(BaseParser):
         end_date = self.get_proposal_end_date(args.account)
 
         # Format the account name and end date as an easy-to-read string
-        date_str =end_date.strftime("%m/%d/%y")
+        date_str = end_date.strftime("%m/%d/%y")
         print(f"Proposal ends on {args.account} for account {date_str} on H2P")

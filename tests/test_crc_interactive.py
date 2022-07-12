@@ -9,7 +9,7 @@ class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
     def test_defaults_match_class_settings(self) -> None:
-        """Test parsed args default to values defined as class settings"""
+        """Test parsed args default to the values defined as class settings"""
 
         args, _ = CrcInteractive().parse_known_args(['--mpi'])
 
