@@ -50,29 +50,30 @@ the following:
 2. Define the application arguments (and help text) in the class ``__init__`` method
 3. Define the core application logic in the ``app_logic`` method
 
-.. code-block::
+.. doctest::
 
-   from argparse import Namespace
+    >>> from argparse import Namespace
 
-   from apps._base_parser import BaseParser
+    >>> from apps._base_parser import BaseParser
 
 
-   class ExampleApplication(BaseParser):
-       \"""This docstring becomes the application description in the CLI help text.\"""
-
-       def __init__(self) -> None:
-           \"""Define arguments for the command line interface\"""
-
-           self.add_arguments('-f', '--foo', help="This is help text for foo")
-
-       def app_logic(self, args: Namespace) -> None:
-           \"""Logic to evaluate when executing the application
-
-           Args:
-               args: Parsed command line arguments
-           \"""
-
-           print(args.foo)
+   >>> class ExampleApplication(BaseParser):
+   ...     \"""This docstring becomes the application description in the CLI help text.\"""
+   ...
+   ...     def __init__(self) -> None:
+   ...         \"""Define arguments for the command line interface\"""
+   ...
+   ...         super().__init__()
+   ...         self.add_argument('-f', '--foo', help="This is help text for foo")
+   ...
+   ...     def app_logic(self, args: Namespace) -> None:
+   ...         \"""Logic to evaluate when executing the application
+   ...
+   ...         Args:
+   ...             args: Parsed command line arguments
+   ...         \"""
+   ...
+   ...         print(args.foo)
 
 
 You will also need to add the new application to the ``setup.py`` file under
