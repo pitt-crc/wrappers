@@ -6,7 +6,7 @@ on:
 
 jobs:
   Test-Build-Succeeds:
-    name: Test Build Succeeds
+    name: Test Build with Examples
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -17,22 +17,7 @@ jobs:
           pip install -r requirements.txt
           pip install -r docs/requirements.txt
 
-      - name: Build documentation
-        working-directory: ./docs
-        run: make html SPHINXOPTS="-W --keep-going"  # Raise warnings as errors, but keep building anyway.
-
-  Test-Examples:
-    name: Test Examples
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install -r docs/requirements.txt
-
+      # This will intentionally fail if docs do not build successfully
       - name: Run doctest
         working-directory: ./docs
         run: make doctest
