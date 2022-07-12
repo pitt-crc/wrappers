@@ -259,7 +259,11 @@ class CrcQuota(BaseParser):
         if args.verbose:
             print('User ID: {}'.format(uid))
 
-        print(ihome_quota.to_string(args.verbose))
+        if ihome_quota:
+            print(ihome_quota.to_string(args.verbose))
+
+        else:
+            print('-> None')
 
         print("\nGroup: '{}'".format(group))
         if args.verbose:
