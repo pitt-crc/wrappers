@@ -26,8 +26,7 @@ CRC Wrapper Applications
 
    autoapi/apps/**/[!_]*
 
-Custom commandline applications built by the Center for Research Computing.
+Command applications built by the Center for Research Computing for wrapping common HPC tasks.
 
 The wrapper applications provide a simplified interface for running common
-HPC tasks on Slurm based clusters. The applications are built specifically for
-the CRC and are not designed to work out-of-the-box at other HPC facilities.
+HPC tasks on Slurm based clusters.
