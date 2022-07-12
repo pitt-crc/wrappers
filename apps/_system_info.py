@@ -1,4 +1,4 @@
-"""General utilities for fetching data and interacting with the parent system."""
+"""Utility class for fetching data and interacting with the parent system."""
 
 import re
 import sys
