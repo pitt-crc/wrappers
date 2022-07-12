@@ -63,7 +63,7 @@ class CrcIdle(BaseParser):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = 'sinfo -h -M {0} -p {1} -N -o %N,%C'.format(cluster, partition)
+        command = f'sinfo -h -M {cluster} -p {partition} -N -o %N,%C'
         stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
 
@@ -91,8 +91,7 @@ class CrcIdle(BaseParser):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = "sinfo -h -M {0} -p {1} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '".format(
-            cluster, partition)
+        command = f"sinfo -h -M {cluster} -p {partition} -N --Format=NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '"
 
         stdout = Shell.run_command(command)
         slurm_data = stdout.strip().split()
@@ -150,13 +149,13 @@ class CrcIdle(BaseParser):
         resource_allocation = self.count_idle_resources(cluster, partition)
 
         output_width = 30
-        header = 'Cluster: {0}, Partition: {1}'.format(cluster, partition)
+        header = f'Cluster: {cluster}, Partition: {partition}'
         unit = self.cluster_types.get(cluster, self.default_type)
 
         print(header)
         print('=' * output_width)
         for idle, nodes in sorted(resource_allocation.items()):
-            print('{0:4d} nodes w/ {1:3d} idle {2}'.format(nodes, idle, unit))
+            print(f'{nodes:4d} nodes w/ {idle:3d} idle {unit}')
 
         if not resource_allocation:
             print(' No idle resources')

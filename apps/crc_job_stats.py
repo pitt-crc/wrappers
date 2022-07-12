@@ -29,7 +29,7 @@ class CrcJobStats(BaseParser):
 
         # Get job information from the ``scontrol`` utility
         # Slurm settings are returned as "key=value" pairs seperated by whitespace
-        job_info_command = 'scontrol -M {} show job {}'.format(self.cluster, self.job_id)
+        job_info_command = f'scontrol -M {self.cluster} show job {self.job_id}'
         output = Shell.run_command(job_info_command)
         split_output = output.strip().split()
 
@@ -72,13 +72,13 @@ class CrcJobStats(BaseParser):
 
         # Print metrics for running jobs
         for item in ('JobId', 'SubmitTime', 'EndTime', 'RunTime', 'TRES', 'Partition', 'NodeList', 'Command'):
-            print('{:>16s}: {}'.format(item, job_info[item]))
+            print(f'{item:>16s}: {job_info[item]}')
 
         # Add the more information section
         print('')
         print(horizontal_border)
         print(' For more information use the command:')
-        print('   - {}'.format(custom_slurm_command))
+        print(f'   - {custom_slurm_command}')
         print('')
         print(' To control the output of the above command:')
         print('   - Add `--format=<field1,field2,etc>` with fields of interest')

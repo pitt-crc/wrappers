@@ -42,19 +42,19 @@ class CrcInteractive(BaseParser):
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
             '-t', '--time', type=int, default=self.default_time,
-            help='run time in hours [default: {}]'.format(self.default_time))
+            help=f'run time in hours [default: {self.default_time}]')
 
         resource_args.add_argument(
             '-n', '--num-nodes', type=int, default=self.default_nodes,
-            help='number of nodes [default: {}]'.format(self.default_nodes))
+            help=f'number of nodes [default: {self.default_nodes}]')
 
         resource_args.add_argument(
             '-c', '--num-cores', type=int, default=self.default_cores,
-            help='number of cores per node [default: {}]'.format(self.default_cores))
+            help=f'number of cores per node [default: {self.default_cores}]')
 
         resource_args.add_argument(
             '-u', '--num-gpus', type=int, default=self.default_gpus,
-            help='if using -g, the number of GPUs [default: {}]'.format(self.default_gpus))
+            help=f'if using -g, the number of GPUs [default: {self.default_gpus}]')
 
         # A grab bag of other settings for configuring slurm jobs
         additional_args = self.add_argument_group('Additional Job Settings')
@@ -73,11 +73,11 @@ class CrcInteractive(BaseParser):
 
         # Check wall time is between limits
         if not self.min_time <= args.time <= self.max_time:
-            self.error('{} is not in {} <= time <= {}... exiting'.format(args.time, self.min_time, self.max_time))
+            self.error(f'{args.time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
 
         # Check the minimum number of nodes are requested for mpi
         if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.min_mpi_nodes:
-            self.error('You must use at least {} nodes when using the MPI cluster'.format(self.min_mpi_nodes))
+            self.error(f'You must use at least {self.min_mpi_nodes} nodes when using the MPI cluster')
 
         # Check a partition is specified if the user is requesting invest
         if args.invest and not args.partition:
@@ -128,16 +128,16 @@ class CrcInteractive(BaseParser):
 
         # The --gres argument in srun needs some special handling so is missing from the above dict
         if (args.gpu or args.invest) and args.num_gpus:
-            srun_args += ' ' + '--gres=gpu:{}'.format(args.num_gpus)
+            srun_args += ' ' + f'--gres=gpu:{args.num_gpus}'
 
         # Add the --x11 flag only if X11 is working
         if self.x11_is_available():
             srun_args += ' --x11 '
 
         cluster_to_run = next(cluster for cluster in SlurmInfo.get_cluster_names() if getattr(args, cluster))
-        return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
+        return f'srun -M {cluster_to_run} {srun_args} --pty bash'
 
-    def app_logic(self, args: Namespace) -> str:
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

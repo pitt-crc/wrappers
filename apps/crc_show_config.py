@@ -32,7 +32,7 @@ class CrcShowConfig(BaseParser):
             partition: The name of the partition in the given cluster
         """
 
-        scontrol_command = "scontrol -M {} show partition {}".format(cluster, partition)
+        scontrol_command = f"scontrol -M {cluster} show partition {partition}"
         cmd_out = Shell.run_command(scontrol_command).split()
 
         partition_info = {}
@@ -57,9 +57,9 @@ class CrcShowConfig(BaseParser):
         # Get slurm settings for each node in the partition
         # Only print out values for a single node
         # Assume the first node is representative of the partition
-        nodes_info = Shell.run_command("scontrol show hostname {}".format(partition_nodes))
+        nodes_info = Shell.run_command(f"scontrol show hostname {partition_nodes}")
         node = nodes_info.split()[0]
-        print(Shell.run_command("scontrol -M {} show node {}".format(cluster, node)))
+        print(Shell.run_command(f"scontrol -M {cluster} show node {node}"))
 
     def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
@@ -76,10 +76,10 @@ class CrcShowConfig(BaseParser):
 
         if args.partition:
             if args.partition not in SlurmInfo.get_partition_names(args.cluster):
-                self.error('Partition {} is not part of cluster {}'.format(args.partition, args.cluster))
+                self.error(f'Partition {args.partition} is not part of cluster {args.cluster}')
 
             self.print_node(args.cluster, args.partition)
 
         else:
             # Summarize all available partitions
-            print(Shell.run_command("scontrol -M {} show partition".format(args.cluster)))
+            print(Shell.run_command(f"scontrol -M {args.cluster} show partition"))

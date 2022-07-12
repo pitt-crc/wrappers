@@ -36,7 +36,7 @@ class CrcSqueue(BaseParser):
         """
 
         # Variables for building shell commands
-        user = "-u {0}".format(environ['USER'])
+        user = f"-u {environ['USER']}"
 
         # Build the base command
         command_options = ["squeue -M all"]

@@ -72,7 +72,7 @@ class AbstractFilesystemUsage(object):
         base_2_power = int(math.floor(math.log(size, 1024)))
         conversion_factor = math.pow(1024, base_2_power)
         final_size = round(size / conversion_factor, 2)
-        return '{} {}'.format(final_size, size_units[base_2_power])
+        return f'{final_size} {size_units[base_2_power]}'
 
 
 class GenericUsage(AbstractFilesystemUsage):
@@ -90,7 +90,7 @@ class GenericUsage(AbstractFilesystemUsage):
             An instance of the parent class
         """
 
-        df_command = "df {}".format(path)
+        df_command = f"df {path}"
         quota_info_list = Shell.run_command(df_command).splitlines()
         if not quota_info_list:
             return None
@@ -137,11 +137,11 @@ class BeegfsUsage(AbstractFilesystemUsage):
             An instance of the parent class
         """
 
-        allocation_out = Shell.run_command("df /bgfs/{}".format(group))
+        allocation_out = Shell.run_command(f"df /bgfs/{group}")
         if len(allocation_out) == 0:
             return None
 
-        quota_info_cmd = "beegfs-ctl --getquota --gid {} --csv --storagepoolid=1".format(group)
+        quota_info_cmd = f"beegfs-ctl --getquota --gid {group} --csv --storagepoolid=1"
         quota_out = Shell.run_command(quota_info_cmd)
         result = quota_out.splitlines()[1].split(',')
         return cls(name, int(result[2]), int(result[3]), int(result[4]), int(result[5]))
@@ -185,7 +185,7 @@ class IhomeUsage(AbstractFilesystemUsage):
         with open("/ihome/crc/scripts/ihome_quota.json", "r") as infile:
             data = json.load(infile)
 
-        persona = "UID:{}".format(uid)
+        persona = f"UID:{uid}"
         for item in data["quotas"]:
             if item["persona"] is not None:
                 if item["persona"]["id"] == persona:
@@ -215,15 +215,15 @@ class CrcQuota(BaseParser):
         """
 
         username = username or ''
-        check_user_cmd = "id -un {}".format(username)
+        check_user_cmd = f"id -un {username}"
         user, err = Shell.run_command(check_user_cmd, include_err=True)
 
         if err:
-            sys.exit("Could not find quota information for user {}".format(username))
+            sys.exit(f"Could not find quota information for user {username}")
 
-        group = Shell.run_command("id -gn {}".format(username))
-        uid = Shell.run_command("id -u {}".format(username))
-        gid = Shell.run_command("id -g {}".format(username))
+        group = Shell.run_command(f"id -gn {username}")
+        uid = Shell.run_command(f"id -u {username}")
+        gid = Shell.run_command(f"id -g {username}")
 
         return user, int(uid), group, int(gid)
 
@@ -238,10 +238,10 @@ class CrcQuota(BaseParser):
             A tuple of ``Quota`` objects
         """
 
-        zfs1_quota = GenericUsage.from_path('zfs1', '/zfs1/{}'.format(group))
-        zfs2_quota = GenericUsage.from_path('zfs2', '/zfs2/{}'.format(group))
+        zfs1_quota = GenericUsage.from_path('zfs1', f'/zfs1/{group}')
+        zfs2_quota = GenericUsage.from_path('zfs2', f'/zfs2/{group}')
         bgfs_quota = BeegfsUsage.from_group('beegfs', group)
-        ix_quota = GenericUsage.from_path('ix', '/ix/{}'.format(group))
+        ix_quota = GenericUsage.from_path('ix', f'/ix/{group}')
 
         # Only return quotas that exist for the given group (i.e., objects that are not None)
         all_quotas = (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota)
@@ -259,15 +259,15 @@ class CrcQuota(BaseParser):
         ihome_quota = IhomeUsage.from_uid('ihome', uid)
         supp_quotas = self.get_group_quotas(group)
 
-        print("User: '{}'".format(user))
+        print(f"User: '{user}'")
         if args.verbose:
-            print('User ID: {}'.format(uid))
+            print(f'User ID: {uid}')
 
         print(ihome_quota.to_string(args.verbose))
 
-        print("\nGroup: '{}'".format(group))
+        print(f"\nGroup: '{group}'")
         if args.verbose:
-            print('Group ID: {}'.format(gid))
+            print(f'Group ID: {gid}')
 
         for quota in supp_quotas:
             print(quota.to_string(args.verbose))

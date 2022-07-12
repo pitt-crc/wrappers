@@ -27,9 +27,8 @@ class CrcUsage(BaseParser):
             args: Parsed command line arguments
         """
 
-        account_exists = Shell.run_command('sacctmgr -n list account account={} format=account%30'.format(args.account))
+        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
         if not account_exists:
-            self.error("The group '{}' doesn't have an account according to Slurm".format(args.account))
+            self.error(f"The group '{args.account}' doesn't have an account according to Slurm")
 
-        bank_info_command = '{} {}'.format(self.banking_executable, args.account)
-        print(Shell.run_command(bank_info_command))
+        print(Shell.run_command(f'{self.banking_executable} {args.account}'))

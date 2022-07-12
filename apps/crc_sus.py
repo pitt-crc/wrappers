@@ -61,12 +61,12 @@ class CrcSus(BaseParser):
             A string summarizing the account allocation
         """
 
-        output_lines = ['Account {}'.format(account)]
+        output_lines = [f'Account {account}']
         cluster_name_length = max(len(cluster) for cluster in allocation)
 
         for cluster, sus in allocation.items():
             cluster_name = cluster.rjust(cluster_name_length)
-            output_lines.append(' cluster {} has {:,} SUs'.format(cluster_name, sus))
+            output_lines.append(f' cluster {cluster_name} has {sus:,} SUs')
 
         return '\n'.join(output_lines)
 
