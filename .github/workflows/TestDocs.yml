@@ -1,0 +1,23 @@
+name: Test Documentation
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  Test-Build-Succeeds:
+    name: Test Build with Examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install -r docs/requirements.txt
+
+      # This will intentionally fail if docs do not build successfully
+      - name: Run doctest
+        working-directory: ./docs
+        run: make doctest
