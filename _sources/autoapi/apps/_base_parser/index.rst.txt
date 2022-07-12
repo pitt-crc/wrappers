@@ -23,7 +23,7 @@ Module Contents
 
       
 
-   .. py:method:: _get_formatter(self) -> argparse.HelpFormatter
+   .. py:method:: _get_formatter(self) -> argparse.RawTextHelpFormatter
 
       Returns a ``HelpFormatter`` object for formatting application help text
 
