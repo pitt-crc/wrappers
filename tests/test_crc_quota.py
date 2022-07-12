@@ -8,12 +8,12 @@ from apps.crc_quota import AbstractFilesystemUsage
 class BytesUnitConversion(unittest.TestCase):
     """Test the conversion of bytes into human-readable units"""
 
-    def test_zero_bytes(self):
+    def test_zero_bytes(self) -> None:
         """Test the conversion of zero bytes"""
 
         self.assertEqual('0.0 B', AbstractFilesystemUsage.convert_size(0))
 
-    def test_integer_conversion(self):
+    def test_integer_conversion(self) -> None:
         """Test the conversion from bytes to known integer units"""
 
         inputs = (1, 2 ** 10, 2 ** 20, 2 ** 30, 2 ** 40, 2 ** 50, 2 ** 60, 2 ** 70, 2 ** 80)
@@ -22,7 +22,7 @@ class BytesUnitConversion(unittest.TestCase):
         for inp, oup in zip(inputs, outputs):
             self.assertEqual(oup, AbstractFilesystemUsage.convert_size(inp))
 
-    def test_non_integer_values(self):
+    def test_non_integer_values(self) -> None:
         """Test the conversion from bytes to known non-integer units"""
 
         inputs = (5, 5.0E5, 5.0E7, 5.0E9, 5.0E12)
@@ -30,7 +30,3 @@ class BytesUnitConversion(unittest.TestCase):
 
         for inp, oup in zip(inputs, outputs):
             self.assertEqual(oup, AbstractFilesystemUsage.convert_size(inp))
-
-
-if __name__ == '__main__':
-    unittest.main()

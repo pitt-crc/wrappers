@@ -10,7 +10,7 @@ class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
     @skip('Requires slurm utilities to be installed')
-    def test_clusters_are_valid_args(self):
+    def test_clusters_are_valid_args(self) -> None:
         """Test clusters defined in common settings are valid values for the ``--cluster`` argument"""
 
         app = CrcShowConfig()

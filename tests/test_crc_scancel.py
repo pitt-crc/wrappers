@@ -8,7 +8,7 @@ from apps.crc_scancel import CrcScancel
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
-    def test_job_id_is_parsed(self):
+    def test_job_id_is_parsed(self) -> None:
         """Test the job id is recovered from the command line
 
         This test ensures the correct value is parsed AND the
