@@ -15,7 +15,7 @@ CRC Wrapper Applications
    :caption: Applications:
    :glob:
 
-   **/*
+   **/[!_]*
 
 Custom commandline applications built by the Center for Research Computing.
 
