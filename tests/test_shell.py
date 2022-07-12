@@ -27,13 +27,13 @@ class FileDescriptors(TestCase):
 class ReturnIsDecoded(TestCase):
     """Test return values are decoded into strings"""
 
-    def test_stdout_only(self):
+    def test_stdout_only(self) -> None:
         """Test returns when ``include_err`` is ``False``"""
 
         out = Shell.run_command('echo hello world')
         self.assertIsInstance(out, str)
 
-    def test_with_stderr(self):
+    def test_with_stderr(self) -> None:
         """Test returns when ``include_err`` is ``True``"""
 
         out, err = Shell.run_command('echo hello world', include_err=True)

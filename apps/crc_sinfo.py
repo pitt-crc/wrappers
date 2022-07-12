@@ -1,5 +1,7 @@
 """A simple wrapper around the Slurm ``sinfo`` command"""
 
+from argparse import Namespace
+
 from ._base_parser import BaseParser
 from ._system_info import Shell
 
@@ -7,7 +9,7 @@ from ._system_info import Shell
 class CrcSinfo(BaseParser):
     """Display information about all available Slurm clusters."""
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

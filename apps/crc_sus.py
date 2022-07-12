@@ -1,5 +1,8 @@
 """Print an account's service unit allocation"""
 
+from argparse import Namespace
+from typing import Dict
+
 import dataset
 
 from ._base_parser import BaseParser
@@ -11,7 +14,7 @@ class CrcSus(BaseParser):
 
     banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcSus, self).__init__()
@@ -20,7 +23,7 @@ class CrcSus(BaseParser):
         help_text = f'slurm account name [default: {default_group}]'
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def get_allocation_info(self, account):
+    def get_allocation_info(self, account: str) -> Dict[str, int]:
         """Return the service unit allocation for a given account name
 
         Args:
@@ -47,7 +50,7 @@ class CrcSus(BaseParser):
         return allocations
 
     @staticmethod
-    def build_output_string(account, **allocation):
+    def build_output_string(account: str, **allocation: int) -> str:
         """Build a string describing an account's service unit allocation
 
         Args:
@@ -58,16 +61,16 @@ class CrcSus(BaseParser):
             A string summarizing the account allocation
         """
 
-        output_lines = ['Account {}'.format(account)]
+        output_lines = [f'Account {account}']
         cluster_name_length = max(len(cluster) for cluster in allocation)
 
         for cluster, sus in allocation.items():
             cluster_name = cluster.rjust(cluster_name_length)
-            output_lines.append(' cluster {} has {:,} SUs'.format(cluster_name, sus))
+            output_lines.append(f' cluster {cluster_name} has {sus:,} SUs')
 
         return '\n'.join(output_lines)
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:

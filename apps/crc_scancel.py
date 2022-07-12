@@ -1,5 +1,6 @@
 """A simple wrapper around the Slurm ``scancel`` command"""
 
+from argparse import Namespace
 from os import environ
 from sys import stdout
 
@@ -12,7 +13,7 @@ class CrcScancel(BaseParser):
 
     user = environ['USER']
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
         super(CrcScancel, self).__init__()
@@ -22,7 +23,7 @@ class CrcScancel(BaseParser):
         self.add_argument('job_id', type=int_as_str, help='the job ID to cancel')
 
     @staticmethod
-    def cancel_job_on_cluster(cluster, job_id):
+    def cancel_job_on_cluster(cluster: str, job_id: int) -> None:
         """Cancel a running slurm job
 
         Args:
@@ -30,9 +31,9 @@ class CrcScancel(BaseParser):
             job_id: The ID of the slurm job to cancel
         """
 
-        Shell.run_command('scancel -M {} {}'.format(cluster, job_id))
+        Shell.run_command(f'scancel -M {cluster} {job_id}')
 
-    def get_cluster_for_job_id(self, job_id):
+    def get_cluster_for_job_id(self, job_id: int) -> str:
         """Return the name of the cluster a slurm job is running on
 
         Exits the application with an error
@@ -45,11 +46,11 @@ class CrcScancel(BaseParser):
 
         for cluster in SlurmInfo.get_cluster_names(include_all_clusters=True):
             # Fetch a list of running slurm jobs matching the username and job id
-            command = 'squeue -h -u {} -j {} -M {}'.format(self.user, job_id, cluster)
+            command = f'squeue -h -u {self.user} -j {job_id} -M {cluster}'
             if job_id in Shell.run_command(command):
                 return cluster
 
-    def app_logic(self, args):
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:
@@ -58,9 +59,9 @@ class CrcScancel(BaseParser):
 
         cluster = self.get_cluster_for_job_id(args.job_id)
         if not cluster:
-            self.error('Could not find job {} running on known clusters'.format(args.job_id))
+            self.error(f'Could not find job {args.job_id} running on known clusters')
 
-        stdout.write("Would you like to cancel job {0} on cluster {1}? (y/N): ".format(args.job_id, cluster))
+        stdout.write(f"Would you like to cancel job {args.job_id} on cluster {cluster}? (y/N): ")
         if Shell.readchar().lower() == 'y':
             self.cancel_job_on_cluster(cluster, args.job_id)
-            print('Force Terminated job {}'.format(args.job_id))
+            print(f'Force Terminated job {args.job_id}')

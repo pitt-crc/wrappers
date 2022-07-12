@@ -9,7 +9,7 @@ from apps.crc_squeue import CrcSqueue
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
-    def test_default_flags_are_false(self):
+    def test_default_flags_are_false(self) -> None:
         """Test default values for all flag arguments are ``False``"""
 
         app = CrcSqueue()
@@ -23,7 +23,7 @@ class ArgumentParsing(TestCase):
 class SlurmCommandCreation(TestCase):
     """Test the creation of ``squeue`` commands based on command line arguments"""
 
-    def test_all_option(self):
+    def test_all_option(self) -> None:
         """Test the ``--all`` argument disables ``-u`` in the piped slurm command"""
 
         app = CrcSqueue()
@@ -58,31 +58,31 @@ class OutputFormat(TestCase):
         args, _ = app.parse_known_args(cmd_args)
         return app.build_slurm_command(args)
 
-    def test_defaults_to_user_format(self):
+    def test_defaults_to_user_format(self) -> None:
         """Test the application defaults to using the ``output_format_user`` format"""
 
         slurm_command = self.get_slurm_command([''])
         self.assertIn(CrcSqueue.output_format_user, slurm_command)
 
-    def test_format_for_user_flag(self):
+    def test_user_flag(self) -> None:
         """Test the application defaults to using the ``output_format_user`` format"""
 
         slurm_command = self.get_slurm_command(['--user'])
         self.assertIn(CrcSqueue.output_format_user, slurm_command)
 
-    def test_format_for_all_flag(self):
+    def test_all_flag(self) -> None:
         """Test the application defaults to using the ``output_format_all`` format"""
 
         slurm_command = self.get_slurm_command(['--all'])
         self.assertIn(CrcSqueue.output_format_all, slurm_command)
 
-    def test_format_for_user_and_start_flag(self):
+    def test_user_and_start_flag(self) -> None:
         """Test the application defaults to using the ``output_format_user_start`` format"""
 
         slurm_command = self.get_slurm_command(['--user', '--start'])
         self.assertIn(CrcSqueue.output_format_user_start, slurm_command)
 
-    def test_format_for_all_and_start_flags(self):
+    def test_all_and_start_flags(self) -> None:
         """Test the application defaults to using the ``output_format_all_start`` format"""
 
         slurm_command = self.get_slurm_command(['--all', '--start'])
