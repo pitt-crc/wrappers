@@ -23,18 +23,18 @@ Module Contents
 
       
 
-   .. py:method:: _get_formatter(self)
+   .. py:method:: _get_formatter(self) -> argparse.HelpFormatter
 
       Returns a ``HelpFormatter`` object for formatting application help text
 
 
-   .. py:method:: app_version(self)
+   .. py:method:: app_version(self) -> str
       :property:
 
       Return the application name and version as a string
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
       :abstractmethod:
 
       Logic to evaluate when executing the application
@@ -42,14 +42,14 @@ Module Contents
       :param args: Parsed command line arguments
 
 
-   .. py:method:: error(self, message)
+   .. py:method:: error(self, message: str) -> None
 
       Print the error message to STDOUT and exit
 
       :param message: The error message
 
 
-   .. py:method:: execute(cls)
+   .. py:method:: execute(cls) -> None
       :classmethod:
 
       Parse command line arguments and execute the application

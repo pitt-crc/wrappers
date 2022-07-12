@@ -18,7 +18,7 @@ Module Contents
 
    Display information about the current Slurm configuration.
 
-   .. py:method:: get_partition_info(cluster, partition)
+   .. py:method:: get_partition_info(cluster: str, partition: str) -> Dict[str, str]
       :staticmethod:
 
       Return a dictionary of Slurm settings as configured on a given partition
@@ -27,7 +27,7 @@ Module Contents
       :param partition: The name of the partition in the given cluster
 
 
-   .. py:method:: print_node(self, cluster, partition)
+   .. py:method:: print_node(self, cluster: str, partition: str) -> None
 
       Print the slurm configuration of a given cluster and partition
 
@@ -35,7 +35,7 @@ Module Contents
       :param partition: The name of the partition on the cluster
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

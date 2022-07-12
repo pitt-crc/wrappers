@@ -23,14 +23,14 @@ Module Contents
 
       
 
-   .. py:method:: get_proposal_end_date(self, account)
+   .. py:method:: get_proposal_end_date(self, account: str) -> datetime.datetime
 
       Get the proposal end date for a given account
 
       :param account: The name of the account
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

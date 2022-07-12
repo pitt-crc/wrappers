@@ -23,7 +23,7 @@ Module Contents
 
       
 
-   .. py:method:: get_allocation_info(self, account)
+   .. py:method:: get_allocation_info(self, account: str) -> Dict[str, int]
 
       Return the service unit allocation for a given account name
 
@@ -32,7 +32,7 @@ Module Contents
       :returns: A dictionary mapping cluster names to the number of service units
 
 
-   .. py:method:: build_output_string(account, **allocation)
+   .. py:method:: build_output_string(account: str, **allocation: int) -> str
       :staticmethod:
 
       Build a string describing an account's service unit allocation
@@ -43,7 +43,7 @@ Module Contents
       :returns: A string summarizing the account allocation
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

@@ -58,20 +58,20 @@ Module Contents
 
       
 
-   .. py:method:: _validate_arguments(self, args)
+   .. py:method:: _validate_arguments(self, args: argparse.Namespace) -> None
 
       Exit the application if command-line arguments are invalid
 
       :param args: Parsed commandline arguments
 
 
-   .. py:method:: x11_is_available()
+   .. py:method:: x11_is_available() -> bool
       :staticmethod:
 
       Return whether x11 is available in the current runtime environment
 
 
-   .. py:method:: create_srun_command(self, args)
+   .. py:method:: create_srun_command(self, args: argparse.Namespace) -> str
 
       Create an ``srun`` command based on parsed commandline arguments
 
@@ -80,7 +80,7 @@ Module Contents
       :returns: The equivalent ``srun`` command as a string
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

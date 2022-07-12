@@ -12,7 +12,7 @@ apps.crc_quota
 Module Contents
 ---------------
 
-.. py:class:: AbstractFilesystemUsage(name, size_used, size_limit)
+.. py:class:: AbstractFilesystemUsage(name: str, size_used: int, size_limit: int)
 
    Bases: :py:obj:`object`
 
@@ -25,13 +25,13 @@ Module Contents
       :param verbose: Return a more detailed representation
 
 
-   .. py:method:: _verbose_string(self)
+   .. py:method:: _verbose_string(self) -> str
 
 
-   .. py:method:: _short_string(self)
+   .. py:method:: _short_string(self) -> str
 
 
-   .. py:method:: convert_size(size)
+   .. py:method:: convert_size(size: int) -> str
       :staticmethod:
 
       Convert the given number of bytes to a human-readable string
@@ -42,13 +42,13 @@ Module Contents
 
 
 
-.. py:class:: GenericUsage(name, size_used, size_limit)
+.. py:class:: GenericUsage(name: str, size_used: int, size_limit: int)
 
    Bases: :py:obj:`AbstractFilesystemUsage`
 
    Disk storage quota for a generic file system
 
-   .. py:method:: from_path(cls, name, path)
+   .. py:method:: from_path(cls, name: str, path: str) -> Optional[GenericUsage]
       :classmethod:
 
       Return a quota object for a given file path
@@ -60,16 +60,16 @@ Module Contents
 
 
 
-.. py:class:: BeegfsUsage(name, size_used, size_limit, chunk_used, chunk_limit)
+.. py:class:: BeegfsUsage(name: str, size_used: int, size_limit: int, chunk_used: int, chunk_limit: int)
 
    Bases: :py:obj:`AbstractFilesystemUsage`
 
    Disk storage quota for a BeeGFS file system
 
-   .. py:method:: _verbose_string(self)
+   .. py:method:: _verbose_string(self) -> str
 
 
-   .. py:method:: from_group(cls, name, group)
+   .. py:method:: from_group(cls, name: str, group: str) -> Optional[BeegfsUsage]
       :classmethod:
 
       Return a quota object for a given group name
@@ -81,16 +81,16 @@ Module Contents
 
 
 
-.. py:class:: IhomeUsage(name, size_used, size_limit, files, physical)
+.. py:class:: IhomeUsage(name: str, size_used: int, size_limit: int, files: int, physical: int)
 
    Bases: :py:obj:`AbstractFilesystemUsage`
 
    Disk storage quota for the ihome file system
 
-   .. py:method:: _verbose_string(self)
+   .. py:method:: _verbose_string(self) -> str
 
 
-   .. py:method:: from_uid(cls, name, uid)
+   .. py:method:: from_uid(cls, name: str, uid: int) -> Optional[IhomeUsage]
       :classmethod:
 
       Return a quota object for a given user id
@@ -108,7 +108,7 @@ Module Contents
 
    Display a user's disk quota.
 
-   .. py:method:: get_user_info(username=None)
+   .. py:method:: get_user_info(username: Optional[str] = None) -> Tuple[str, int, str, int]
       :staticmethod:
 
       Return system IDs for the current user
@@ -118,7 +118,7 @@ Module Contents
       :returns: Tuple with the user's name, user ID, group name, and group ID
 
 
-   .. py:method:: get_group_quotas(group)
+   .. py:method:: get_group_quotas(group: str) -> Tuple[GenericUsage]
       :staticmethod:
 
       Return quota information for the given group
@@ -128,7 +128,7 @@ Module Contents
       :returns: A tuple of ``Quota`` objects
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

@@ -23,7 +23,7 @@ Module Contents
 
       
 
-   .. py:method:: cancel_job_on_cluster(cluster, job_id)
+   .. py:method:: cancel_job_on_cluster(cluster: str, job_id: int) -> None
       :staticmethod:
 
       Cancel a running slurm job
@@ -32,14 +32,14 @@ Module Contents
       :param job_id: The ID of the slurm job to cancel
 
 
-   .. py:method:: get_cluster_for_job_id(self, job_id)
+   .. py:method:: get_cluster_for_job_id(self, job_id: int) -> str
 
       Return the name of the cluster a slurm job is running on
 
       Exits the application with an error
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

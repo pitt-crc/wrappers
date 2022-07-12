@@ -30,24 +30,24 @@ Module Contents
 
       
 
-   .. py:method:: exit_if_not_in_slurm(self)
+   .. py:method:: exit_if_not_in_slurm(self) -> None
 
       Exit the application is not running from within a slurm job
 
 
-   .. py:method:: get_job_info(self)
+   .. py:method:: get_job_info(self) -> Dict[str, str]
 
       Return information about the running job as a dictionary
 
 
-   .. py:method:: pretty_print_job_info(self, job_info)
+   .. py:method:: pretty_print_job_info(self, job_info: dict) -> None
 
       Print information about a running job in a readable format
 
       :param job_info: A dictionary of information about the running job
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

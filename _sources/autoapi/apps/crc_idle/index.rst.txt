@@ -28,7 +28,7 @@ Module Contents
 
       
 
-   .. py:method:: get_cluster_list(self, args)
+   .. py:method:: get_cluster_list(self, args: argparse.Namespace) -> Tuple[str]
 
       Return a list of clusters specified in the command line arguments
 
@@ -40,7 +40,7 @@ Module Contents
       :returns: A tuple of cluster names
 
 
-   .. py:method:: _idle_cpu_resources(cluster, partition)
+   .. py:method:: _idle_cpu_resources(cluster: str, partition: str) -> Dict[int, int]
       :staticmethod:
 
       Return the idle CPU resources on a given cluster partition
@@ -51,7 +51,7 @@ Module Contents
       :returns: A dictionary mapping idle resources to number of nodes
 
 
-   .. py:method:: _idle_gpu_resources(cluster, partition)
+   .. py:method:: _idle_gpu_resources(cluster: str, partition: str) -> Dict[int, int]
       :staticmethod:
 
       Return the idle GPU resources on a given cluster partition
@@ -64,7 +64,7 @@ Module Contents
       :returns: A dictionary mapping idle resources to number of nodes
 
 
-   .. py:method:: count_idle_resources(self, cluster, partition)
+   .. py:method:: count_idle_resources(self, cluster: str, partition: str) -> Dict[int, int]
 
       Determine the number of idle resources on a given cluster partition
 
@@ -77,7 +77,7 @@ Module Contents
       :returns: A dictionary mapping idle resources to number of nodes
 
 
-   .. py:method:: print_partition_summary(self, cluster, partition)
+   .. py:method:: print_partition_summary(self, cluster: str, partition: str) -> None
 
       Print a summary of idle resources in a single partition
 
@@ -85,7 +85,7 @@ Module Contents
       :param partition: The partition in the parent cluster
 
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 

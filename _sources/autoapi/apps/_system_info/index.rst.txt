@@ -16,13 +16,13 @@ Module Contents
 
    Methods for interacting with the runtime shell
 
-   .. py:method:: readchar()
+   .. py:method:: readchar() -> str
       :staticmethod:
 
       Read a single character from the command line
 
 
-   .. py:method:: run_command(command, include_err=False)
+   .. py:method:: run_command(command: str, include_err: bool = False) -> Union[str, Tuple[str, str]]
       :staticmethod:
 
       Run a command in a dedicated shell
@@ -48,7 +48,7 @@ Module Contents
 
       
 
-   .. py:method:: get_cluster_names(cls, include_all_clusters=False)
+   .. py:method:: get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]
       :classmethod:
 
       Return a tuple cluster names configured with slurm
@@ -58,7 +58,7 @@ Module Contents
       :returns: A set of cluster names
 
 
-   .. py:method:: get_partition_names(cls, cluster_name, include_all_partitions=False)
+   .. py:method:: get_partition_names(cls, cluster_name: str, include_all_partitions: bool = False) -> Set[str]
       :classmethod:
 
       Return a tuple of partition names associated with a given slurm cluster

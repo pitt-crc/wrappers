@@ -18,7 +18,7 @@ Module Contents
 
    Display information about all available Slurm clusters.
 
-   .. py:method:: app_logic(self, args)
+   .. py:method:: app_logic(self, args: argparse.Namespace) -> None
 
       Logic to evaluate when executing the application
 
