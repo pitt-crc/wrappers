@@ -3,7 +3,7 @@ apps._base_parser
 
 .. autoapi-nested-parse::
 
-   Parent classes for building command line applications.
+   Parent classes used when building command line applications.
 
 
 
