@@ -45,8 +45,15 @@ class Shell:
         command_list = split(command)
         process = Popen(command_list, stdout=PIPE, stderr=PIPE, shell=False)
         std_out, std_err = process.communicate()
-        out_decoded = std_out.decode().strip()
-        err_decoded = std_err.decode().strip()
+
+        try:
+            out_decoded = std_out.decode().strip()
+            err_decoded = std_err.decode().strip()
+
+        # For Python 2.7/3.6+ compatibility
+        except UnicodeDecodeError:
+            out_decoded = std_out.strip()
+            err_decoded = std_err.strip()
 
         if include_err:
             return out_decoded, err_decoded

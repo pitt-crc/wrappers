@@ -1,4 +1,4 @@
-#!/usr/bin/python3 -E
+#!/usr/bin/env /ihome/crc/wrappers/py_wrap.sh
 """Command line utility for checking a user's disk usage"""
 
 import json
