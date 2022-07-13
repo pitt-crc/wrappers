@@ -49,7 +49,7 @@ setup(
     description='Command-line applications for interacting with HPC clusters at the Pitt CRC.',
     version=_version,
     packages=find_packages(),
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     entry_points="""
         [console_scripts]
         crc-idle=apps.crc_idle:CrcIdle.execute
