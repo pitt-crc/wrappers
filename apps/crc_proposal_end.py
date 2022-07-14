@@ -31,7 +31,7 @@ class CrcProposalEnd(BaseParser):
             account: The name of the account
         """
 
-        database = dataset.connect(self.banking_db_path)
+        database = dataset.connect(self.banking_db_path, sqlite_wal_mode=False)
         table = database['proposal']
 
         db_record = table.find_one(account=account)

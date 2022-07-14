@@ -1,5 +1,5 @@
 """Print an account's service unit allocation"""
-
+import sqlite3
 from argparse import Namespace
 from typing import Dict
 
@@ -34,7 +34,7 @@ class CrcSus(BaseParser):
         """
 
         # Connect to the database and get the table with proposal service units
-        database = dataset.connect(self.banking_db_path)
+        database = dataset.connect(self.banking_db_path, sqlite_wal_mode=False)
         table = database['proposal']
 
         # Ensure a proposal exists for the given account
