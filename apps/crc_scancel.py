@@ -2,7 +2,6 @@
 
 from argparse import Namespace
 from os import environ
-from sys import stdout
 
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo
@@ -61,7 +60,7 @@ class CrcScancel(BaseParser):
         if not cluster:
             self.error(f'Could not find job {args.job_id} running on known clusters')
 
-        stdout.write(f"Would you like to cancel job {args.job_id} on cluster {cluster}? (y/N): ")
+        print(f"Would you like to cancel job {args.job_id} on cluster {cluster}? (y/N): ")
         if Shell.readchar().lower() == 'y':
             self.cancel_job_on_cluster(cluster, args.job_id)
             print(f'Force Terminated job {args.job_id}')
