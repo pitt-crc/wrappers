@@ -1,5 +1,5 @@
 """Print an account's service unit allocation"""
-import sqlite3
+
 from argparse import Namespace
 from typing import Dict
 
