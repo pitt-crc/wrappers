@@ -60,7 +60,7 @@ Module Contents
 
 
 
-.. py:class:: BeegfsUsage(name: str, size_used: int, size_limit: int, chunk_used: int, chunk_limit: int)
+.. py:class:: BeegfsUsage(name: str, size_used: int, size_limit: int, chunk_used: str, chunk_limit: str)
 
    Bases: :py:obj:`AbstractFilesystemUsage`
 
