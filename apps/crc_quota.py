@@ -102,7 +102,7 @@ class GenericUsage(AbstractFilesystemUsage):
 class BeegfsUsage(AbstractFilesystemUsage):
     """Disk storage quota for a BeeGFS file system"""
 
-    def __init__(self, name: str, size_used: int, size_limit: int, chunk_used: int, chunk_limit: int) -> None:
+    def __init__(self, name: str, size_used: int, size_limit: int, chunk_used: str, chunk_limit: str) -> None:
         """Create a new BeeGFS quota from known system metrics
 
         Args:
@@ -144,7 +144,7 @@ class BeegfsUsage(AbstractFilesystemUsage):
         quota_info_cmd = f"beegfs-ctl --getquota --gid {group} --csv --storagepoolid=1"
         quota_out = Shell.run_command(quota_info_cmd)
         result = quota_out.splitlines()[1].split(',')
-        return cls(name, int(result[2]), int(result[3]), int(result[4]), int(result[5]))
+        return cls(name, int(result[2]), int(result[3]), result[4], result[5])
 
 
 class IhomeUsage(AbstractFilesystemUsage):
