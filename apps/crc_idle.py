@@ -1,4 +1,9 @@
-"""Command line application for listing idle Slurm resources"""
+"""Command line application for listing idle Slurm resources.
+
+The application relies on the ``sinfo`` command to identify idle resources and
+returns a summary of how many resources are available on each cluster partition.
+Resource counts are provided for GPU and CPU partitions.
+"""
 
 from argparse import Namespace
 from typing import Tuple, Dict
