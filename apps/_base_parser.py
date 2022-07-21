@@ -10,10 +10,11 @@ from . import __version__
 
 
 class BaseParser(ArgumentParser):
-    """Base class for building command line applications"""
+    """Base class for building command line applications
 
-    # Maximum starting point of help text argument descriptions
-    help_width = 50
+    Inheriting from this class ensures child applications behave consistently
+    and share the same version number.
+    """
 
     def __init__(self) -> None:
         """Define arguments for the command line interface"""
@@ -28,9 +29,10 @@ class BaseParser(ArgumentParser):
         self.add_argument('-v', '--version', action='version', version=self.app_version)
 
     def _get_formatter(self) -> RawTextHelpFormatter:
-        """Returns a ``HelpFormatter`` object for formatting application help text"""
+        """Returns a ``HelpFormatter`` object that defines formatting for the application help text"""
 
-        return RawTextHelpFormatter(self.prog, max_help_position=self.help_width)
+        help_width = 50  # Maximum starting point of help text argument descriptions
+        return RawTextHelpFormatter(self.prog, max_help_position=help_width)
 
     @property
     def app_version(self) -> str:
