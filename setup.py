@@ -1,4 +1,4 @@
-"""Installation instructions for the tell-me-about application"""
+"""Package installation logic"""
 
 import re
 from pathlib import Path
