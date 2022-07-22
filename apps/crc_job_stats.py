@@ -32,7 +32,11 @@ class CrcJobStats(BaseParser):
             self.exit()
 
     def get_job_info(self) -> Dict[str, str]:
-        """Return information about the running job as a dictionary"""
+        """Return information about the running job as a dictionary
+
+        Returns:
+            A dictionary of job information fetched from ``scontrol``
+        """
 
         # Get job information from the ``scontrol`` utility
         # Slurm settings are returned as "key=value" pairs seperated by whitespace

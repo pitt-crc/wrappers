@@ -97,7 +97,7 @@ class GenericUsage(AbstractFilesystemUsage):
             path: The file path for create a quota for
 
         Returns:
-            An instance of the parent class
+            An instance of the parent class or None if the allocation does not exist
         """
 
         df_command = f"df {path}"
@@ -144,7 +144,7 @@ class BeegfsUsage(AbstractFilesystemUsage):
             group: The group to create a quota for
 
         Returns:
-            An instance of the parent class
+            An instance of the parent class or None if the allocation does not exist
         """
 
         allocation_out = Shell.run_command(f"df /bgfs/{group}")
@@ -188,7 +188,7 @@ class IhomeUsage(AbstractFilesystemUsage):
             uid: The ID of the user
 
         Returns:
-            An instance of the parent class
+            An instance of the parent class or None if the allocation does not exist
         """
 
         # Get the information from Isilon
