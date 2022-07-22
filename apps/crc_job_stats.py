@@ -1,4 +1,11 @@
-"""Command line utility for printing basic information about a running job."""
+"""Command line utility for printing basic information about a running job.
+
+This application is designed to called at the bottom of a job submission
+script. Using the ``sacct`` utility, it fetches information about the submitted
+job and prints a summary to the terminal.
+
+.. important:: This application with error out if not called from within a slurm job.
+"""
 
 from argparse import Namespace
 from os import environ
