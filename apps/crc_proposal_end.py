@@ -1,4 +1,9 @@
-"""Print the end date for an account's proposal"""
+"""Print the end date for an account's proposal.
+
+.. important::
+   This application is designed to interface with the CRC banking application.
+   The proposal end date is fetched directly from the banking database.
+"""
 
 from argparse import Namespace
 from datetime import datetime
@@ -29,6 +34,9 @@ class CrcProposalEnd(BaseParser):
 
         Args:
             account: The name of the account
+
+        Returns:
+            The proposal end date as a ``datetime`` object
         """
 
         database = dataset.connect(self.banking_db_path, sqlite_wal_mode=False)
