@@ -1,4 +1,9 @@
-"""A simple wrapper around the Slurm ``scancel`` command"""
+"""A simple wrapper around the Slurm ``scancel`` command.
+
+This application allows users to cancel a Slurm job by providing a job ID.
+It differs from the default ``scancel`` command by adding a confirmation
+prompt to confirm users are canceling the correct job.
+"""
 
 from argparse import Namespace
 from os import environ
@@ -36,6 +41,12 @@ class CrcScancel(BaseParser):
         """Return the name of the cluster a slurm job is running on
 
         Exits the application with an error
+
+        Args:
+            job_id: The ID of th slurm job
+
+        Returns:
+            The name of the cluster as a string
         """
 
         # In principle the cluster name can be fetched by running
