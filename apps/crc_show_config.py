@@ -1,4 +1,4 @@
-"""Display the slurm configuration for a given cluster/partition"""
+"""Display the slurm configuration for a given cluster/partition."""
 
 from argparse import Namespace
 from typing import Dict
