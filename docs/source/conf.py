@@ -17,7 +17,7 @@ sys.path.insert(0, str(project_root))
 
 from apps import __version__, __author__, __copyright__
 
-project = u'CRC Wrapper Applications'
+project = 'CRC Wrapper Applications'
 copyright = __copyright__
 author = __author__
 release = __version__
