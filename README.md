@@ -5,4 +5,4 @@
 [![Test Suite](https://github.com/pitt-crc/wrappers/actions/workflows/Unittests.yml/badge.svg)](https://github.com/pitt-crc/wrappers/actions/workflows/Unittests.yml)
 [![Deploy Documentation](https://github.com/pitt-crc/wrappers/actions/workflows/DeployDocs.yml/badge.svg)](https://github.com/pitt-crc/wrappers/actions/workflows/DeployDocs.yml)
 
-See the documentation: http://crc-pages.pitt.edu/wrappers/
+See the documentation: https://crc-pages.pitt.edu/wrappers/
