@@ -1,4 +1,13 @@
-"""A simple wrapper around the Slurm ``srun`` command"""
+"""A simple wrapper around the Slurm ``srun`` command
+
+The application launches users into an interactive slurm session on a user
+selected cluster and (if specified) partition. Dedicated commandline options
+for selecting specific clusters.
+
+Each cluster is provided with a predefined commandline options. As a result,
+this application does support dynamic cluster discovery. New clusters need
+to be manually added (or removed) by updating the application CLI arguments.
+"""
 
 from argparse import Namespace
 from os import system
@@ -65,7 +74,7 @@ class CrcInteractive(BaseParser):
         additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP style submission')
 
     def _validate_arguments(self, args: Namespace) -> None:
-        """Exit the application if command-line arguments are invalid
+        """Exit the application if commandline arguments are invalid
 
         Args:
             args: Parsed commandline arguments
