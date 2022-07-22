@@ -67,7 +67,7 @@ setup(
     """,
     install_requires=get_requirements(),
     author=_author,
-    keyword='Pitt, CRC, HPC, wrappers',
+    keywords='Pitt, CRC, HPC, wrappers',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
     # license=_license_type,
