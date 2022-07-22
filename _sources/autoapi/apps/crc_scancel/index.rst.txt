@@ -3,7 +3,11 @@ apps.crc_scancel
 
 .. autoapi-nested-parse::
 
-   A simple wrapper around the Slurm ``scancel`` command
+   A simple wrapper around the Slurm ``scancel`` command.
+
+   This application allows users to cancel a Slurm job by providing a job ID.
+   It differs from the default ``scancel`` command by adding a confirmation
+   prompt to confirm users are canceling the correct job.
 
 
 
@@ -37,6 +41,10 @@ Module Contents
       Return the name of the cluster a slurm job is running on
 
       Exits the application with an error
+
+      :param job_id: The ID of th slurm job
+
+      :returns: The name of the cluster as a string
 
 
    .. py:method:: app_logic(self, args: argparse.Namespace) -> None

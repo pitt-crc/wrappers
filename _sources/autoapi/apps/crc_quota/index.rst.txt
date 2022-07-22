@@ -3,7 +3,16 @@ apps.crc_quota
 
 .. autoapi-nested-parse::
 
-   Command line utility for checking a user's disk usage
+   Command line utility for checking a user's disk usage.
+
+   This application prints a user's disk usage on multiple CRC file systems.
+   For most file systems this usage is determined using ``df`` commandline utility.
+   Disk usage for the ``ihome`` file system is fetched from a json file generated
+   by an upstream cron job.
+
+   The file system paths (and types) are hardcoded in this application.
+   To modify what file systems are examined by the application, see the
+   ``CrcQuota.app_logic`` method.
 
 
 
@@ -16,7 +25,7 @@ Module Contents
 
    Bases: :py:obj:`object`
 
-   Base class for building object-oriented representations of file system quotas
+   Base class for building object-oriented representations of file system quotas.
 
    .. py:method:: to_string(self, verbose=False)
 
@@ -56,7 +65,7 @@ Module Contents
       :param name: Name of the file system (e.g., zfs, ix, home)
       :param path: The file path for create a quota for
 
-      :returns: An instance of the parent class
+      :returns: An instance of the parent class or None if the allocation does not exist
 
 
 
@@ -77,7 +86,7 @@ Module Contents
       :param name: Name of the file system (e.g., zfs, ix, home)
       :param group: The group to create a quota for
 
-      :returns: An instance of the parent class
+      :returns: An instance of the parent class or None if the allocation does not exist
 
 
 
@@ -98,7 +107,7 @@ Module Contents
       :param name: Name of the file system (e.g., zfs, ix, home)
       :param uid: The ID of the user
 
-      :returns: An instance of the parent class
+      :returns: An instance of the parent class or None if the allocation does not exist
 
 
 

@@ -14,12 +14,14 @@ Module Contents
 
 .. py:class:: Shell
 
-   Methods for interacting with the runtime shell
+   Methods for interacting with the runtime shell.
 
    .. py:method:: readchar() -> str
       :staticmethod:
 
       Read a single character from the command line
+
+      :returns: The character entered by the user
 
 
    .. py:method:: run_command(command: str, include_err: bool = False) -> Union[str, Tuple[str, str]]
@@ -36,7 +38,7 @@ Module Contents
 
 .. py:class:: SlurmInfo
 
-   Class for fetching Slurm config data
+   Class for fetching Slurm config data.
 
    .. py:attribute:: ignore_clusters
       
@@ -51,7 +53,7 @@ Module Contents
    .. py:method:: get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]
       :classmethod:
 
-      Return a tuple cluster names configured with slurm
+      Return a tuple of cluster names configured with slurm
 
       :param include_all_clusters: Include clusters that are otherwise marked as ignored
 

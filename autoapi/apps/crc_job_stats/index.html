@@ -112,6 +112,13 @@
   <section id="apps-crc-job-stats">
 <h1>apps.crc_job_stats<a class="headerlink" href="#apps-crc-job-stats" title="Permalink to this heading"></a></h1>
 <p>Command line utility for printing basic information about a running job.</p>
+<p>This application is designed to called at the bottom of a job submission
+script. Using the <code class="docutils literal notranslate"><span class="pre">sacct</span></code> utility, it fetches information about the submitted
+job and prints a summary to the terminal.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>This application will error out if not called from within a slurm job.</p>
+</div>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -140,6 +147,11 @@
 <dt class="sig sig-object py" id="CrcJobStats.get_job_info">
 <span class="sig-name descname"><span class="pre">get_job_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#CrcJobStats.get_job_info" title="Permalink to this definition"></a></dt>
 <dd><p>Return information about the running job as a dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of job information fetched from <code class="docutils literal notranslate"><span class="pre">scontrol</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

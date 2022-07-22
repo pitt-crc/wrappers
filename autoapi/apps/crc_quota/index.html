@@ -129,14 +129,21 @@
              
   <section id="apps-crc-quota">
 <h1>apps.crc_quota<a class="headerlink" href="#apps-crc-quota" title="Permalink to this heading"></a></h1>
-<p>Command line utility for checking a user’s disk usage</p>
+<p>Command line utility for checking a user’s disk usage.</p>
+<p>This application prints a user’s disk usage on multiple CRC file systems.
+For most file systems this usage is determined using <code class="docutils literal notranslate"><span class="pre">df</span></code> commandline utility.
+Disk usage for the <code class="docutils literal notranslate"><span class="pre">ihome</span></code> file system is fetched from a json file generated
+by an upstream cron job.</p>
+<p>The file system paths (and types) are hardcoded in this application.
+To modify what file systems are examined by the application, see the
+<code class="docutils literal notranslate"><span class="pre">CrcQuota.app_logic</span></code> method.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="AbstractFilesystemUsage">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AbstractFilesystemUsage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_used</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#AbstractFilesystemUsage" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Base class for building object-oriented representations of file system quotas</p>
+<p>Base class for building object-oriented representations of file system quotas.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="AbstractFilesystemUsage.to_string">
 <span class="sig-name descname"><span class="pre">to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#AbstractFilesystemUsage.to_string" title="Permalink to this definition"></a></dt>
@@ -191,7 +198,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the parent class</p>
+<dd class="field-even"><p>An instance of the parent class or None if the allocation does not exist</p>
 </dd>
 </dl>
 </dd></dl>
@@ -220,7 +227,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the parent class</p>
+<dd class="field-even"><p>An instance of the parent class or None if the allocation does not exist</p>
 </dd>
 </dl>
 </dd></dl>
@@ -249,7 +256,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An instance of the parent class</p>
+<dd class="field-even"><p>An instance of the parent class or None if the allocation does not exist</p>
 </dd>
 </dl>
 </dd></dl>

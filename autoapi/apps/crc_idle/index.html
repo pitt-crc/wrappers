@@ -113,7 +113,10 @@
              
   <section id="apps-crc-idle">
 <h1>apps.crc_idle<a class="headerlink" href="#apps-crc-idle" title="Permalink to this heading"></a></h1>
-<p>Command line application for listing idle Slurm resources</p>
+<p>Command line application for listing idle Slurm resources.</p>
+<p>The application relies on the <code class="docutils literal notranslate"><span class="pre">sinfo</span></code> command to identify idle resources and
+returns a summary of how many resources are available on each cluster partition.
+Resource counts are provided for GPU and CPU partitions.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">

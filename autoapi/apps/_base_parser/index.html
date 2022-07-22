@@ -70,7 +70,6 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">apps._base_parser</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#BaseParser">BaseParser</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#BaseParser.help_width">help_width</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BaseParser._get_formatter">_get_formatter</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BaseParser.app_version">app_version</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#BaseParser.app_logic">app_logic</a></li>
@@ -118,16 +117,13 @@
 <dt class="sig sig-object py" id="BaseParser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BaseParser</span></span><a class="headerlink" href="#BaseParser" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code></p>
-<p>Base class for building command line applications</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="BaseParser.help_width">
-<span class="sig-name descname"><span class="pre">help_width</span></span><em class="property"><span class="w"> </span><span class="pre">=</span> <span class="pre">50</span></em><a class="headerlink" href="#BaseParser.help_width" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>Base class for building command line applications.</p>
+<p>Inheriting from this class ensures child applications behave consistently
+and share the same version number.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="BaseParser._get_formatter">
 <span class="sig-name descname"><span class="pre">_get_formatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">argparse.RawTextHelpFormatter</span></span></span><a class="headerlink" href="#BaseParser._get_formatter" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">HelpFormatter</span></code> object for formatting application help text</p>
+<dd><p>Returns a <code class="docutils literal notranslate"><span class="pre">HelpFormatter</span></code> object that defines formatting for the application help text</p>
 </dd></dl>
 
 <dl class="py method">

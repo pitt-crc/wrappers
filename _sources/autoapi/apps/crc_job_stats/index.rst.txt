@@ -5,6 +5,12 @@ apps.crc_job_stats
 
    Command line utility for printing basic information about a running job.
 
+   This application is designed to called at the bottom of a job submission
+   script. Using the ``sacct`` utility, it fetches information about the submitted
+   job and prints a summary to the terminal.
+
+   .. important:: This application will error out if not called from within a slurm job.
+
 
 
 
@@ -38,6 +44,8 @@ Module Contents
    .. py:method:: get_job_info(self) -> Dict[str, str]
 
       Return information about the running job as a dictionary
+
+      :returns: A dictionary of job information fetched from ``scontrol``
 
 
    .. py:method:: pretty_print_job_info(self, job_info: dict) -> None

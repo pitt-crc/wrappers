@@ -3,7 +3,7 @@ apps
 
 .. autoapi-nested-parse::
 
-   Command applications built by the Center for Research Computing for wrapping common HPC tasks.
+   Commandline applications built by the Pitt Center for Research Computing for wrapping common HPC user tasks.
 
 
 

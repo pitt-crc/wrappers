@@ -3,7 +3,7 @@ apps.crc_squeue
 
 .. autoapi-nested-parse::
 
-   A simple wrapper around the Slurm ``squeue`` command
+   A simple wrapper around the Slurm ``squeue`` command.
 
 
 

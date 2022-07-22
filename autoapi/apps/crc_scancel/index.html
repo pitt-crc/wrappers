@@ -109,7 +109,10 @@
              
   <section id="apps-crc-scancel">
 <h1>apps.crc_scancel<a class="headerlink" href="#apps-crc-scancel" title="Permalink to this heading"></a></h1>
-<p>A simple wrapper around the Slurm <code class="docutils literal notranslate"><span class="pre">scancel</span></code> command</p>
+<p>A simple wrapper around the Slurm <code class="docutils literal notranslate"><span class="pre">scancel</span></code> command.</p>
+<p>This application allows users to cancel a Slurm job by providing a job ID.
+It differs from the default <code class="docutils literal notranslate"><span class="pre">scancel</span></code> command by adding a confirmation
+prompt to confirm users are canceling the correct job.</p>
 <section id="module-contents">
 <h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -141,6 +144,14 @@
 <span class="sig-name descname"><span class="pre">get_cluster_for_job_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#CrcScancel.get_cluster_for_job_id" title="Permalink to this definition"></a></dt>
 <dd><p>Return the name of the cluster a slurm job is running on</p>
 <p>Exits the application with an error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>job_id</strong> – The ID of th slurm job</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name of the cluster as a string</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

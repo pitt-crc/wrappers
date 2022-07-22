@@ -119,11 +119,16 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="Shell">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Shell</span></span><a class="headerlink" href="#Shell" title="Permalink to this definition"></a></dt>
-<dd><p>Methods for interacting with the runtime shell</p>
+<dd><p>Methods for interacting with the runtime shell.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Shell.readchar">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">readchar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#Shell.readchar" title="Permalink to this definition"></a></dt>
 <dd><p>Read a single character from the command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The character entered by the user</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -148,7 +153,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="SlurmInfo">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SlurmInfo</span></span><a class="headerlink" href="#SlurmInfo" title="Permalink to this definition"></a></dt>
-<dd><p>Class for fetching Slurm config data</p>
+<dd><p>Class for fetching Slurm config data.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="SlurmInfo.ignore_clusters">
 <span class="sig-name descname"><span class="pre">ignore_clusters</span></span><a class="headerlink" href="#SlurmInfo.ignore_clusters" title="Permalink to this definition"></a></dt>
@@ -162,7 +167,7 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="SlurmInfo.get_cluster_names">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_cluster_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_all_clusters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#SlurmInfo.get_cluster_names" title="Permalink to this definition"></a></dt>
-<dd><p>Return a tuple cluster names configured with slurm</p>
+<dd><p>Return a tuple of cluster names configured with slurm</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>include_all_clusters</strong> – Include clusters that are otherwise marked as ignored</p>

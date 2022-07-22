@@ -3,7 +3,10 @@ apps.crc_proposal_end
 
 .. autoapi-nested-parse::
 
-   Print the end date for an account's proposal
+   Print the end date for an account's proposal.
+
+   This application is designed to interface with the CRC banking application
+   and will not work without a running bank installation.
 
 
 
@@ -28,6 +31,8 @@ Module Contents
       Get the proposal end date for a given account
 
       :param account: The name of the account
+
+      :returns: The proposal end date as a ``datetime`` object
 
 
    .. py:method:: app_logic(self, args: argparse.Namespace) -> None
