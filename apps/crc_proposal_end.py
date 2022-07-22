@@ -1,8 +1,7 @@
 """Print the end date for an account's proposal.
 
-.. important::
-   This application is designed to interface with the CRC banking application.
-   The proposal end date is fetched directly from the banking database.
+This application is designed to interface with the CRC banking application
+and will not work without a running bank installation.
 """
 
 from argparse import Namespace
