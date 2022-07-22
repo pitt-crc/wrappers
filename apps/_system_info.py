@@ -10,7 +10,7 @@ from typing import Union, Tuple, Set
 
 
 class Shell:
-    """Methods for interacting with the runtime shell"""
+    """Methods for interacting with the runtime shell."""
 
     @staticmethod
     def readchar() -> str:
@@ -60,7 +60,7 @@ class Shell:
 
 
 class SlurmInfo:
-    """Class for fetching Slurm config data"""
+    """Class for fetching Slurm config data."""
 
     ignore_clusters = {'azure'}
     ignore_partitions = {

@@ -10,7 +10,7 @@ from . import __version__
 
 
 class BaseParser(ArgumentParser):
-    """Base class for building command line applications
+    """Base class for building command line applications.
 
     Inheriting from this class ensures child applications behave consistently
     and share the same version number.
