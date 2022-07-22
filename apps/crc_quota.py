@@ -1,4 +1,14 @@
-"""Command line utility for checking a user's disk usage"""
+"""Command line utility for checking a user's disk usage.
+
+This application prints a user's disk usage on multiple CRC file systems.
+For most file systems this usage is determined using ``df`` commandline utility.
+Disk usage for the ``ihome`` file system is fetched from a json file generated
+by an upstream cron job.
+
+The file system paths (and types) are hardcoded in this application.
+To modify what file systems are examined by the application, see the
+``CrcQuota.app_logic`` method.
+"""
 
 from __future__ import annotations
 
@@ -13,7 +23,7 @@ from ._system_info import Shell
 
 
 class AbstractFilesystemUsage(object):
-    """Base class for building object-oriented representations of file system quotas"""
+    """Base class for building object-oriented representations of file system quotas."""
 
     def __init__(self, name: str, size_used: int, size_limit: int) -> None:
         """Create a new quota from known system metrics
@@ -87,7 +97,7 @@ class GenericUsage(AbstractFilesystemUsage):
             path: The file path for create a quota for
 
         Returns:
-            An instance of the parent class
+            An instance of the parent class or None if the allocation does not exist
         """
 
         df_command = f"df {path}"
@@ -134,7 +144,7 @@ class BeegfsUsage(AbstractFilesystemUsage):
             group: The group to create a quota for
 
         Returns:
-            An instance of the parent class
+            An instance of the parent class or None if the allocation does not exist
         """
 
         allocation_out = Shell.run_command(f"df /bgfs/{group}")
@@ -178,7 +188,7 @@ class IhomeUsage(AbstractFilesystemUsage):
             uid: The ID of the user
 
         Returns:
-            An instance of the parent class
+            An instance of the parent class or None if the allocation does not exist
         """
 
         # Get the information from Isilon

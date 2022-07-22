@@ -1,4 +1,11 @@
-"""A simple wrapper around the Slurm ``sinfo`` command"""
+"""A simple wrapper around the Slurm ``sinfo`` command.
+
+This application is equivalent to running:
+
+.. code-block:: bash
+
+   sinfo -M all
+"""
 
 from argparse import Namespace
 

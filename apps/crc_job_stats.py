@@ -1,4 +1,11 @@
-"""Command line utility for printing basic information about a running job."""
+"""Command line utility for printing basic information about a running job.
+
+This application is designed to called at the bottom of a job submission
+script. Using the ``sacct`` utility, it fetches information about the submitted
+job and prints a summary to the terminal.
+
+.. important:: This application will error out if not called from within a slurm job.
+"""
 
 from argparse import Namespace
 from os import environ
@@ -25,7 +32,11 @@ class CrcJobStats(BaseParser):
             self.exit()
 
     def get_job_info(self) -> Dict[str, str]:
-        """Return information about the running job as a dictionary"""
+        """Return information about the running job as a dictionary
+
+        Returns:
+            A dictionary of job information fetched from ``scontrol``
+        """
 
         # Get job information from the ``scontrol`` utility
         # Slurm settings are returned as "key=value" pairs seperated by whitespace

@@ -1,5 +1,5 @@
 """This module is intended to be temporary. The original application has been
-renamed. This placeholder instructs users to use the new command line app.
+renamed. This placeholder instructs users to use the ``crc-show-config`` application.
 """
 
 from argparse import Namespace

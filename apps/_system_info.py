@@ -10,11 +10,15 @@ from typing import Union, Tuple, Set
 
 
 class Shell:
-    """Methods for interacting with the runtime shell"""
+    """Methods for interacting with the runtime shell."""
 
     @staticmethod
     def readchar() -> str:
-        """Read a single character from the command line"""
+        """Read a single character from the command line
+
+        Returns:
+            The character entered by the user
+        """
 
         # Get the current settings of the standard input file descriptor
         file_descriptor = sys.stdin.fileno()
@@ -28,7 +32,7 @@ class Shell:
             # Restore the original standard input settings
             termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
 
-        print('')
+        print('')  # Bump terminal onto a new line
         return character
 
     @staticmethod
@@ -56,7 +60,7 @@ class Shell:
 
 
 class SlurmInfo:
-    """Class for fetching Slurm config data"""
+    """Class for fetching Slurm config data."""
 
     ignore_clusters = {'azure'}
     ignore_partitions = {
@@ -73,7 +77,7 @@ class SlurmInfo:
 
     @classmethod
     def get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]:
-        """Return a tuple cluster names configured with slurm
+        """Return a tuple of cluster names configured with slurm
 
         Args:
             include_all_clusters: Include clusters that are otherwise marked as ignored

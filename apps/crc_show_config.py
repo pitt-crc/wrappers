@@ -1,4 +1,4 @@
-"""Display the slurm configuration for a given cluster/partition"""
+"""Display the slurm configuration for a given cluster/partition."""
 
 from argparse import Namespace
 from typing import Dict
@@ -30,6 +30,9 @@ class CrcShowConfig(BaseParser):
         Args:
             cluster: The name of the cluster to get settings for
             partition: The name of the partition in the given cluster
+
+        Returns:
+            A dictionary of job information fetched from ``scontrol``
         """
 
         scontrol_command = f"scontrol -M {cluster} show partition {partition}"

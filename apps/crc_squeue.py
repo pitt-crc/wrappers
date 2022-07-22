@@ -1,4 +1,4 @@
-"""A simple wrapper around the Slurm ``squeue`` command"""
+"""A simple wrapper around the Slurm ``squeue`` command."""
 
 from argparse import Namespace
 from os import environ
