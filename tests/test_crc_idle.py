@@ -2,8 +2,8 @@
 
 from unittest import TestCase, skip
 
-from apps.crc_idle import CrcIdle
 from apps._system_info import SlurmInfo
+from apps.crc_idle import CrcIdle
 
 
 class ArgumentParsing(TestCase):
