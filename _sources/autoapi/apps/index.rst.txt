@@ -22,4 +22,9 @@ Module Contents
 
    
 
+.. py:data:: __copyright__
+   :annotation: = 2022, Pitt Center for Research Computing
+
+   
+
 
