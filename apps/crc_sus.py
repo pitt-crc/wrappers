@@ -1,4 +1,8 @@
-"""Print an account's service unit allocation"""
+"""Print an account's service unit allocation.
+
+This application is designed to interface with the CRC banking application
+and will not work without a running bank installation.
+"""
 
 from argparse import Namespace
 from typing import Dict

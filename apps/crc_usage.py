@@ -1,4 +1,8 @@
-"""Command line interface that wraps the banking application"""
+"""User facing application for returning user system usage from the CRC banking application.
+
+This application is designed to interface with the CRC banking application
+and will not work without a running bank installation.
+"""
 
 from argparse import Namespace
 
