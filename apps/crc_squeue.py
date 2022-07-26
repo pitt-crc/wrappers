@@ -12,10 +12,10 @@ class CrcSqueue(BaseParser):
     """Summarize currently running Slurm jobs."""
 
     # Formats for output data depending on user provided arguments
-    output_format_user = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R'"
-    output_format_all = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.20R'"
-    output_format_user_start = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.20R %.20S'"
-    output_format_all_start = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.20R %.20S'"
+    output_format_user = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.50R'"
+    output_format_all = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R'"
+    output_format_user_start = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
+    output_format_all_start = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
 
     # Frequency (in seconds) to refresh output when user specifies ``--watch``
     watch_frequency = 10
