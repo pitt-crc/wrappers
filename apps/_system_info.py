@@ -77,7 +77,7 @@ class SlurmInfo:
 
     @classmethod
     def get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]:
-        """Return a tuple of cluster names configured with slurm
+        """Return cluster names configured with slurm
 
         Args:
             include_all_clusters: Include clusters that are otherwise marked as ignored
