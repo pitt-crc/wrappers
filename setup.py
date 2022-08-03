@@ -5,6 +5,9 @@ from pathlib import Path
 
 from setuptools import setup, find_packages
 
+PACKAGE_REQUIREMENTS = Path(__file__).parent / 'requirements.txt'
+DOCUMENTATION_REQUIREMENTS = Path(__file__).parent / 'docs' / 'requirements.txt'
+
 
 def get_long_description():
     """Return a long description of tha parent package"""
@@ -13,11 +16,10 @@ def get_long_description():
     return readme_file.read_text()
 
 
-def get_requirements():
+def get_requirements(path):
     """Return a list of package dependencies"""
 
-    requirements_path = Path(__file__).parent / 'requirements.txt'
-    with requirements_path.open() as req_file:
+    with path.open() as req_file:
         return req_file.read().splitlines()
 
 
@@ -65,7 +67,11 @@ setup(
         crc-usage=apps.crc_usage:CrcUsage.execute
         crc-scontrol=apps.crc_scontrol:CrcScontrol.execute
     """,
-    install_requires=get_requirements(),
+    install_requires=get_requirements(PACKAGE_REQUIREMENTS),
+    extras_require={
+        'docs': get_requirements(DOCUMENTATION_REQUIREMENTS),
+        'tests': ['coverage'],
+    },
     author=_author,
     keywords='Pitt, CRC, HPC, wrappers',
     long_description=get_long_description(),
