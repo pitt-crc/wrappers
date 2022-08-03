@@ -14,8 +14,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-          pip install -r docs/requirements.txt
+          pip install .[docs]
 
       # This will intentionally fail if docs do not build successfully
       - name: Run doctest
