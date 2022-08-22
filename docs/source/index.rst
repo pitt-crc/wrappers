@@ -24,13 +24,13 @@ See the :ref:`install` page for more details.
    :hidden:
 
    Overview<self>
+   install
 
 .. toctree::
    :hidden:
    :caption: Developer Notes:
    :glob:
 
-   developer_notes/install
    developer_notes/new_app
 
 .. Source files for documenting individual applications are generated
