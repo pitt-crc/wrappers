@@ -252,9 +252,10 @@ class CrcQuota(BaseParser):
         zfs2_quota = GenericUsage.from_path('zfs2', f'/zfs2/{group}')
         bgfs_quota = BeegfsUsage.from_group('beegfs', group)
         ix_quota = GenericUsage.from_path('ix', f'/ix/{group}')
+        ix1_quota = GenericUsage.from_path('ix1', f'/ix1/{group}')
 
         # Only return quotas that exist for the given group (i.e., objects that are not None)
-        all_quotas = (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota)
+        all_quotas = (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota, ix1_quota)
         return tuple(filter(None, all_quotas))
 
     def app_logic(self, args: Namespace) -> None:
