@@ -3,16 +3,17 @@
 import re
 from pathlib import Path
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-PACKAGE_REQUIREMENTS = Path(__file__).parent / 'requirements.txt'
-DOCUMENTATION_REQUIREMENTS = Path(__file__).parent / 'docs' / 'requirements.txt'
+_file_dir = Path(__file__).resolve().parent
+_pkg_requirements_path = _file_dir / 'requirements.txt'
+_doc_requirements_path = _file_dir / 'docs' / 'requirements.txt'
 
 
 def get_long_description():
-    """Return a long description of tha parent package"""
+    """Return a long description of the parent package"""
 
-    readme_file = Path(__file__).parent / 'README.md'
+    readme_file = _file_dir / 'README.md'
     return readme_file.read_text()
 
 
@@ -23,33 +24,57 @@ def get_requirements(path):
         return req_file.read().splitlines()
 
 
-def get_meta():
-    """Return package metadata including the:
-        - author
-        - version
-        - license
+def get_package_data(directory):
+    """Return a list of files in the given directory"""
+
+    return list(map(str, directory.rglob('*')))
+
+
+def get_extras(**extras_items):
+    """Return a dictionary of package extras
+
+    Argument names are used to generate key values in the returned dictionary.
+    Argument values can be a list of packages or the path to a requirements
+    file. The `all` key is added to the returned dictionary automatically.
+
+    Args:
+        **extra sets of dependencies as a list of packages or requirements path
     """
 
-    init_path = Path(__file__).resolve().parent / 'apps/__init__.py'
+    extras = dict()
+    for extra_name, extra_definition in extras_items.items():
+        if isinstance(extra_definition, Path):
+            extras[extra_name] = get_requirements(extra_definition)
+
+        else:
+            extras[extra_name] = extra_definition
+
+    extras['all'] = set()
+    for packages in extras.values():
+        extras['all'].update(packages)
+
+    return extras
+
+
+def get_meta(value):
+    """Return package metadata as defined in the init file
+
+    Args:
+        value: The metadata variable to return a value for
+    """
+
+    init_path = _file_dir / 'app' / '__init__.py'
     init_text = init_path.read_text()
 
-    version_regex = re.compile("__version__ = '(.*?)'")
-    version = version_regex.findall(init_text)[0]
-
-    author_regex = re.compile("__author__ = '(.*?)'")
-    author = author_regex.findall(init_text)[0]
-
-    # license_regex = re.compile("__license__ = '(.*?)'")
-    # license_type = license_regex.findall(init_text)[0]
-
-    return author, version
+    regex = re.compile(f"__{value}__ = '(.*?)'")
+    value = regex.findall(init_text)[0]
+    return value
 
 
-_author, _version = get_meta()
 setup(
     name='crc-wrappers',
     description='Command-line applications for interacting with HPC clusters at the Pitt CRC.',
-    version=_version,
+    version=get_meta('version'),
     packages=find_packages(),
     python_requires='>=3.7',
     entry_points="""
@@ -67,16 +92,13 @@ setup(
         crc-usage=apps.crc_usage:CrcUsage.execute
         crc-scontrol=apps.crc_scontrol:CrcScontrol.execute
     """,
-    install_requires=get_requirements(PACKAGE_REQUIREMENTS),
-    extras_require={
-        'docs': get_requirements(DOCUMENTATION_REQUIREMENTS),
-        'tests': ['coverage'],
-    },
-    author=_author,
+    install_requires=get_requirements(_pkg_requirements_path),
+    extras_require=get_extras(docs=_doc_requirements_path, tests=['coverage']),
+    author=get_meta('author'),
     keywords='Pitt, CRC, HPC, wrappers',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
-    # license=_license_type,
+    license=get_meta('license'),
     classifiers=[
         'Programming Language :: Python :: 3',
     ]
