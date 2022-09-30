@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+"""Configuration file for building application documentation"""
 
 # -- Path setup --------------------------------------------------------------
 
@@ -6,11 +6,11 @@ import sys
 
 from pathlib import Path
 
-# Add the project source code to the working python environment
-conf_dir = Path(__file__).resolve().parent
-project_root = conf_dir.parent.parent
+this_dir = Path(__file__).resolve().parent
+project_root = this_dir.parent.parent
 apps_dir = project_root / 'apps'
 
+# Add the project source code to the working python environment
 sys.path.insert(0, str(project_root))
 
 # -- Project information -----------------------------------------------------

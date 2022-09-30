@@ -1,0 +1,57 @@
+name: Documentation
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: pip install .[docs]
+
+      - name: Test Doc Examples
+        working-directory: docs
+        run: make doctest
+
+      - name: Build Docs
+        working-directory: docs
+        run: make html SPHINXOPTS="-W"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: docs/build/html
+
+  deploy:
+    name: Publish Documentation
+    if: github.event_name == 'push'
+    needs: [ build ]
+
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
