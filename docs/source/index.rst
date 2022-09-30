@@ -41,6 +41,7 @@ See the :ref:`install` page for more details.
    :caption: Applications:
    :glob:
 
+   autoapi/apps/index
    autoapi/apps/[!_]**/*
 
 .. toctree::
