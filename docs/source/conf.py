@@ -3,6 +3,7 @@
 # -- Path setup --------------------------------------------------------------
 
 import sys
+from datetime import date
 
 from pathlib import Path
 
@@ -15,10 +16,10 @@ sys.path.insert(0, str(project_root))
 
 # -- Project information -----------------------------------------------------
 
-from apps import __version__, __author__, __copyright__
+from apps import __version__, __author__
 
 project = 'CRC Wrapper Applications'
-copyright = __copyright__
+copyright = f'{date.today().year}, {__author__}'
 author = __author__
 release = __version__
 
