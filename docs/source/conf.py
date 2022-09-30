@@ -38,6 +38,7 @@ extensions = [
 # Configure automatic documentation of commandline applications
 autoapi_type = 'python'
 autoapi_dirs = [str(apps_dir)]
+autoapi_ignore = [str(apps_dir / '__init__.py')]
 autoapi_add_toctree_entry = False
 autoapi_template_dir = 'templates'
 

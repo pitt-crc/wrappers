@@ -6,7 +6,7 @@ import sys
 from argparse import ArgumentParser, Namespace, RawTextHelpFormatter
 from textwrap import dedent
 
-from . import __version__
+VERSION = '0.4.0'
 
 
 class BaseParser(ArgumentParser):
