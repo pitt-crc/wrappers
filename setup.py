@@ -20,8 +20,7 @@ def get_long_description():
 def get_requirements(path):
     """Return a list of package dependencies"""
 
-    with path.open() as req_file:
-        return req_file.read().splitlines()
+    return path.read_text().splitlines()
 
 
 def get_package_data(directory):
