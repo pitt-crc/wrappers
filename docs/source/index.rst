@@ -15,10 +15,6 @@ Most applications documented here will work out of the box on a generic
 Slurm cluster systems. However, some applications are built specifically for
 the CRC and depend on internal CRC systems.
 
-The applications are designed to be modular and can be installed independently.
-See the :doc:`install` page for more details.
-
-
 .. toctree::
    :hidden:
 
