@@ -1,4 +1,4 @@
-"""Command line utility for printing basic information about a running job.
+"""Command line utility to print basic information about a running job.
 
 This application is designed to called at the bottom of a job submission
 script. Using the ``sacct`` utility, it fetches information about the submitted
@@ -25,7 +25,7 @@ class CrcJobStats(BaseParser):
     job_id = environ.get('SLURM_JOB_ID')
 
     def exit_if_not_in_slurm(self) -> None:
-        """Exit the application is not running from within a slurm job"""
+        """Exit the application if not running from within a slurm job"""
 
         if 'SLURM_JOB_ID' not in environ:
             print('This script is meant to be added at the bottom of your Slurm scripts!')

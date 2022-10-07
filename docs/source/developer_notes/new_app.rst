@@ -8,9 +8,9 @@ ensures all applications share the same fundamental behavior.
 To create a new application, inherit from the ``BaseParser`` class and define
 the following:
 
-1. Define the application description as class documentation
-2. Define the application arguments (and help text) in the class ``__init__`` method
-3. Define the core application logic in the ``app_logic`` method
+1. The application description as class documentation
+2. The application arguments (and help text) in the class ``__init__`` method
+3. The core application logic in the ``app_logic`` method
 
 An example template is provided below:
 
@@ -48,7 +48,7 @@ An example template is provided below:
 
 You will also need to add the new application to the ``setup.py`` file under
 the ``entry_points`` option. The following example assumes the application
-class is located in ``apps/example_module.py`` and exposes the application as
+class is located in ``apps/crc_example_module.py`` and exposes the application as
 an executable called ``executable-name``:
 
 .. code-block::
@@ -58,7 +58,7 @@ an executable called ``executable-name``:
    >>> setup(
    ...    entry_points="""
    ...        [console_scripts]
-   ...        executable-name=apps.example_module:ExampleApplication.execute
+   ...        executable-name=apps.crc_example_module:ExampleApplication.execute
    ...    """
    ...)
 

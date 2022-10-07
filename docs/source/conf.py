@@ -36,7 +36,7 @@ extensions = [
     'sphinx_copybutton',
 ]
 
-# Configure automatic documentation of commandline applications
+# Configure automatic documentation of command line applications
 autoapi_type = 'python'
 autoapi_dirs = [str(apps_dir)]
 autoapi_add_toctree_entry = False

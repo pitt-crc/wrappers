@@ -1,9 +1,7 @@
-.. _install:
-
 Installation
 ------------
 
-The command line applications are installable as a collective set via the
+The CRC wrapper applications are a suite of command line applications installable via the
 `pip <https://pip.pypa.io/en/stable/>`_ (or `pipx <https://pypa.github.io/pipx/>`_)
 package manager:
 
@@ -15,3 +13,9 @@ package manager:
    The ``pipx`` utility is recommended for system administrators working in
    environments with conflicting package managers
    (like `lmod <https://lmod.readthedocs.io/en/latest/>`_).
+
+All command line applications are installed
+
+.. code-block::
+
+   pipx install git+https://github.com/pitt-crc/wrappers.git --install-option="--nocrc"

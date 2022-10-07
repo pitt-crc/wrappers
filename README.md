@@ -5,6 +5,6 @@
 [![Tests](https://github.com/pitt-crc/wrappers/actions/workflows/Unittests.yml/badge.svg)](https://github.com/pitt-crc/wrappers/actions/workflows/Unittests.yml)
 [![Documentation](https://github.com/pitt-crc/wrappers/actions/workflows/Documentation.yml/badge.svg)](https://github.com/pitt-crc/wrappers/actions/workflows/Documentation.yml)
 
-Commandline wrapper applications that simplify common HPC user tasks. 
+Command line wrapper applications that simplify common HPC user tasks. 
 
 See the documentation: https://crc-pages.pitt.edu/wrappers/

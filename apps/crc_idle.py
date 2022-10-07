@@ -1,8 +1,8 @@
 """Command line application for listing idle Slurm resources.
 
-The application relies on the ``sinfo`` command to identify idle resources and
-returns a summary of how many resources are available on each cluster partition.
-Resource counts are provided for GPU and CPU partitions.
+The application relies on the info command to identify idle resources and
+summarize how many resources are available on each cluster partition.
+Resource summaries are provided for GPU and CPU partitions.
 """
 
 from argparse import Namespace
@@ -37,7 +37,7 @@ class CrcIdle(BaseParser):
         self.add_argument('-p', '--partition', nargs='+', help='only include information for specific partitions')
 
     def get_cluster_list(self, args: Namespace) -> Tuple[str]:
-        """Return a list of clusters specified in the command line arguments
+        """Return a list of clusters specified by command line arguments
 
         Returns a tuple of clusters specified by command line arguments. If no
         clusters were specified, then return a tuple of all cluster names.
@@ -83,9 +83,9 @@ class CrcIdle(BaseParser):
 
     @staticmethod
     def _idle_gpu_resources(cluster: str, partition: str) -> Dict[int, int]:
-        """Return the idle GPU resources on a given cluster partition
+        """Return idle GPU resources on a given cluster partition
 
-           If the host node is in 'drain' state, the GPUs are reported as unavailable.
+        If the host node is in a ``drain`` state, the GPUs are reported as unavailable.
 
         Args:
             cluster: The cluster to print a summary for

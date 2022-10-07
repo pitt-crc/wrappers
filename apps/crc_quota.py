@@ -1,11 +1,11 @@
 """Command line utility for checking a user's disk usage.
 
 This application prints a user's disk usage on multiple CRC file systems.
-For most file systems this usage is determined using ``df`` commandline utility.
-Disk usage for the ``ihome`` file system is fetched from a json file generated
+For most file systems this usage is determined using ``df`` command line utility.
+Disk usage for the ``ihome`` file system is fetched from a JSON file generated
 by an upstream cron job.
 
-The file system paths (and types) are hardcoded in this application.
+The file system paths (and types) are hard coded in this application.
 To modify what file systems are examined by the application, see the
 ``CrcQuota.app_logic`` method.
 """
@@ -22,7 +22,7 @@ from ._base_parser import BaseParser
 from ._system_info import Shell
 
 
-class AbstractFilesystemUsage(object):
+class AbstractFilesystemUsage:
     """Base class for building object-oriented representations of file system quotas."""
 
     def __init__(self, name: str, size_used: int, size_limit: int) -> None:
@@ -38,11 +38,14 @@ class AbstractFilesystemUsage(object):
         self.size_used = size_used
         self.size_limit = size_limit
 
-    def to_string(self, verbose=False):
+    def to_string(self, verbose: bool = False) -> str:
         """Return a string representation of the quota usage
 
         Args:
             verbose: Return a more detailed representation
+
+        Returns:
+            Human readable quota usage information
         """
 
         if verbose:
