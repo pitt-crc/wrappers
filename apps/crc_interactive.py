@@ -1,10 +1,10 @@
 """A simple wrapper around the Slurm ``srun`` command
 
-The application launches users into an interactive slurm session on a user
-selected cluster and (if specified) partition. Dedicated commandline options
-for selecting specific clusters.
+The application launches users into an interactive Slurm session on a
+user-selected cluster and (if specified) partition. Dedicated command line
+options for selecting specific clusters.
 
-Each cluster is provided with a predefined commandline options. As a result,
+Each cluster is provided with predefined command line options. As a result,
 this application does support dynamic cluster discovery. New clusters need
 to be manually added (or removed) by updating the application CLI arguments.
 """
