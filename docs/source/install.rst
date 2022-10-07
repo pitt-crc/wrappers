@@ -1,7 +1,7 @@
 Installation
 ------------
 
-The CRC wrapper applications are a suite of commandline applications installable via the
+The CRC wrapper applications are a suite of command line applications installable via the
 `pip <https://pip.pypa.io/en/stable/>`_ (or `pipx <https://pypa.github.io/pipx/>`_)
 package manager:
 
@@ -14,7 +14,7 @@ package manager:
    environments with conflicting package managers
    (like `lmod <https://lmod.readthedocs.io/en/latest/>`_).
 
-All commandline applications are installed
+All command line applications are installed
 
 .. code-block::
 

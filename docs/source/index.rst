@@ -1,7 +1,7 @@
 CRC Wrapper Applications
 ========================
 
-Commandline applications for wrapping common HPC tasks.
+Command line applications for wrapping common HPC tasks.
 
 The CRC wrapper applications provide a simplified interface for running common
 HPC tasks on Slurm based clusters. They are designed as a stepping stone for

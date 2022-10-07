@@ -74,10 +74,10 @@ class CrcInteractive(BaseParser):
         additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP style submission')
 
     def _validate_arguments(self, args: Namespace) -> None:
-        """Exit the application if commandline arguments are invalid
+        """Exit the application if command line arguments are invalid
 
         Args:
-            args: Parsed commandline arguments
+            args: Parsed commandl ine arguments
         """
 
         # Check wall time is between limits
@@ -106,7 +106,7 @@ class CrcInteractive(BaseParser):
         return False
 
     def create_srun_command(self, args: Namespace) -> str:
-        """Create an ``srun`` command based on parsed commandline arguments
+        """Create an ``srun`` command based on parsed command line arguments
 
         Args:
             args: A dictionary of parsed command line parsed_args
