@@ -66,7 +66,7 @@ class BaseParser(ArgumentParser):
         """Parse command line arguments and execute the application"""
 
         new_app_name = self.prog.replace('.py', '')
-        print('{} is being deprecated. Please use {} instead.'.format(self.prog, new_app_name))
+        print('!! {} is being deprecated. Please use {} instead.\n'.format(self.prog, new_app_name))
 
         try:
             args = self.parse_args()
