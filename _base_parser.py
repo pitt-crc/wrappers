@@ -65,6 +65,9 @@ class BaseParser(ArgumentParser):
     def execute(self):
         """Parse command line arguments and execute the application"""
 
+        new_app_name = self.prog.replace('.py', '')
+        print(f'{self.prog} is being deprecated. Please use {new_app_name} instead.')
+
         try:
             args = self.parse_args()
             self.app_logic(args)
