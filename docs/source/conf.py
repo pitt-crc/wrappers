@@ -16,7 +16,7 @@ sys.path.insert(0, str(project_root))
 
 # -- Project information -----------------------------------------------------
 
-from apps import __version__, __author__
+from apps import __version__
 
 project = 'CRC Wrapper Applications'
 author = 'Pitt Center for Research Computing'
