@@ -28,6 +28,7 @@ are built specifically for the CRC and depend on internal CRC systems.
    :glob:
 
    developer_notes/new_app
+   developer_notes/release
 
 .. Source files for documenting individual applications are generated
    dynamically by the sphinx-autoapi plugin. These files are added below.
