@@ -19,6 +19,9 @@ classifiers = [
     "Topic :: System :: Filesystems",
     "Topic :: System :: Monitoring"
 ]
+dependencies = [
+    "dataset==1.5.2"
+]
 
 [project.optional-dependencies]
 tests = ["coverage"]
