@@ -16,11 +16,11 @@ sys.path.insert(0, str(project_root))
 
 # -- Project information -----------------------------------------------------
 
-from apps import __version__, __author__
+from apps import __version__
 
 project = 'CRC Wrapper Applications'
-copyright = f'{date.today().year}, {__author__}'
-author = __author__
+author = 'Pitt Center for Research Computing'
+copyright = f'{date.today().year}, {author}'
 release = __version__
 
 # -- General configuration ---------------------------------------------------

@@ -12,12 +12,12 @@ description = "Command-line applications for interacting with HPC clusters at th
 keywords = ["Pitt", "CRC", "HPC", "wrappers"]
 classifiers = [
     "Environment :: Console",
-    "Intended Audience :: System Administrators",
-    "Operating System :: POSIX :: IRIX",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX",
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
-    "Topic :: System :: Filesystems",
-    "Topic :: System :: Monitoring"
+    "Topic :: Utilities"
 ]
 dependencies = [
     "dataset==1.5.2"
