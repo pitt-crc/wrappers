@@ -2,7 +2,7 @@ Release Procedures
 ==================
 
 In this document, the words *shall*, *will*, and *must* refer to hard requirements.
-THe words *should* and *are expected to* refer to general objectives.
+The words *should* and *are expected to* refer to general objectives.
 
 Generating a Release
 --------------------
