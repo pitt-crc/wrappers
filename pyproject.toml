@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.2", ]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "crc-wrappers"
+dynamic = ["version"]
+requires-python = ">=3.7"
+authors = [{ name = "Pitt Center for Research Computing" }]
+readme = { file = "README.md", content-type = "text/markdown" }
+description = "Command-line applications for interacting with HPC clusters at the Pitt CRC."
+keywords = ["Pitt", "CRC", "HPC", "wrappers"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX :: IRIX",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Filesystems",
+    "Topic :: System :: Monitoring"
+]
+
+[project.optional-dependencies]
+tests = ["coverage"]
+docs = [
+    "sphinx==4.5.0",
+    "sphinx-autoapi==2.0.0",
+    "sphinx-copybutton==0.5.0",
+    "sphinx-rtd-theme==1.0.0"
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "apps.__version__" }
