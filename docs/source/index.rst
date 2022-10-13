@@ -11,9 +11,10 @@ functionality provided by Slurm.
 A Note to External HPC Teams
 ----------------------------
 
-Most applications documented here will work out of the box on a generic
-Slurm cluster systems. However, some applications are built specifically for
-the CRC and depend on internal CRC systems.
+These applications were built by and for the University of Pittsburgh
+Center for Research Computing (CRC). Most applications documented here will work
+out of the box on a generic Slurm cluster systems. However, some applications
+are built specifically for the CRC and depend on internal CRC systems.
 
 .. toctree::
    :hidden:
@@ -27,6 +28,7 @@ the CRC and depend on internal CRC systems.
    :glob:
 
    developer_notes/new_app
+   developer_notes/release
 
 .. Source files for documenting individual applications are generated
    dynamically by the sphinx-autoapi plugin. These files are added below.

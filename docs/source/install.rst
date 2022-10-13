@@ -1,21 +1,26 @@
 Installation
 ------------
 
-The CRC wrapper applications are a suite of command line applications installable via the
-`pip <https://pip.pypa.io/en/stable/>`_ (or `pipx <https://pypa.github.io/pipx/>`_)
-package manager:
+The CRC wrapper applications are installable via the `pipx <https://pypa.github.io/pipx/>`_ package manager:
 
 .. code-block::
 
-   pipx install git+https://github.com/pitt-crc/wrappers.git
+   pipx install git+https://github.com/pitt-crc/quota_notifier.git
 
-.. note::
-   The ``pipx`` utility is recommended for system administrators working in
-   environments with conflicting package managers
-   (like `lmod <https://lmod.readthedocs.io/en/latest/>`_).
+The above command will install the full suite of command line utilities plus any required dependencies.
+Extra installation options are also provided for developers requiring additional dependencies:
 
-All command line applications are installed
+.. code-block:: bash
 
-.. code-block::
+    git clone https://github.com/pitt-crc/quota_notifier
+    pip install quota_notifier.[docs]
 
-   pipx install git+https://github.com/pitt-crc/wrappers.git --install-option="--nocrc"
+To install a specific subset of extras, chose from the options below.
+
++----------------------+----------------------------------------------------------+
+| Install Option       | Description                                              |
++======================+==========================================================+
+| ``[docs]``           | Dependencies required for building the documentation.    |
++----------------------+----------------------------------------------------------+
+| ``[tests]``          | Dependencies required for running tests (with coverage). |
++----------------------+----------------------------------------------------------+
