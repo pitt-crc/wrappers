@@ -81,19 +81,6 @@ class CrcInteractive(BaseParser):
         if args.invest and not args.partition:
             self.error('You must specify a partition when using the Investor cluster')
 
-    @staticmethod
-    def x11_is_available():
-        """Return whether x11 is available in the current runtime environment"""
-
-        try:
-            _, x11_err = Shell.run_command('xset q', include_err=True)
-            return not x11_err
-
-        except OSError:
-            pass
-
-        return False
-
     def create_srun_command(self, args):
         """Create an ``srun`` command based on parsed commandline arguments
 
@@ -127,10 +114,6 @@ class CrcInteractive(BaseParser):
         # The --gres argument in srun needs some special handling so is missing from the above dict
         if (args.gpu or args.invest) and args.num_gpus:
             srun_args += ' ' + '--gres=gpu:{}'.format(args.num_gpus)
-
-        # Add the --x11 flag only if X11 is working
-        if self.x11_is_available():
-            srun_args += ' --x11 '
 
         cluster_to_run = next(cluster for cluster in SlurmInfo.get_cluster_names() if getattr(args, cluster))
         return 'srun -M {} {} --pty bash'.format(cluster_to_run, srun_args)
