@@ -4,6 +4,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "crc-wrappers"
+packages = [
+    { include = "crc_wrappers", from = "apps" },
+]
 version = "0.0.0"  # Version is set dynamically by the CI tool on publication
 authors = ["Pitt Center for Research Computing", ]
 readme = "README.md"
@@ -37,6 +40,7 @@ crc-squeue = "crc_wrappers.crc_squeue:CrcSqueue.execute"
 crc-sus = "crc_wrappers.crc_sus:CrcSus.execute"
 
 [tool.poetry.dependencies]
+python = "^3.7.0"
 dataset = "1.5.2"
 
 [tool.poetry.group.docs]
