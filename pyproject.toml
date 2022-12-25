@@ -1,14 +1,19 @@
 [build-system]
-requires = ["setuptools>=61.2", ]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+[tool.poetry]
 name = "crc-wrappers"
-dynamic = ["version"]
-requires-python = ">=3.7"
-authors = [{ name = "Pitt Center for Research Computing" }]
-readme = { file = "README.md", content-type = "text/markdown" }
-description = "Command-line applications for interacting with HPC clusters at the Pitt CRC."
+packages = [
+    { include = "apps" },
+]
+version = "0.0.0"  # Version is set dynamically by the CI tool on publication
+authors = ["Pitt Center for Research Computing", ]
+readme = "README.md"
+description = "Command-line applications for interacting with HPC clusters at the Pitt Crc."
+homepage = "https://github.com/pitt-crc/wrappers"
+repository = "https://github.com/pitt-crc/wrappers"
+documentation = "https://crc-pages.pitt.edu/wrappers/"
 keywords = ["Pitt", "CRC", "HPC", "wrappers"]
 classifiers = [
     "Environment :: Console",
@@ -20,18 +25,29 @@ classifiers = [
     "Topic :: Utilities",
     "Typing :: Typed"
 ]
-dependencies = [
-    "dataset==1.5.2"
-]
 
-[project.optional-dependencies]
-tests = ["coverage"]
-docs = [
-    "sphinx==5.3.0",
-    "sphinx-autoapi==2.0.0",
-    "sphinx-copybutton==0.5.1",
-    "sphinx-rtd-theme==1.1.1"
-]
+[tool.poetry.scripts]
+crc-idle = "apps.crc_idle:CrcIdle.execute"
+crc-interactive = "apps.crc_interactive:CrcInteractive.execute"
+crc-job_stats = "apps.crc_job_stats:CrcJobStats.execute"
+crc-proposal_end = "apps.crc_proposal_end:CrcProposalEnd.execute"
+crc-quota = "apps.crc_quota:CrcQuota.execute"
+crc-scancel = "apps.crc_scancel:CrcScancel.execute"
+crc-scontrol = "apps.crc_scontrol:CrcScontrol.execute"
+crc-show_config = "apps.crc_show_config:CrcShowConfig.execute"
+crc-sinfo = "apps.crc_sinfo:CrcSinfo.execute"
+crc-squeue = "apps.crc_squeue:CrcSqueue.execute"
+crc-sus = "apps.crc_sus:CrcSus.execute"
 
-[tool.setuptools.dynamic]
-version = { attr = "apps.__version__" }
+[tool.poetry.dependencies]
+python = "^3.8.0"
+dataset = "1.5.2"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx="5.3.0"
+sphinx-autoapi="2.0.0"
+sphinx-copybutton="0.5.1"
+sphinx-rtd-theme="1.1.1"
