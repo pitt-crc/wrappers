@@ -40,7 +40,7 @@ crc-squeue = "apps.crc_squeue:CrcSqueue.execute"
 crc-sus = "apps.crc_sus:CrcSus.execute"
 
 [tool.poetry.dependencies]
-python = "^3.7.0"
+python = "^3.8.0"
 dataset = "1.5.2"
 
 [tool.poetry.group.docs]
