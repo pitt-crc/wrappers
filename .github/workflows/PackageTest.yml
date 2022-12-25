@@ -2,6 +2,7 @@ name: Tests
 
 on:
   workflow_dispatch:
+  workflow_call:
   push:
 
 jobs:
@@ -11,19 +12,22 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.7", "3.8", "3.9", "3.10" ]
+        python-version: [ "3.8", "3.9", "3.10", "3.11" ]
 
     steps:
       - name: Checkout source
-        uses: actions/checkout@master
+        uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install package dependencies
         run: pip install . coverage
+
+      - name: Confirm executable was installed
+        run: notifier --version
 
       - name: Run tests with coverage
         run: |
