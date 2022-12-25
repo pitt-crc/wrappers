@@ -27,7 +27,18 @@ jobs:
         run: pip install . coverage
 
       - name: Confirm executable was installed
-        run: notifier --version
+        run: |
+          crc-idle --version
+          crc-interactive --version
+          crc-job_stats --version
+          crc-proposal_end --version
+          crc-quota --version
+          crc-scancel --version
+          crc-scontrol --version
+          crc-show_config --version
+          crc-sinfo --version
+          crc-squeue --version
+          crc-sus --version
 
       - name: Run tests with coverage
         run: |
