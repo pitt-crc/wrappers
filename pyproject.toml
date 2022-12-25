@@ -5,7 +5,7 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "crc-wrappers"
 packages = [
-    { include = "crc_wrappers", from = "apps" },
+    { include = "apps" },
 ]
 version = "0.0.0"  # Version is set dynamically by the CI tool on publication
 authors = ["Pitt Center for Research Computing", ]
@@ -27,17 +27,17 @@ classifiers = [
 ]
 
 [tool.poetry.scripts]
-crc-idle = "crc_wrappers.crc_idle:CrcIdle.execute"
-crc-interactive = "crc_wrappers.crc_interactive:CrcInteractive.execute"
-crc-job_stats = "crc_wrappers.crc_job_stats:CrcJobStats.execute"
-crc-proposal_end = "crc_wrappers.crc_proposal_end:CrcProposalEnd.execute"
-crc-quota = "crc_wrappers.crc_quota:CrcQuota.execute"
-crc-scancel = "crc_wrappers.crc_scancel:CrcScancel.execute"
-crc-scontrol = "crc_wrappers.crc_scontrol:CrcScontrol.execute"
-crc-show_config = "crc_wrappers.crc_show_config:CrcShowConfig.execute"
-crc-sinfo = "crc_wrappers.crc_sinfo:CrcSinfo.execute"
-crc-squeue = "crc_wrappers.crc_squeue:CrcSqueue.execute"
-crc-sus = "crc_wrappers.crc_sus:CrcSus.execute"
+crc-idle = "apps.crc_idle:CrcIdle.execute"
+crc-interactive = "apps.crc_interactive:CrcInteractive.execute"
+crc-job_stats = "apps.crc_job_stats:CrcJobStats.execute"
+crc-proposal_end = "apps.crc_proposal_end:CrcProposalEnd.execute"
+crc-quota = "apps.crc_quota:CrcQuota.execute"
+crc-scancel = "apps.crc_scancel:CrcScancel.execute"
+crc-scontrol = "apps.crc_scontrol:CrcScontrol.execute"
+crc-show_config = "apps.crc_show_config:CrcShowConfig.execute"
+crc-sinfo = "apps.crc_sinfo:CrcSinfo.execute"
+crc-squeue = "apps.crc_squeue:CrcSqueue.execute"
+crc-sus = "apps.crc_sus:CrcSus.execute"
 
 [tool.poetry.dependencies]
 python = "^3.7.0"
