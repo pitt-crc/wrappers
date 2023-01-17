@@ -1,7 +1,17 @@
 version: 2
 updates:
+  # Maintain dependencies for Python
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
-      interval: "monthly"
-    open-pull-requests-limit: 20
+      interval: "weekly"
+    open-pull-requests-limit: 100
+    ignore:
+      - dependency-name: "express"  # Newer versions of sphinx-jsonschema have compatibility issues
+
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 100
