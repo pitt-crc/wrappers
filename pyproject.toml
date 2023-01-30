@@ -41,7 +41,7 @@ crc-sus = "apps.crc_sus:CrcSus.execute"
 
 [tool.poetry.dependencies]
 python = "^3.8.0"
-dataset = "1.5.2"
+dataset = "1.6.0"
 
 [tool.poetry.group.docs]
 optional = true
