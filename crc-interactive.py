@@ -33,7 +33,9 @@ class CrcInteractive(BaseParser):
         cluster_args.add_argument('-m', '--mpi', action='store_true', help='Interactive job on mpi cluster')
         cluster_args.add_argument('-i', '--invest', action='store_true', help='Interactive job on invest cluster')
         cluster_args.add_argument('-d', '--htc', action='store_true', help='Interactive job on htc cluster')
-        cluster_args.add_argument('-e', '--edu', action='store_true', dest='teach', help='Interactive job on the teaching cluster')
+        cluster_args.add_argument('-e', '--edu', action='store_true', dest='teach',
+                                  help='Interactive job on the teaching cluster')
+
         cluster_args.add_argument('-p', '--partition', help='Specify non-default partition')
 
         # Arguments for requesting additional hardware resources
