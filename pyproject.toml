@@ -10,6 +10,7 @@ packages = [
 version = "0.0.0"  # Version is set dynamically by the CI tool on publication
 authors = ["Pitt Center for Research Computing", ]
 readme = "README.md"
+license = "GPL-3.0-only"
 description = "Command-line applications for interacting with HPC clusters at the Pitt Crc."
 homepage = "https://github.com/pitt-crc/wrappers"
 repository = "https://github.com/pitt-crc/wrappers"
@@ -19,6 +20,7 @@ classifiers = [
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Natural Language :: English",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
