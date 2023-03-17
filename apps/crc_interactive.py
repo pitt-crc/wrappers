@@ -11,7 +11,7 @@ to be manually added (or removed) by updating the application CLI arguments.
 
 from argparse import Namespace
 from os import system
-
+from datetime import datetime
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo
 
@@ -51,7 +51,7 @@ class CrcInteractive(BaseParser):
         resource_args = self.add_argument_group('Arguments for Increased Resources')
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
-            '-t', '--time', type=int, default=self.default_time,
+            '-t', '--time',  default=str(self.default_time),
             help=f'run time in hours [default: {self.default_time}]')
 
         resource_args.add_argument(
@@ -81,9 +81,15 @@ class CrcInteractive(BaseParser):
             args: Parsed commandl ine arguments
         """
 
-        # Check wall time is between limits
-        if not self.min_time <= args.time <= self.max_time:
-            self.error(f'{args.time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
+        # Check wall time is between limits, enable both %H:%M format as well as integer hours
+        check_time=0
+        if args.time.find(':')<0:
+            check_time=int(args.time)
+         else:
+            check_time=datetime.strptime(args.time,'%H:%M').hour
+            
+        if not self.min_time <= check_time <= self.max_time:
+            self.error(f'{check_time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
 
         # Check the minimum number of nodes are requested for mpi
         if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.min_mpi_nodes:
@@ -115,7 +121,9 @@ class CrcInteractive(BaseParser):
             'feature': '--constraint={}',
             'num_cores': '--cpus-per-task={}' if getattr(args, 'openmp') else '--ntasks-per-node={}'
         }
-
+        #Check if time specified in %H:%M format
+        if args.time.find(':')>-1:
+            srun_dict['time']='--time={}'
         # Build a string of srun arguments
         srun_args = '--export=ALL'
         for app_arg_name, srun_arg_name in srun_dict.items():
