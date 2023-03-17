@@ -85,7 +85,7 @@ class CrcInteractive(BaseParser):
         check_time=0
         if args.time.find(':')<0:
             check_time=int(args.time)
-         else:
+        else:
             check_time=datetime.strptime(args.time,'%H:%M').hour
             
         if not self.min_time <= check_time <= self.max_time:
