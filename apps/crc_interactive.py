@@ -83,7 +83,7 @@ class CrcInteractive(BaseParser):
 
         # Check wall time is between limits, enable both %H:%M format as well as integer hours
         check_time=0
-        if  args.time.isdecimal()::
+        if  args.time.isdecimal():
             check_time=int(args.time)+1
         else:
             check_time=datetime.strptime(args.time,'%H:%M').hour
