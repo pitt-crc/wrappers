@@ -52,7 +52,7 @@ class CrcInteractive(BaseParser):
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
             '-t', '--time',  default=self.default_time,
-            help=f'run time in hours [default: {self.default_time}]')
+            help=f'run time in hours or hours:minutes [default: {self.default_time}]')
 
         resource_args.add_argument(
             '-n', '--num-nodes', type=int, default=self.default_nodes,
@@ -83,8 +83,8 @@ class CrcInteractive(BaseParser):
 
         # Check wall time is between limits, enable both %H:%M format as well as integer hours
         check_time=0
-        if args.time.find(':')<0:
-            check_time=int(args.time)
+        if  args.time.isdecimal()::
+            check_time=int(args.time)+1
         else:
             check_time=datetime.strptime(args.time,'%H:%M').hour
             
@@ -113,7 +113,7 @@ class CrcInteractive(BaseParser):
         srun_dict = {
             'partition': '--partition={}',
             'num_nodes': '--nodes={}',
-            'time': '--time={}:00:00',
+            'time': '--time={}:00',
             'reservation': '--reservation={}',
             'mem': '--mem={}g',
             'account': '--account={}',
@@ -121,9 +121,7 @@ class CrcInteractive(BaseParser):
             'feature': '--constraint={}',
             'num_cores': '--cpus-per-task={}' if getattr(args, 'openmp') else '--ntasks-per-node={}'
         }
-        #Check if time specified in %H:%M format
-        if args.time.find(':')>-1:
-            srun_dict['time']='--time={}'
+     
         # Build a string of srun arguments
         srun_args = '--export=ALL'
         for app_arg_name, srun_arg_name in srun_dict.items():
