@@ -1,0 +1,55 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "crc-wrappers"
+packages = [
+    { include = "apps" },
+]
+version = "0.0.0"  # Version is set dynamically by the CI tool on publication
+authors = ["Pitt Center for Research Computing", ]
+readme = "README.md"
+license = "GPL-3.0-only"
+description = "Command-line applications for interacting with HPC clusters at the Pitt Crc."
+homepage = "https://github.com/pitt-crc/wrappers"
+repository = "https://github.com/pitt-crc/wrappers"
+documentation = "https://crc-pages.pitt.edu/wrappers/"
+keywords = ["Pitt", "CRC", "HPC", "wrappers"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Natural Language :: English",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+    "Typing :: Typed"
+]
+
+[tool.poetry.scripts]
+crc-idle = "apps.crc_idle:CrcIdle.execute"
+crc-interactive = "apps.crc_interactive:CrcInteractive.execute"
+crc-job_stats = "apps.crc_job_stats:CrcJobStats.execute"
+crc-proposal_end = "apps.crc_proposal_end:CrcProposalEnd.execute"
+crc-quota = "apps.crc_quota:CrcQuota.execute"
+crc-scancel = "apps.crc_scancel:CrcScancel.execute"
+crc-scontrol = "apps.crc_scontrol:CrcScontrol.execute"
+crc-show_config = "apps.crc_show_config:CrcShowConfig.execute"
+crc-sinfo = "apps.crc_sinfo:CrcSinfo.execute"
+crc-squeue = "apps.crc_squeue:CrcSqueue.execute"
+crc-sus = "apps.crc_sus:CrcSus.execute"
+
+[tool.poetry.dependencies]
+python = "^3.8.0"
+dataset = "1.6.0"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx="6.1.3"
+sphinx-autoapi="2.0.1"
+sphinx-copybutton="0.5.1"
+sphinx-rtd-theme="1.2.0"
