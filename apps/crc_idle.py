@@ -6,7 +6,7 @@ Resource summaries are provided for GPU and CPU partitions.
 """
 
 from argparse import Namespace
-from typing import Tuple, Dict
+from typing import Dict, Tuple
 
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo
