@@ -73,6 +73,7 @@ class CrcInteractive(BaseParser):
         additional_args.add_argument('-l', '--license', help='specify a license')
         additional_args.add_argument('-f', '--feature', help='specify a feature, e.g. `ti` for GPUs')
         additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP style submission')
+        additional_args.add_argument('-x', '--x11', action='store_true', help='enable X11 forwarding')
 
     def _validate_arguments(self, args: Namespace) -> None:
         """Exit the application if command line arguments are invalid
@@ -118,6 +119,9 @@ class CrcInteractive(BaseParser):
 
         # Build a string of srun arguments
         srun_args = '--export=ALL'
+        if args.x11:
+            srun_args += ' --x11'
+
         for app_arg_name, srun_arg_name in srun_dict.items():
             arg_value = getattr(args, app_arg_name)
             if arg_value:
