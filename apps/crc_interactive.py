@@ -10,10 +10,11 @@ to be manually added (or removed) by updating the application CLI arguments.
 """
 
 from argparse import Namespace
-from os import system
 from datetime import datetime
+from os import system
+
 from ._base_parser import BaseParser
-from ._system_info import Shell, SlurmInfo
+from ._system_info import SlurmInfo
 
 
 class CrcInteractive(BaseParser):

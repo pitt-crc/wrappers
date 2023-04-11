@@ -5,8 +5,8 @@ import sys
 import termios
 import tty
 from shlex import split
-from subprocess import Popen, PIPE
-from typing import Union, Tuple, Set
+from subprocess import PIPE, Popen
+from typing import Set, Tuple, Union
 
 
 class Shell:
