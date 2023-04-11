@@ -11,7 +11,7 @@ to be manually added (or removed) by updating the application CLI arguments.
 
 from argparse import Namespace
 from os import system
-
+from datetime import datetime
 from ._base_parser import BaseParser
 from ._system_info import Shell, SlurmInfo
 
@@ -23,7 +23,7 @@ class CrcInteractive(BaseParser):
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
 
-    default_time = 1  # Default runtime
+    default_time = '1'  # Default runtime
     default_nodes = 1  # Default number of nodes
     default_cores = 1  # Default number of requested cores
     default_mem = 1  # Default memory in GB
@@ -51,8 +51,8 @@ class CrcInteractive(BaseParser):
         resource_args = self.add_argument_group('Arguments for Increased Resources')
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
-            '-t', '--time', type=int, default=self.default_time,
-            help=f'run time in hours [default: {self.default_time}]')
+            '-t', '--time', default=self.default_time,
+            help=f'run time in hours or hours:minutes [default: {self.default_time}]')
 
         resource_args.add_argument(
             '-n', '--num-nodes', type=int, default=self.default_nodes,
@@ -79,12 +79,19 @@ class CrcInteractive(BaseParser):
         """Exit the application if command line arguments are invalid
 
         Args:
-            args: Parsed commandl ine arguments
+            args: Parsed commandline arguments
         """
 
-        # Check wall time is between limits
-        if not self.min_time <= args.time <= self.max_time:
-            self.error(f'{args.time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
+        # Check wall time is between limits, enable both %H:%M format and integer hours
+        if args.time.isdecimal():
+            check_time = int(args.time)
+        else:
+            check_time = (
+                datetime.strptime(args.time, '%H:%M').hour +
+                datetime.strptime(args.time, '%H:%M').minute / 60)
+
+        if not self.min_time <= check_time <= self.max_time:
+            self.error(f'{check_time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
 
         # Check the minimum number of nodes are requested for mpi
         if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.min_mpi_nodes:
@@ -108,7 +115,7 @@ class CrcInteractive(BaseParser):
         srun_dict = {
             'partition': '--partition={}',
             'num_nodes': '--nodes={}',
-            'time': '--time={}:00:00',
+            'time': '--time={}:00',
             'reservation': '--reservation={}',
             'mem': '--mem={}g',
             'account': '--account={}',
