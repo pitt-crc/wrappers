@@ -85,7 +85,9 @@ class CrcInteractive(BaseParser):
         if args.time.isdecimal():
             check_time = int(args.time)
         else:
-            check_time = datetime.strptime(args.time, '%H:%M').hour + float(datetime.strptime(args.time, '%H:%M').minute) // 60
+            check_time = (
+                datetime.strptime(args.time, '%H:%M').hour +
+                datetime.strptime(args.time, '%H:%M').minute / 60)
 
         if not self.min_time <= check_time <= self.max_time:
             self.error(f'{check_time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
