@@ -44,6 +44,7 @@ class CrcInteractive(BaseParser):
         cluster_args.add_argument('-m', '--mpi', action='store_true', help='launch a session on the mpi cluster')
         cluster_args.add_argument('-i', '--invest', action='store_true', help='launch a session on the invest cluster')
         cluster_args.add_argument('-d', '--htc', action='store_true', help='launch a session on the htc cluster')
+        cluster_args.add_argument('-e', '--teach', action='store_true', help='launch a session on the teach cluster')
         cluster_args.add_argument('-p', '--partition', help='run the session on a specific partition')
 
         # Arguments for requesting additional hardware resources
@@ -140,7 +141,7 @@ class CrcInteractive(BaseParser):
             args: Parsed command line arguments
         """
 
-        if not any(getattr(args, cluster) for cluster in SlurmInfo.get_cluster_names()):
+        if not any(getattr(args, cluster, False) for cluster in SlurmInfo.get_cluster_names()):
             self.print_help()
             self.exit()
 
