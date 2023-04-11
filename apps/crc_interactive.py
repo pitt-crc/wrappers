@@ -51,7 +51,7 @@ class CrcInteractive(BaseParser):
         resource_args = self.add_argument_group('Arguments for Increased Resources')
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
-            '-t', '--time',  default=self.default_time,
+            '-t', '--time', default=self.default_time,
             help=f'run time in hours or hours:minutes [default: {self.default_time}]')
 
         resource_args.add_argument(
@@ -78,16 +78,15 @@ class CrcInteractive(BaseParser):
         """Exit the application if command line arguments are invalid
 
         Args:
-            args: Parsed commandl ine arguments
+            args: Parsed commandline arguments
         """
 
-        # Check wall time is between limits, enable both %H:%M format as well as integer hours
-        check_time=0
-        if  args.time.isdecimal():
-            check_time=int(args.time)
+        # Check wall time is between limits, enable both %H:%M format and integer hours
+        if args.time.isdecimal():
+            check_time = int(args.time)
         else:
-            check_time=datetime.strptime(args.time,'%H:%M').hour + float(datetime.strptime(args.time,'%H:%M').minute)/60
-            
+            check_time = datetime.strptime(args.time, '%H:%M').hour + float(datetime.strptime(args.time, '%H:%M').minute) // 60
+
         if not self.min_time <= check_time <= self.max_time:
             self.error(f'{check_time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
 
@@ -121,7 +120,7 @@ class CrcInteractive(BaseParser):
             'feature': '--constraint={}',
             'num_cores': '--cpus-per-task={}' if getattr(args, 'openmp') else '--ntasks-per-node={}'
         }
-     
+
         # Build a string of srun arguments
         srun_args = '--export=ALL'
         for app_arg_name, srun_arg_name in srun_dict.items():
