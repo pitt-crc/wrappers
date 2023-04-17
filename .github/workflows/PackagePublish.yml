@@ -10,14 +10,25 @@ permissions:
   id-token: write
 
 jobs:
-  test-package:
+  run-tests:
     name: Run Tests
-    uses: ./.github/workflows/PackageTest.yml
-    secrets: inherit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.8", "3.9", "3.10", "3.11" ]
 
-  build-package:
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v3
+
+      - name: Run Tests
+        uses: ./.github/actions/run-tests
+        with:
+          python-version: ${{ matrix.python-version }}
+
+  build-distribution:
     name: Build Source Distribution
-    needs: test-package
+    needs: run-tests
     runs-on: ubuntu-latest
 
     steps:
@@ -35,11 +46,11 @@ jobs:
           virtualenvs-create: false
 
       # Get the new package version from the release tag
-      # Release tags are expected to start with "refs/tags/v", so the first 11 characters are stripped
+      # Git release tags are expected to start with "refs/tags/v"
       - name: Set package version
         run: |
           tag=${{github.ref}}
-          poetry version "${tag:11}"
+          poetry version "${tag#refs/tags/v}"
 
       - name: Build package
         run: poetry build -v
@@ -51,9 +62,20 @@ jobs:
           path: dist
           retention-days: 7
 
+  build-docs:
+    name: Build Documentation
+    needs: run-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project source
+        uses: actions/checkout@v3
+
+      - name: Run tests
+        uses: ./.github/actions/build-sphinx
+
   publish-package:
     name: Publish Distribution
-    needs: [ build-package, build-docs ]
+    needs: [ build-distribution, build-docs ]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 
@@ -63,6 +85,8 @@ jobs:
         include:
           - host: https://py00.crc.pitt.edu
             environment: publish-h2p
+          - host: https://upload.pypi.org/legacy/
+            environment: publish-pypi
 
     steps:
       - name: Download distribution from artifact storage
@@ -74,15 +98,10 @@ jobs:
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          verbose: true
+          print-hash: true
           repository-url: ${{ matrix.host }}
           user: ${{ secrets.REPO_USER }}
           password: ${{ secrets.REPO_PASSWORD }}
-
-  build-docs:
-    needs: test-package
-    uses: ./.github/workflows/DocumentationBuild.yml
-    secrets: inherit
 
   publish-docs:
     name: Deploy Documentation
@@ -100,4 +119,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v2
- 
