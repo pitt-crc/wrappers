@@ -1,0 +1,40 @@
+name: "Run Application Tests"
+description: "Execute the application test suite."
+
+inputs:
+  python-version:
+    required: true
+    description: "Python version to use when running tests."
+  coverage-output:
+    required: false
+    description: "Optionally export test coverage to the given XML file path."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python ${{ inputs.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install Poetry
+      uses: snok/install-poetry@v1
+      with:
+        virtualenvs-create: false
+
+    - name: Install package dependencies
+      shell: bash
+      run: poetry install --with tests
+
+    - name: Run tests with coverage
+      shell: bash
+      run: |
+        pip install coverage
+        coverage run -m unittest discover 
+        coverage report --omit="tests/*"
+
+    - name: Export test coverage
+      if: ${{ inputs.coverage-output }}
+      shell: bash
+      run:
+        coverage xml --omit="tests/*" -o ${{ inputs.coverage-output }}
