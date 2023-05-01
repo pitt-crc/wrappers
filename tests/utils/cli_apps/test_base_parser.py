@@ -25,7 +25,7 @@ class ErrorHandling(TestCase):
         with self.assertRaisesRegex(SystemExit, message):
             Parser().error(message)
 
-    @mock.patch('apps.utils.parsing.BaseParser.print_help')
+    @mock.patch('apps.utils.cli_apps.Parser.print_help')
     def test_help_is_printed(self, mock_print_help: mock.Mock):
         """Test help text is printed automatically by default"""
 
