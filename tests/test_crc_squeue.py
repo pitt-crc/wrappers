@@ -1,10 +1,10 @@
 """Tests for the ``crc-squeue`` application."""
 
-from os import environ
+import getpass
 from unittest import TestCase
 
 from apps.crc_squeue import CrcSqueue
-import getpass
+
 
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
