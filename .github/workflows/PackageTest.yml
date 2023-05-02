@@ -38,13 +38,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          poetry use wrappers
+          poetry env use wrappers
           poetry install . --with tests
 
       - name: Run tests with coverage
         shell: bash
         run: |
-          pip install coverage
           coverage run -m unittest discover 
           coverage report --omit="tests/*"
           coverage xml --omit="tests/*" -o ${{ inputs.coverage-output }}
