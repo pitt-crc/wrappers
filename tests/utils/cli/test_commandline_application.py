@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from apps.utils.cli_apps import CommandlineApplication, Parser
+from apps.utils.cli import CommandlineApplication, Parser
 
 
 class IsAbstract(TestCase):
