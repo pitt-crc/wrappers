@@ -18,7 +18,7 @@ class ErrorHandling(TestCase):
         with self.assertRaisesRegex(SystemExit, message):
             Parser().error(message)
 
-    @mock.patch('apps.utils.cli.Parser.print_help')
+    @mock.patch('argparse.ArgumentParser.print_help')
     def test_help_is_printed(self, mock_print_help: mock.Mock) -> None:
         """Test help text is printed when running without commandline arguments"""
 
