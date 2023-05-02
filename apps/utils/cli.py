@@ -21,7 +21,7 @@ class Parser(ArgumentParser):
         formatter_factory = lambda prog: HelpFormatter(prog, max_help_position=50)
 
         super().__init__(*args, **kwargs, formatter_class=formatter_factory)
-        self.add_argument('-v', '--version', action='version', version=f'{self.prog} version {__version__}')
+        self.add_argument('--version', action='version', version=f'{self.prog} version {__version__}')
 
     def error(self, message: str) -> None:
         """Handle parsing errors and exit the application
@@ -40,11 +40,11 @@ class Parser(ArgumentParser):
             SystemExit: Every time the method is run
         """
 
+        # If no commandline arguments were given, print the help text
         if len(sys.argv) == 1:
             self.print_help()
-            raise SystemExit(message)
 
-        raise SystemExit(message)  # pragma: no cover
+        raise SystemExit(message)
 
 
 class CommandlineApplication(metaclass=abc.ABCMeta):
@@ -81,10 +81,12 @@ class CommandlineApplication(metaclass=abc.ABCMeta):
         """Parse command line arguments and execute the application"""
 
         app = cls()
+        args = app.app_interface().parse_args()
+
         try:
-            args = app.app_interface().parse_args()
             app.app_logic(args)
 
+        # Handle interrupt with cleaner error message
         except KeyboardInterrupt:
             exit('User interrupt detected - exiting...')
 
