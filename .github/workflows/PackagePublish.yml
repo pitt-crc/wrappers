@@ -34,8 +34,6 @@ jobs:
         include:
           - host: https://py00.crc.pitt.edu
             environment: publish-h2p
-          - host: https://upload.pypi.org/legacy/
-            environment: publish-pypi
 
     steps:
       - name: Checkout source
