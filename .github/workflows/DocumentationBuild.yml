@@ -16,5 +16,26 @@ jobs:
       - name: Checkout project source
         uses: actions/checkout@v3
 
+      - name: Set up Python ${{ inputs.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+
+      - name: Install dependencies
+        shell: bash
+        run: poetry install --with docs
+
       - name: Build Docs
-        uses: ./.github/actions/build-sphinx
+        shell: bash
+        working-directory: docs
+        run: make html SPHINXOPTS="-W"
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: docs/build/html

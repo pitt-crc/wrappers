@@ -12,8 +12,14 @@ permissions:
 
 jobs:
   run-tests:
-    name: Run Tests
+    name: Tests
     uses: ./.github/workflows/PackageTest.yml
+    secrets: inherit
+
+  build-docs:
+    needs: run-tests
+    uses: ./.github/workflows/DocumentationBuild.yml
+    secrets: inherit
 
   build-distribution:
     name: Build Source Distribution
@@ -50,17 +56,6 @@ jobs:
           name: package-build
           path: dist
           retention-days: 7
-
-  build-docs:
-    name: Build Documentation
-    needs: run-tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout project source
-        uses: actions/checkout@v3
-
-      - name: Run tests
-        uses: ./.github/actions/build-sphinx
 
   publish-package:
     name: Publish Distribution
@@ -99,12 +94,12 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      # url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
-      # - name: Deploy to GitHub Pages
-      #   id: deployment
-      #   uses: actions/deploy-pages@v2
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
