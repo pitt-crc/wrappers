@@ -1,14 +1,13 @@
 name: Publish Package
 
 on:
-  push:
   release:
     types: [ released ]
 
 permissions:
   contents: read
-  pages: write
   packages: read
+  pages: write
   id-token: write
 
 jobs:
@@ -69,13 +68,13 @@ jobs:
           path: dist
           retention-days: 7
 
-      # - name: Publish package
-      #   uses: pypa/gh-action-pypi-publish@release/v1
-      #   with:
-      #     print-hash: true
-      #     repository-url: ${{ matrix.host }}
-      #     user: ${{ secrets.REPO_USER }}
-      #     password: ${{ secrets.REPO_PASSWORD }}
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          print-hash: true
+          repository-url: ${{ matrix.host }}
+          user: ${{ secrets.REPO_USER }}
+          password: ${{ secrets.REPO_PASSWORD }}
 
   publish-docs:
     name: Deploy Documentation
