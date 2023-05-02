@@ -17,6 +17,7 @@ jobs:
     secrets: inherit
 
   build-docs:
+    name: Docs
     needs: run-tests
     uses: ./.github/workflows/DocumentationBuild.yml
     secrets: inherit
