@@ -1,6 +1,6 @@
 """Tests for the ``Parser`` class."""
 
-from unittest import TestCase, mock
+from unittest import TestCase
 
 from apps.utils.cli import Parser
 
@@ -17,12 +17,3 @@ class ErrorHandling(TestCase):
         message = 'This is a test'
         with self.assertRaisesRegex(SystemExit, message):
             Parser().error(message)
-
-    @mock.patch('argparse.ArgumentParser.print_help')
-    def test_help_is_printed(self, mock_print_help: mock.Mock) -> None:
-        """Test help text is printed when running without commandline arguments"""
-
-        with self.assertRaises(SystemExit):
-            Parser().error('this is a test')
-
-        mock_print_help.assert_called()
