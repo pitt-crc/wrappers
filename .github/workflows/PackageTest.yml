@@ -12,20 +12,49 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.8", "3.9", "3.10", "3.11" ]
+        slurm_version:
+          - 20.02.5.1
+          - 20.11.9.1
+          - 22.05.2.1
+        python:
+          - 3.8
+          - 3.9
+
+    container:
+      image: ghcr.io/pitt-crc/test-env:${{ matrix.slurm_version }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - name: Setup environment
+        run: /usr/local/bin/entrypoint.sh
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run tests
-        uses: ./.github/actions/run-tests
-        with:
-          python-version: ${{ matrix.python-version }}
-          coverage-output: coverage.xml
+      - name: Install poetry
+        run: pip${{ matrix.python }} install poetry
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run tests with coverage
+        shell: bash
+        run: |
+          pip install coverage
+          coverage run -m unittest discover 
+          coverage report --omit="tests/*"
+
+      - name: Export test coverage
+        if: ${{ inputs.coverage-output }}
+        shell: bash
+        run:
+          coverage xml --omit="tests/*" -o ${{ inputs.coverage-output }}
 
       # Report partial coverage results to codacy for the current python version
       - name: Report partial coverage results
+        shell: bash
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report --partial -l Python -r coverage.xml
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
@@ -37,6 +66,7 @@ jobs:
     needs: run-tests
     steps:
       - name: Finish reporting coverage
+        shell: bash
         run: bash <(curl -Ls https://coverage.codacy.com/get.sh) final
         env:
           CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
