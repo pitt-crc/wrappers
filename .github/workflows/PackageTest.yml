@@ -42,11 +42,10 @@ jobs:
           poetry install --with tests
 
       - name: Run tests with coverage
-        shell: bash
         run: |
-          coverage run -m unittest discover 
-          coverage report --omit="tests/*"
-          coverage xml --omit="tests/*" -o ${{ inputs.coverage-output }}
+          poetry run coverage run -m unittest discover 
+          poetry run coverage report --omit="tests/*"
+          poetry run coverage xml --omit="tests/*" -o ${{ inputs.coverage-output }}
 
       # Report partial coverage results to codacy for the current python version
       - name: Report partial coverage results
