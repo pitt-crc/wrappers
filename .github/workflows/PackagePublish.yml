@@ -37,36 +37,35 @@ jobs:
             environment: publish-pypi
 
     steps:
-      steps:
-        - name: Checkout source
-          uses: actions/checkout@v3
+      - name: Checkout source
+        uses: actions/checkout@v3
 
-        - name: Set up Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-        - name: Install Poetry
-          uses: snok/install-poetry@v1
-          with:
-            virtualenvs-create: false
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
 
-        # Get the new package version from the release tag
-        # Git release tags are expected to start with "refs/tags/v"
-        - name: Set package version
-          run: |
-            tag=${{github.ref}}
-            poetry version "${tag#refs/tags/v}"
+      # Get the new package version from the release tag
+      # Git release tags are expected to start with "refs/tags/v"
+      - name: Set package version
+        run: |
+          tag=${{github.ref}}
+          poetry version "${tag#refs/tags/v}"
 
-        - name: Build package
-          run: poetry build -v
+      - name: Build package
+        run: poetry build -v
 
-        - name: Upload distribution to artifact storage
-          uses: actions/upload-artifact@v3
-          with:
-            name: package-build
-            path: dist
-            retention-days: 7
+      - name: Upload distribution to artifact storage
+        uses: actions/upload-artifact@v3
+        with:
+          name: package-build
+          path: dist
+          retention-days: 7
 
       # - name: Publish package
       #   uses: pypa/gh-action-pypi-publish@release/v1
