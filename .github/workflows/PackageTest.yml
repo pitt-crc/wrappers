@@ -16,7 +16,7 @@ jobs:
           - 20.02.5.1
           - 20.11.9.1
           - 22.05.2.1
-        python:
+        python_version:
           - 3.8
           - 3.9
 
@@ -34,11 +34,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install poetry
-        run: pip${{ matrix.python }} install poetry
+        run: pip install poetry
 
       - name: Install dependencies
         run: |
-          poetry env use python${{ matrix.python }}
+          poetry env use python${{ matrix.python_version }}
           poetry install --with tests
 
       - name: Run tests with coverage
