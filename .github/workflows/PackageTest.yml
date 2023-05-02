@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry env use python${{ matrix.python }}
-          poetry install . --with tests
+          poetry install --with tests
 
       - name: Run tests with coverage
         shell: bash
