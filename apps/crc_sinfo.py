@@ -10,7 +10,7 @@ This application is equivalent to running:
 from argparse import Namespace
 
 from ._base_parser import BaseParser
-from ._system_info import Shell
+from .utils.system_info import Shell
 
 
 class CrcSinfo(BaseParser):

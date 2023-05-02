@@ -32,7 +32,7 @@ class Shell:
             # Restore the original standard input settings
             termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
 
-        print('')  # Bump terminal onto a new line
+        print()  # Bump terminal onto a new line
         return character
 
     @staticmethod

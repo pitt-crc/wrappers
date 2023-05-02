@@ -9,7 +9,7 @@ from argparse import Namespace
 from os import environ
 
 from ._base_parser import BaseParser
-from ._system_info import Shell, SlurmInfo
+from .utils.system_info import Shell, SlurmInfo
 
 
 class CrcScancel(BaseParser):

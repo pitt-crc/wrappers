@@ -4,7 +4,7 @@ from argparse import Namespace
 from typing import Dict
 
 from ._base_parser import BaseParser
-from ._system_info import Shell, SlurmInfo
+from .utils.system_info import Shell, SlurmInfo
 
 
 class CrcShowConfig(BaseParser):
