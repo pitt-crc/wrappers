@@ -12,7 +12,7 @@ from os import environ
 from typing import Dict
 
 from ._base_parser import BaseParser
-from ._system_info import Shell
+from .utils.system_info import Shell
 
 
 class CrcJobStats(BaseParser):

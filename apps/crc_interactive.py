@@ -14,7 +14,7 @@ from datetime import datetime
 from os import system
 
 from ._base_parser import BaseParser
-from ._system_info import SlurmInfo
+from .utils.system_info import SlurmInfo
 
 
 class CrcInteractive(BaseParser):
