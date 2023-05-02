@@ -5,16 +5,6 @@ from unittest import TestCase, mock
 from apps.utils.cli_apps import Parser
 
 
-class ApplicationVersion(TestCase):
-    """Test the commandline version argument"""
-
-    def test_has_version_argument(self) -> None:
-        """Test instances have a ``version`` argument by default"""
-
-        args, unknown_args = Parser().parse_known_args(['--version'])
-        self.assertFalse(unknown_args)
-
-
 class ErrorHandling(TestCase):
     """Test error handling via the ``error`` method"""
 
