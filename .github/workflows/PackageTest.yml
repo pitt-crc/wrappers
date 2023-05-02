@@ -45,11 +45,6 @@ jobs:
           pip install coverage
           coverage run -m unittest discover 
           coverage report --omit="tests/*"
-
-      - name: Export test coverage
-        if: ${{ inputs.coverage-output }}
-        shell: bash
-        run:
           coverage xml --omit="tests/*" -o ${{ inputs.coverage-output }}
 
       # Report partial coverage results to codacy for the current python version
