@@ -9,7 +9,8 @@ permissions:
   id-token: write
 
 jobs:
-  build-docs:
+  build:
+    name: Build
     needs: run-tests
     uses: ./.github/workflows/DocumentationBuild.yml
     secrets: inherit
