@@ -37,7 +37,9 @@ jobs:
         run: pip${{ matrix.python }} install poetry
 
       - name: Install dependencies
-        run: poetry install
+        run: |
+          poetry use wrappers
+          poetry install . --with tests
 
       - name: Run tests with coverage
         shell: bash
