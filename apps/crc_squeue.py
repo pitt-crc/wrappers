@@ -1,7 +1,7 @@
 """A simple wrapper around the Slurm ``squeue`` command."""
 
+import getpass
 from argparse import Namespace
-from os import environ
 from time import sleep
 
 from ._base_parser import BaseParser
@@ -36,7 +36,7 @@ class CrcSqueue(BaseParser):
         """
 
         # Variables for building shell commands
-        user = f"-u {environ['USER']}"
+        user = f"-u {getpass.getuser()}"
 
         # Build the base command
         command_options = ["squeue -M all"]

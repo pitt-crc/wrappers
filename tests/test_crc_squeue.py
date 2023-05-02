@@ -1,6 +1,6 @@
 """Tests for the ``crc-squeue`` application."""
 
-from os import environ
+import getpass
 from unittest import TestCase
 
 from apps.crc_squeue import CrcSqueue
@@ -27,7 +27,7 @@ class SlurmCommandCreation(TestCase):
         """Test the ``--all`` argument disables ``-u`` in the piped slurm command"""
 
         app = CrcSqueue()
-        slurm_user_argument = "-u {0}".format(environ['USER'])
+        slurm_user_argument = f'-u {getpass.getuser()}'
 
         # The application should default to showing information for the current user
         args, _ = app.parse_known_args([''])

@@ -46,6 +46,12 @@ crc-usage = "apps.crc_usage:CrcUsage.execute"
 python = "^3.8.0"
 dataset = "1.6.0"
 
+[tool.poetry.group.tests]
+optional = true
+
+[tool.poetry.group.tests.dependencies]
+coverage="*"
+
 [tool.poetry.group.docs]
 optional = true
 

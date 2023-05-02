@@ -5,8 +5,8 @@ It differs from the default ``scancel`` command by adding a confirmation
 prompt to confirm users are canceling the correct job.
 """
 
+import getpass
 from argparse import Namespace
-from os import environ
 
 from ._base_parser import BaseParser
 from .utils.system_info import Shell, SlurmInfo
@@ -15,7 +15,7 @@ from .utils.system_info import Shell, SlurmInfo
 class CrcScancel(BaseParser):
     """Cancel a Slurm job submitted by the current user."""
 
-    user = environ['USER']
+    user = getpass.getuser()
 
     def __init__(self) -> None:
         """Define arguments for the command line interface"""
