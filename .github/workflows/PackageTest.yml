@@ -45,7 +45,7 @@ jobs:
         run: |
           poetry run coverage run -m unittest discover 
           poetry run coverage report --omit="tests/*"
-          poetry run coverage xml --omit="tests/*" -o ${{ inputs.coverage-output }}
+          poetry run coverage xml --omit="tests/*" -o coverage.xml
 
       # Report partial coverage results to codacy for the current python version
       - name: Report partial coverage results
