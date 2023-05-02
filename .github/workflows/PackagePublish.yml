@@ -23,7 +23,7 @@ jobs:
 
   publish-package:
     name: Publish Distribution
-    needs: [ build-distribution, build-docs ]
+    needs: [ build-docs ]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 
