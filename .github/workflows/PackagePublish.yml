@@ -1,6 +1,7 @@
 name: Publish Package
 
 on:
+  push:
   release:
     types: [ released ]
 
@@ -12,19 +13,7 @@ permissions:
 jobs:
   run-tests:
     name: Run Tests
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ "3.8", "3.9", "3.10", "3.11" ]
-
-    steps:
-      - name: Checkout source
-        uses: actions/checkout@v3
-
-      - name: Run Tests
-        uses: ./.github/actions/run-tests
-        with:
-          python-version: ${{ matrix.python-version }}
+    uses: ./.github/workflows/PackageTest.yml
 
   build-distribution:
     name: Build Source Distribution
@@ -95,13 +84,13 @@ jobs:
           name: package-build
           path: dist
 
-      - name: Publish package
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          print-hash: true
-          repository-url: ${{ matrix.host }}
-          user: ${{ secrets.REPO_USER }}
-          password: ${{ secrets.REPO_PASSWORD }}
+      # - name: Publish package
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     print-hash: true
+      #     repository-url: ${{ matrix.host }}
+      #     user: ${{ secrets.REPO_USER }}
+      #     password: ${{ secrets.REPO_PASSWORD }}
 
   publish-docs:
     name: Deploy Documentation
@@ -110,12 +99,12 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      # url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      # - name: Deploy to GitHub Pages
+      #   id: deployment
+      #   uses: actions/deploy-pages@v2
