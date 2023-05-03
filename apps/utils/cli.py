@@ -3,7 +3,7 @@
 import abc
 import logging
 import sys
-from argparse import ArgumentParser, Namespace, HelpFormatter
+from argparse import ArgumentParser, HelpFormatter, Namespace
 
 from .. import __version__
 
