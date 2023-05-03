@@ -10,7 +10,7 @@ from typing import Dict
 import dataset
 
 from ._base_parser import BaseParser
-from .utils.system_info import Shell, SlurmInfo
+from .utils.system_info import Shell, Slurm
 
 
 class CrcSus(BaseParser):
@@ -47,7 +47,7 @@ class CrcSus(BaseParser):
             self.error('ERROR: No proposal for the given account was found')
 
         allocations = dict()
-        for cluster in SlurmInfo.get_cluster_names():
+        for cluster in Slurm.get_cluster_names():
             if cluster in db_record:
                 allocations[cluster] = db_record[cluster]
 

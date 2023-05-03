@@ -59,7 +59,7 @@ class Shell:
         return out_decoded
 
 
-class SlurmInfo:
+class Slurm:
     """Class for fetching Slurm config data."""
 
     ignore_clusters = {'azure'}
@@ -74,6 +74,13 @@ class SlurmInfo:
         'isenocak-mpi',
         'power9'
     }
+
+    @staticmethod
+    def is_installed() -> bool:
+        """Return whether ``sacctmgr`` is installed on the host machine"""
+
+        cmd, err = Shell.run_command('sacctmgr --version', include_err=True)
+        return cmd and not err
 
     @classmethod
     def get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]:

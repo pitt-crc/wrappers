@@ -27,4 +27,4 @@ class DefaultParser(TestCase):
             def app_logic(self, *args) -> None:
                 """A placeholder method"""
 
-        self.assertIsInstance(DummyApp().app_interface(), Parser)
+        self.assertIsInstance(DummyApp().parser, Parser)

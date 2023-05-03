@@ -9,7 +9,7 @@ import getpass
 from argparse import Namespace
 
 from ._base_parser import BaseParser
-from .utils.system_info import Shell, SlurmInfo
+from .utils.system_info import Shell, Slurm
 
 
 class CrcScancel(BaseParser):
@@ -54,7 +54,7 @@ class CrcScancel(BaseParser):
         # However, that approach fails for scavenger jobs. Instead, we iterate
         # over the clusters until we find the right one.
 
-        for cluster in SlurmInfo.get_cluster_names(include_all_clusters=True):
+        for cluster in Slurm.get_cluster_names(include_all_clusters=True):
             # Fetch a list of running slurm jobs matching the username and job id
             command = f'squeue -h -u {self.user} -j {job_id} -M {cluster}'
             if job_id in Shell.run_command(command):
