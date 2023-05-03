@@ -1,9 +1,8 @@
 """Utility classes for building commandline parsers/applications."""
 
 import abc
-import logging
 import sys
-from argparse import ArgumentParser, HelpFormatter, Namespace
+from argparse import ArgumentParser, Namespace, HelpFormatter
 
 from .. import __version__
 
@@ -56,17 +55,18 @@ class CommandlineApplication(metaclass=abc.ABCMeta):
     2. The top level application logic via the ``app_logic`` method
     """
 
-    def app_interface(self) -> Parser:
+    def __init__(self):
+        """Initialize the commandline application"""
+
+        self.parser = Parser(description=self.__doc__.split('\n')[0])
+        self.app_interface(self.parser)
+
+    def app_interface(self, parser: Parser) -> None:
         """Define the application commandline interface
 
-        Factory method for creating commandline argument parsers with the
-        appropriate interface for the parent application.
-
-        Returns:
-            An instantiated commandline parser
+        Args:
+            parser: Argument parser used by the parent commandline application
         """
-
-        return Parser()
 
     @abc.abstractmethod
     def app_logic(self, args: Namespace) -> None:
@@ -81,7 +81,7 @@ class CommandlineApplication(metaclass=abc.ABCMeta):
         """Parse command line arguments and execute the application"""
 
         app = cls()
-        args = app.app_interface().parse_args()
+        args = app.parser.parse_args()
 
         try:
             app.app_logic(args)
@@ -91,4 +91,4 @@ class CommandlineApplication(metaclass=abc.ABCMeta):
             exit('User interrupt detected - exiting...')
 
         except Exception as excep:
-            logging.error(str(excep))
+            print(str(excep))
