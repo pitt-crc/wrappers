@@ -14,7 +14,7 @@ from datetime import datetime
 from os import system
 
 from ._base_parser import BaseParser
-from .utils.system_info import SlurmInfo
+from .utils.system_info import Slurm
 
 
 class CrcInteractive(BaseParser):
@@ -139,7 +139,7 @@ class CrcInteractive(BaseParser):
         if (args.gpu or args.invest) and args.num_gpus:
             srun_args += ' ' + f'--gres=gpu:{args.num_gpus}'
 
-        cluster_to_run = next(cluster for cluster in SlurmInfo.get_cluster_names() if getattr(args, cluster))
+        cluster_to_run = next(cluster for cluster in Slurm.get_cluster_names() if getattr(args, cluster))
         return f'srun -M {cluster_to_run} {srun_args} --pty bash'
 
     def app_logic(self, args: Namespace) -> None:
@@ -149,7 +149,7 @@ class CrcInteractive(BaseParser):
             args: Parsed command line arguments
         """
 
-        if not any(getattr(args, cluster, False) for cluster in SlurmInfo.get_cluster_names()):
+        if not any(getattr(args, cluster, False) for cluster in Slurm.get_cluster_names()):
             self.print_help()
             self.exit()
 
