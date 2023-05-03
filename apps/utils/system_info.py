@@ -79,8 +79,13 @@ class Slurm:
     def is_installed() -> bool:
         """Return whether ``sacctmgr`` is installed on the host machine"""
 
-        cmd, err = Shell.run_command('sacctmgr --version', include_err=True)
-        return cmd and not err
+        try:
+            Shell.run_command('sacctmgr --version')
+
+        except FileNotFoundError:
+            return False
+
+        return True
 
     @classmethod
     def get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]:
