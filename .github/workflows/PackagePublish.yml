@@ -24,7 +24,7 @@ jobs:
 
   publish-package:
     name: Publish Distribution
-    needs: [ build-docs ]
+    needs: build-docs
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 
@@ -53,8 +53,8 @@ jobs:
       # Git release tags are expected to start with "refs/tags/v"
       - name: Set package version
         run: |
-          tag=${{github.ref}}
-          poetry version "${tag#refs/tags/v}"
+          release_tag=${{github.ref}}
+          poetry version "${release_tag#refs/tags/v}"
 
       - name: Build package
         run: poetry build -v
