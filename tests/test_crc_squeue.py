@@ -9,15 +9,23 @@ from apps.crc_squeue import CrcSqueue
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
-    def test_default_flags_are_false(self) -> None:
+    def test_default_arguments_are_false(self) -> None:
         """Test default values for all flag arguments are ``False``"""
 
         app = CrcSqueue()
         args, unknown_args = app.parse_known_args([])
+
         self.assertFalse(unknown_args)
         self.assertFalse(args.all)
-        self.assertFalse(args.start)
+        self.assertFalse(args.cluster)
         self.assertFalse(args.watch)
+
+    def watch_argument_stores_const(self) -> None:
+        """Test the ``--watch`` argument stores the update interval as an integer"""
+
+        app = CrcSqueue()
+        args, unknown_args = app.parse_known_args(['--watch'])
+        self.assertEqual(10, args.watch)
 
 
 class SlurmCommandCreation(TestCase):
