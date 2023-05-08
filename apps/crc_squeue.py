@@ -20,7 +20,7 @@ class CrcSqueue(BaseParser):
 
         super(CrcSqueue, self).__init__()
         self.add_argument('-a', '--all', action='store_true', help='show all jobs (defaults to current user only)')
-        self.add_argument('-c', '--cluster', nargs='?', default='all', help='Only show jobs for the given cluster')
+        self.add_argument('-c', '--cluster', nargs='?', default='all', help='only show jobs for the given cluster')
         self.add_argument('-w', '--watch', action='store_const', const=10, help='update information every 10 seconds')
         self.add_argument('-z', '--print-command', action='store_true',
                           help='print the equivalent slurm command and exit')
