@@ -84,40 +84,28 @@ class SlurmCommandCreation(TestCase):
 class OutputFormat(TestCase):
     """Test the correct output format is specified in the piped slurm command"""
 
-    @staticmethod
-    def get_slurm_command(cmd_args):
-        """Get the slurm command run by the app
-
-        Args:
-            cmd_args: Command line arguments to pass to the application
-
-        Returns:
-            A shell command as a string
-        """
-
-        app = CrcSqueue()
-        args, _ = app.parse_known_args(cmd_args)
-        return app.build_slurm_command(args)
-
-    def test_defaults_to_user_format(self) -> None:
+    @patch('apps.utils.system_info.Shell.run_command')
+    def test_defaults_to_user_format(self, mock_shell: Mock) -> None:
         """Test the application defaults to using the ``output_format_user`` format"""
 
-        slurm_command = self.get_slurm_command([])
-        self.assertIn(CrcSqueue.output_format_user, slurm_command)
+        CrcSqueue().execute([])
+        executed_command = mock_shell.call_args.args[0]
+        self.assertIn(CrcSqueue.output_format_user, executed_command)
 
-    def test_all_flag(self) -> None:
+    @patch('apps.utils.system_info.Shell.run_command')
+    def test_all_flag(self, mock_shell: Mock) -> None:
         """Test the application defaults to using the ``output_format_all`` format"""
 
-        slurm_command = self.get_slurm_command(['--all'])
-        self.assertIn(CrcSqueue.output_format_all, slurm_command)
+        CrcSqueue().execute(['--all'])
+        executed_command = mock_shell.call_args.args[0]
+        self.assertIn(CrcSqueue.output_format_all, executed_command)
 
 
-@patch('sys.stdout', new_callable=StringIO)
-@patch('apps.utils.system_info.Shell.run_command')
 class CommandExecution(TestCase):
     """Test the execution of Slurm commands"""
 
-    def test_slurm_command_executed(self, mock_shell: Mock, *_) -> None:
+    @patch('apps.utils.system_info.Shell.run_command')
+    def test_slurm_command_executed(self, mock_shell: Mock) -> None:
         """Test the slurm command is executed by the application"""
 
         # Parse commandline arguments and generate the expected slurm command
@@ -128,6 +116,8 @@ class CommandExecution(TestCase):
         app.execute([])
         mock_shell.assert_called_with(command)
 
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('apps.utils.system_info.Shell.run_command')
     def test_slurm_command_printed(self, mock_shell: Mock, mock_stdout: Mock) -> None:
         """Test the slurm command is printed but not executed when ``-z`` is specified"""
 
