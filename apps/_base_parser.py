@@ -5,6 +5,7 @@ import os
 import sys
 from argparse import ArgumentParser, Namespace, RawTextHelpFormatter
 from textwrap import dedent
+from typing import Optional, List
 
 from . import __version__
 
@@ -67,12 +68,12 @@ class BaseParser(ArgumentParser):
         sys.exit(2)
 
     @classmethod
-    def execute(cls) -> None:
+    def execute(cls, args: Optional[List[str]] = None) -> None:
         """Parse command line arguments and execute the application"""
 
         app = cls()
         try:
-            args = app.parse_args()
+            args = app.parse_args(args)
             app.app_logic(args)
 
         except KeyboardInterrupt:

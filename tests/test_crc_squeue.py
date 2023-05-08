@@ -1,7 +1,9 @@
 """Tests for the ``crc-squeue`` application."""
 
 import getpass
+from io import StringIO
 from unittest import TestCase
+from unittest.mock import patch, Mock
 
 from apps.crc_squeue import CrcSqueue
 
@@ -22,7 +24,7 @@ class ArgumentParsing(TestCase):
         """Test the cluster argument defaults to ``all`` clusters"""
 
         app = CrcSqueue()
-        args = app.parse_known_args([])
+        args = app.parse_args([])
         self.assertEqual('all', args.cluster)
 
     def test_custom_clusters(self) -> None:
@@ -35,7 +37,7 @@ class ArgumentParsing(TestCase):
         args = app.parse_args(['--cluster', 'smp'])
         self.assertEqual('smp', args.cluster)
 
-    def watch_argument_stores_const(self) -> None:
+    def test_watch_argument_stores_const(self) -> None:
         """Test the ``--watch`` argument stores the update interval as an integer"""
 
         app = CrcSqueue()
@@ -94,13 +96,13 @@ class OutputFormat(TestCase):
         """
 
         app = CrcSqueue()
-        args, _ = app.parse_known_args(cmd_args)
+        args = app.parse_args(cmd_args)
         return app.build_slurm_command(args)
 
     def test_defaults_to_user_format(self) -> None:
         """Test the application defaults to using the ``output_format_user`` format"""
 
-        slurm_command = self.get_slurm_command([''])
+        slurm_command = self.get_slurm_command([])
         self.assertIn(CrcSqueue.output_format_user, slurm_command)
 
     def test_all_flag(self) -> None:
@@ -108,3 +110,35 @@ class OutputFormat(TestCase):
 
         slurm_command = self.get_slurm_command(['--all'])
         self.assertIn(CrcSqueue.output_format_all, slurm_command)
+
+
+@patch('sys.stdout', new_callable=StringIO)
+@patch('apps.utils.system_info.Shell.run_command')
+class CommandExecution(TestCase):
+    """Test the execution of Slurm commands"""
+
+    def test_slurm_command_executed(self, mock_shell: Mock, *_) -> None:
+        """Test the slurm command is executed by the application"""
+
+        # Parse commandline arguments and generate the expected slurm command
+        app = CrcSqueue()
+        command = app.build_slurm_command(app.parse_args())
+
+        # Execute the wrapper and check the slurm command was executed
+        app.execute()
+        mock_shell.assert_called_with(command)
+
+    def test_slurm_command_printed(self, mock_shell: Mock, mock_stdout: Mock) -> None:
+        """Test the slurm command is printed but not executed when ``-z`` is specified"""
+
+        app = CrcSqueue()
+
+        # Parse commandline arguments and generate the expected slurm command
+        cli_args = ['-z']
+        parsed_args = app.parse_args(cli_args)
+        command = app.build_slurm_command(parsed_args)
+
+        # Execute the wrapper and check the slurm command was printed but not executed
+        app.execute(cli_args)
+        self.assertEqual(mock_stdout.getvalue().strip(), command)
+        mock_shell.assert_not_called()
