@@ -4,13 +4,15 @@ This application is designed to interface with the CRC banking application
 and will not work without a running bank installation.
 """
 
+import grp
+import os
 from argparse import Namespace
 from typing import Dict
 
 import dataset
 
 from .utils.cli import BaseParser
-from .utils.system_info import Shell, Slurm
+from .utils.system_info import Slurm
 
 
 class CrcSus(BaseParser):
@@ -19,12 +21,11 @@ class CrcSus(BaseParser):
     banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
     def __init__(self) -> None:
-        """Define arguments for the command line interface"""
+        """Define the application commandline interface"""
 
-        super(CrcSus, self).__init__()
-
-        default_group = Shell.run_command("id -gn")
-        help_text = f'slurm account name [default: {default_group}]'
+        super().__init__()
+        default_group = grp.getgrgid(os.getgid()).gr_name
+        help_text = "slurm account name (defaults to the current user's primary group name)"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     def get_allocation_info(self, account: str) -> Dict[str, int]:
@@ -44,7 +45,7 @@ class CrcSus(BaseParser):
         # Ensure a proposal exists for the given account
         db_record = table.find_one(account=account)
         if db_record is None:
-            self.error('ERROR: No proposal for the given account was found')
+            raise ValueError('ERROR: No proposal for the given account was found')
 
         allocations = dict()
         for cluster in Slurm.get_cluster_names():
