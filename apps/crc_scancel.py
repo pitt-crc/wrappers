@@ -8,7 +8,7 @@ prompt to confirm users are canceling the correct job.
 import getpass
 from argparse import Namespace
 
-from ._base_parser import BaseParser
+from .utils.cli import BaseParser
 from .utils.system_info import Shell, Slurm
 
 

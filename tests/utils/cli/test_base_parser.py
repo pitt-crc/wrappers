@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from apps.utils.cli import Parser
+from apps.utils.cli import BaseParser
 
 
 class ErrorHandling(TestCase):
@@ -16,4 +16,4 @@ class ErrorHandling(TestCase):
 
         message = 'This is a test'
         with self.assertRaisesRegex(SystemExit, message):
-            Parser().error(message)
+            BaseParser().error(message)
