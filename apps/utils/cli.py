@@ -84,4 +84,4 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
             exit('User interrupt detected - exiting...')
 
         except Exception as excep:
-            print(str(excep))
+            app.error(str(excep))
