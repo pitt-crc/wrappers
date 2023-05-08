@@ -125,7 +125,7 @@ class CommandExecution(TestCase):
         command = app.build_slurm_command(app.parse_args([]))
 
         # Execute the wrapper and check the slurm command was executed
-        app.execute()
+        app.execute([])
         mock_shell.assert_called_with(command)
 
     def test_slurm_command_printed(self, mock_shell: Mock, mock_stdout: Mock) -> None:

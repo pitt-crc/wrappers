@@ -3,7 +3,7 @@
 import abc
 import os
 import sys
-from argparse import ArgumentParser, Namespace, RawTextHelpFormatter
+from argparse import ArgumentParser, Namespace, HelpFormatter
 from textwrap import dedent
 from typing import Optional, List
 
@@ -20,20 +20,13 @@ class BaseParser(ArgumentParser):
     def __init__(self) -> None:
         """Define arguments for the command line interface"""
 
-        super(BaseParser, self).__init__()
+        # Increase the default width of the application help text
+        formatter_factory = lambda prog: HelpFormatter(prog, max_help_position=50)
+        super(BaseParser, self).__init__(formatter_class=formatter_factory)
 
         # Strip indent from class docs and use as application description
-        first_line, *other_lines = self.__doc__.split('\n')
-        dedent_other_lines = dedent('\n'.join(other_lines))
-        self.description = '\n'.join((first_line, dedent_other_lines))
-
+        self.description = '\n'.join(dedent(paragraph) for paragraph in self.__doc__.split('\n'))
         self.add_argument('-v', '--version', action='version', version=self.app_version)
-
-    def _get_formatter(self) -> RawTextHelpFormatter:
-        """Returns a ``HelpFormatter`` object that defines formatting for the application help text"""
-
-        help_width = 50  # Maximum starting point of help text argument descriptions
-        return RawTextHelpFormatter(self.prog, max_help_position=help_width)
 
     @property
     def app_version(self) -> str:
