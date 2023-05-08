@@ -10,7 +10,7 @@ from typing import Optional, List
 from .. import __version__
 
 
-class BaseParser(ArgumentParser):
+class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
     """Base class for building command line applications.
 
     Inheriting from this class ensures child applications behave consistently
@@ -26,14 +26,11 @@ class BaseParser(ArgumentParser):
 
         # Strip indent from class docs and use as application description
         self.description = '\n'.join(dedent(paragraph) for paragraph in self.__doc__.split('\n'))
-        self.add_argument('-v', '--version', action='version', version=self.app_version)
 
-    @property
-    def app_version(self) -> str:
-        """Return the application name and version as a string"""
-
+        # Set the application version to match the package version
         program_name = os.path.splitext(self.prog)[0]
-        return '{} version {}'.format(program_name, __version__)
+        version_string = '{} version {}'.format(program_name, __version__)
+        self.add_argument('-v', '--version', action='version', version=version_string)
 
     @abc.abstractmethod
     def app_logic(self, args: Namespace) -> None:

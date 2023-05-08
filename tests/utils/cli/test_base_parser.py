@@ -1,8 +1,31 @@
 """Tests for the ``Parser`` class."""
 
+import re
 from unittest import TestCase
 
 from apps.utils.cli import BaseParser
+
+
+class DummyApp(BaseParser):
+    """A dummy commandline application for use when testing CLI parsing"""
+
+    def app_logic(self, *args) -> None:
+        """Placeholder for implementing required methods by the abstract parent class"""
+
+
+class ParserDescription(TestCase):
+    """Test the generation of CLI application descriptions"""
+
+    def test_matches_class_docs(self) -> None:
+        """Test CLI descriptions match class documentation
+
+        Whitespace and formatting is ignored.
+        """
+
+        app = DummyApp()
+        app_description = re.sub(r'\s+', ' ', app.description)
+        class_docs = re.sub(r'\s+', ' ', DummyApp.__doc__)
+        self.assertEqual(class_docs, app_description)
 
 
 class ErrorHandling(TestCase):
@@ -16,4 +39,4 @@ class ErrorHandling(TestCase):
 
         message = 'This is a test'
         with self.assertRaisesRegex(SystemExit, message):
-            BaseParser().error(message)
+            DummyApp().error(message)
