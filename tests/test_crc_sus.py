@@ -1,21 +1,29 @@
 """Tests for the ``crc-sus`` application."""
 
+import grp
+import os
 from unittest import TestCase
 
 from apps.crc_sus import CrcSus
 
 
-class ArgumentParsing(TestCase):
-    """Test the parsing of command line arguments"""
+class AccountArgument(TestCase):
+    """Test parsing of the ``account`` argument"""
 
-    def test_account_name_is_parsed(self) -> None:
-        """Test the account name is recovered from the command line"""
+    def test_default_account(self) -> None:
+        """Test the default account matches the current user's primary group"""
 
-        account_name = 'sam'
-        args, unknown_args = CrcSus().parse_known_args([account_name])
+        app_parser = CrcSus().parser
+        parsed_account = app_parser.parse_args([]).account
+        current_account = grp.getgrgid(os.getgid()).gr_name
+        self.assertEqual(current_account, parsed_account)
 
-        self.assertFalse(unknown_args)
-        self.assertEqual(account_name, args.account)
+    def test_custom_account_name(self) -> None:
+        """Test a custom account is used when specified"""
+
+        app_parser = CrcSus().parser
+        parsed_account = app_parser.parse_args(['dummy_account']).account
+        self.assertEqual('dummy_account', parsed_account)
 
 
 class OutputStringFormatting(TestCase):
