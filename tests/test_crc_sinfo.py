@@ -14,7 +14,7 @@ class CommandExecution(TestCase):
     def test_all_clusters(self, mock_shell: Mock) -> None:
         """Test all clusters are included in the slurm command by default"""
 
-        CrcSinfo().execute()
+        CrcSinfo().execute([])
         mock_shell.assert_called_with('sinfo -M all')
 
     @patch('apps.utils.system_info.Shell.run_command')
