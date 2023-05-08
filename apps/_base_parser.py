@@ -53,19 +53,27 @@ class BaseParser(ArgumentParser):
         raise NotImplementedError
 
     def error(self, message: str) -> None:
-        """Print the error message to STDOUT and exit
+        """Handle parsing errors and exit the application
+
+        This method mimics the parent class behavior except error messages
+        are included in the raised ``SystemExit`` exception. This makes for
+        easier testing/debugging.
+
+        If the application was called without any commandline arguments, the
+        application help text is printed before exiting.
 
         Args:
             message: The error message
+
+        Raises:
+            SystemExit: Every time the method is run
         """
 
-        # If true, then no arguments were provided
+        # If no commandline arguments were given, print the help text
         if len(sys.argv) == 1:
             self.print_help()
-            self.exit()
 
-        sys.stderr.write('ERROR: {}\n'.format(message))
-        sys.exit(2)
+        raise SystemExit(message)
 
     @classmethod
     def execute(cls, args: Optional[List[str]] = None) -> None:
