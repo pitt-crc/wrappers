@@ -12,49 +12,37 @@ class CrcSqueue(BaseParser):
     """Summarize currently running Slurm jobs."""
 
     # Formats for output data depending on user provided arguments
-    output_format_user = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.50R'"
-    output_format_all = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R'"
-    output_format_user_start = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
-    output_format_all_start = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
-
-    # Frequency (in seconds) to refresh output when user specifies ``--watch``
-    watch_frequency = 10
+    output_format_user = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
+    output_format_all = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
 
     def __init__(self) -> None:
-        """Define arguments for the command line interface"""
+        """Define the application commandline interface"""
 
         super(CrcSqueue, self).__init__()
-        self.add_argument('-a', '--all', action='store_true', help="show all jobs (defaults to current user only)")
-        self.add_argument('-s', '--start', action='store_true', help="add the approximate start time")
-        self.add_argument('-w', '--watch', action='store_true', help="update information every 10 seconds")
+        self.add_argument('-a', '--all', action='store_true', help='show all jobs (defaults to current user only)')
+        self.add_argument('-c', '--cluster', nargs='?', default='all', help='only show jobs for the given cluster')
+        self.add_argument('-w', '--watch', action='store_const', const=10, help='update information every 10 seconds')
+        self.add_argument('-z', '--print-command', action='store_true',
+                          help='print the equivalent slurm command and exit')
 
-    def build_slurm_command(self, args: Namespace) -> str:
+    @classmethod
+    def build_slurm_command(cls, args: Namespace) -> str:
         """Return an ``squeue`` command matching parsed command line arguments
 
         Args:
             args: Parsed command line arguments
         """
 
-        # Variables for building shell commands
-        user = f"-u {getpass.getuser()}"
-
         # Build the base command
-        command_options = ["squeue -M all"]
-        if not args.all:
-            command_options.append(user)
+        command_options = [f'squeue -M {args.cluster}']
 
-        # Add on the necessary output format
-        if args.all and args.start:
-            command_options.append(self.output_format_all_start)
-
-        elif args.all:
-            command_options.append(self.output_format_all)
-
-        elif args.start:
-            command_options.append(self.output_format_user_start)
+        if args.all:
+            command_options.append(cls.output_format_all)
 
         else:
-            command_options.append(self.output_format_user)
+            user = f'-u {getpass.getuser()}'
+            command_options.append(user)
+            command_options.append(cls.output_format_user)
 
         return ' '.join(command_options)
 
@@ -66,9 +54,11 @@ class CrcSqueue(BaseParser):
         """
 
         command = self.build_slurm_command(args)
+        if args.print_command:
+            print(command)
+            return
 
         print(Shell.run_command(command))
         while args.watch:
-            sleep(self.watch_frequency)
-            print()
-            print(Shell.run_command(command))
+            sleep(args.watch)
+            print('\n', Shell.run_command(command))
