@@ -11,7 +11,7 @@ from argparse import Namespace
 from os import environ
 from typing import Dict
 
-from ._base_parser import BaseParser
+from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
 
