@@ -15,7 +15,7 @@ class ArgumentParsing(TestCase):
         """Test default values for all flag arguments are ``False``"""
 
         app = CrcSqueue()
-        args = app.parse_args([])
+        args, _ = app.parse_known_args([])
         self.assertFalse(args.all)
         self.assertFalse(args.watch)
         self.assertFalse(args.print_command)
@@ -24,27 +24,27 @@ class ArgumentParsing(TestCase):
         """Test the cluster argument defaults to ``all`` clusters"""
 
         app = CrcSqueue()
-        args = app.parse_args([])
+        args, _ = app.parse_known_args([])
         self.assertEqual('all', args.cluster)
 
     def test_custom_clusters(self) -> None:
         """Test the custom cluster names are stored by the parser"""
 
         app = CrcSqueue()
-        args = app.parse_args(['-c', 'smp'])
+        args, _ = app.parse_known_args(['-c', 'smp'])
         self.assertEqual('smp', args.cluster)
 
-        args = app.parse_args(['--cluster', 'smp'])
+        args, _ = app.parse_known_args(['--cluster', 'smp'])
         self.assertEqual('smp', args.cluster)
 
     def test_watch_argument_stores_const(self) -> None:
         """Test the ``--watch`` argument stores the update interval as an integer"""
 
         app = CrcSqueue()
-        args = app.parse_args(['--w'])
+        args, _ = app.parse_known_args(['--w'])
         self.assertEqual(10, args.watch)
 
-        args = app.parse_args(['--watch'])
+        args, _ = app.parse_known_args(['--watch'])
         self.assertEqual(10, args.watch)
 
 
@@ -58,12 +58,12 @@ class SlurmCommandCreation(TestCase):
         slurm_user_argument = f'-u {getpass.getuser()}'
 
         # The application should default to showing information for the current user
-        args = app.parse_args([])
+        args, _ = app.parse_known_args([])
         slurm_command = app.build_slurm_command(args)
         self.assertIn(slurm_user_argument, slurm_command, '-u flag is missing from slurm command')
 
         # Make sure user option is disabled when ``--all`` argument is given
-        args = app.parse_args(['--all'])
+        args, _ = app.parse_known_args(['--all'])
         slurm_command = app.build_slurm_command(args)
         self.assertNotIn(slurm_user_argument, slurm_command, '-u flag was added to slurm command')
 
@@ -72,11 +72,11 @@ class SlurmCommandCreation(TestCase):
 
         app = CrcSqueue()
 
-        args = app.parse_args([])
+        args, _ = app.parse_known_args([])
         slurm_command = app.build_slurm_command(args)
         self.assertIn('-M all', slurm_command)
 
-        args = app.parse_args(['-c', 'smp'])
+        args, _ = app.parse_known_args(['-c', 'smp'])
         slurm_command = app.build_slurm_command(args)
         self.assertIn('-M smp', slurm_command)
 
@@ -96,7 +96,7 @@ class OutputFormat(TestCase):
         """
 
         app = CrcSqueue()
-        args = app.parse_args(cmd_args)
+        args, _ = app.parse_known_args(cmd_args)
         return app.build_slurm_command(args)
 
     def test_defaults_to_user_format(self) -> None:
@@ -122,7 +122,7 @@ class CommandExecution(TestCase):
 
         # Parse commandline arguments and generate the expected slurm command
         app = CrcSqueue()
-        command = app.build_slurm_command(app.parse_args())
+        command = app.build_slurm_command(app.parse_args([]))
 
         # Execute the wrapper and check the slurm command was executed
         app.execute()
@@ -135,7 +135,7 @@ class CommandExecution(TestCase):
 
         # Parse commandline arguments and generate the expected slurm command
         cli_args = ['-z']
-        parsed_args = app.parse_args(cli_args)
+        parsed_args, _ = app.parse_known_args(cli_args)
         command = app.build_slurm_command(parsed_args)
 
         # Execute the wrapper and check the slurm command was printed but not executed
