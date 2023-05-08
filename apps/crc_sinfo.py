@@ -14,7 +14,7 @@ from .utils.system_info import Shell
 
 
 class CrcSinfo(BaseParser):
-    """Display information about all available Slurm clusters."""
+    """Display information about available Slurm clusters."""
 
     def __init__(self) -> None:
         """Define the application commandline interface"""
