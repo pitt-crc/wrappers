@@ -13,7 +13,7 @@ from argparse import Namespace
 from datetime import datetime
 from os import system
 
-from ._base_parser import BaseParser
+from .utils.cli import BaseParser
 from .utils.system_info import Slurm
 
 

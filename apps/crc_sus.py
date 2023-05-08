@@ -11,21 +11,22 @@ from typing import Dict
 
 import dataset
 
-from .utils.cli import CommandlineApplication, Parser
+from .utils.cli import BaseParser
 from .utils.system_info import Slurm
 
 
-class CrcSus(CommandlineApplication):
+class CrcSus(BaseParser):
     """Display the number of service units allocated to an account."""
 
     banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
-    def app_interface(self, parser: Parser) -> None:
+    def __init__(self) -> None:
         """Define the application commandline interface"""
 
+        super().__init__()
         default_group = grp.getgrgid(os.getgid()).gr_name
         help_text = "slurm account name (defaults to the current user's primary group name)"
-        parser.add_argument('account', nargs='?', default=default_group, help=help_text)
+        self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     def get_allocation_info(self, account: str) -> Dict[str, int]:
         """Return the service unit allocation for a given account name
