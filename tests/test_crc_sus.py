@@ -13,16 +13,14 @@ class AccountArgument(TestCase):
     def test_default_account(self) -> None:
         """Test the default account matches the current user's primary group"""
 
-        app_parser = CrcSus().parser
-        parsed_account = app_parser.parse_args([]).account
+        parsed_account = CrcSus().parse_args([]).account
         current_account = grp.getgrgid(os.getgid()).gr_name
         self.assertEqual(current_account, parsed_account)
 
     def test_custom_account_name(self) -> None:
         """Test a custom account is used when specified"""
 
-        app_parser = CrcSus().parser
-        parsed_account = app_parser.parse_args(['dummy_account']).account
+        parsed_account = CrcSus().parse_args(['dummy_account']).account
         self.assertEqual('dummy_account', parsed_account)
 
 
