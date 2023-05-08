@@ -4,7 +4,7 @@ import getpass
 from argparse import Namespace
 from time import sleep
 
-from ._base_parser import BaseParser
+from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
 

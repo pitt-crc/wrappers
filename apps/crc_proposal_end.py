@@ -9,7 +9,7 @@ from datetime import datetime
 
 import dataset
 
-from ._base_parser import BaseParser
+from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
 

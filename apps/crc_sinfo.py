@@ -9,7 +9,7 @@ This application is equivalent to running:
 
 from argparse import Namespace
 
-from ._base_parser import BaseParser
+from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
 

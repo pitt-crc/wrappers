@@ -8,21 +8,23 @@ import grp
 import os
 from argparse import Namespace
 
-from .utils.cli import CommandlineApplication, Parser
+from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
 
-class CrcUsage(CommandlineApplication):
+class CrcUsage(BaseParser):
     """Display a Slurm account's cluster usage."""
 
     banking_executable = '/ihome/crc/bank/crc_bank.py usage'
 
-    def app_interface(self, parser: Parser) -> None:
+    def __init__(self) -> None:
         """Define the application commandline interface"""
+
+        super().__init__()
 
         default_group = grp.getgrgid(os.getgid()).gr_name
         help_text = "slurm account name (defaults to the current user's primary group name)"
-        parser.add_argument('account', nargs='?', default=default_group, help=help_text)
+        self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application

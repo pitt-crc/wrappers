@@ -4,7 +4,7 @@ renamed. This placeholder instructs users to use the ``crc-show-config`` applica
 
 from argparse import Namespace
 
-from ._base_parser import BaseParser
+from .utils.cli import BaseParser
 
 
 class CrcScontrol(BaseParser):
