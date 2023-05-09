@@ -15,13 +15,10 @@ class CrcShowConfig(BaseParser):
 
         super(CrcShowConfig, self).__init__()
 
-        self.add_argument(
-            '-c', '--cluster',
-            required=True,
-            choices=Slurm.get_cluster_names(),
-            help='print partitions for the given cluster')
-
+        self.add_argument('-c', '--cluster', required=True, help='print partitions for the given cluster')
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
+        self.add_argument('-z', '--print-command', action='store_true',
+                          help='print the equivalent slurm command and exit')
 
     @staticmethod
     def get_partition_info(cluster: str, partition: str) -> Dict[str, str]:

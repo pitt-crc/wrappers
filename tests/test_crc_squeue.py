@@ -14,8 +14,7 @@ class ArgumentParsing(TestCase):
     def test_default_arguments_are_false(self) -> None:
         """Test default values for all flag arguments are ``False``"""
 
-        app = CrcSqueue()
-        args, _ = app.parse_known_args([])
+        args, _ = CrcSqueue().parse_known_args([])
         self.assertFalse(args.all)
         self.assertFalse(args.watch)
         self.assertFalse(args.print_command)
@@ -23,8 +22,7 @@ class ArgumentParsing(TestCase):
     def test_defaults_to_all_clusters(self) -> None:
         """Test the cluster argument defaults to ``all`` clusters"""
 
-        app = CrcSqueue()
-        args, _ = app.parse_known_args([])
+        args, _ = CrcSqueue().parse_known_args([])
         self.assertEqual('all', args.cluster)
 
     def test_custom_clusters(self) -> None:
