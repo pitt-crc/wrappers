@@ -8,8 +8,8 @@ from apps.crc_usage import CrcUsage
 from apps.utils.system_info import Slurm
 
 
-class AccountArgument(TestCase):
-    """Test parsing of the ``account`` argument"""
+class ArgumentParsing(TestCase):
+    """Test the parsing of command line arguments"""
 
     def test_default_account(self) -> None:
         """Test the default account matches the current user's primary group"""
