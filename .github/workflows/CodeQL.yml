@@ -1,17 +1,17 @@
-name: "CodeQL"
+name: CodeQL
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
   schedule:
-    - cron: '25 5 * * 0'
+    - cron: 25 5 * * 0
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'python' ]
+        language: [ python ]
 
     steps:
     - name: Checkout repository
@@ -35,4 +35,4 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
-        category: "/language:${{matrix.language}}"
+        category: /language:${{matrix.language}}
