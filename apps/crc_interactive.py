@@ -126,7 +126,6 @@ class CrcInteractive(BaseParser):
 
         # Build a string of srun arguments
         srun_args = '--export=ALL'
-
         for app_arg_name, srun_arg_name in srun_dict.items():
             arg_value = getattr(args, app_arg_name)
             if arg_value:

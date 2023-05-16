@@ -1,4 +1,4 @@
-"""Parent classes used when building command line applications."""
+"""Base classes used for building command line applications."""
 
 import abc
 import os
@@ -11,10 +11,15 @@ from .. import __version__
 
 
 class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
-    """Base class for building command line applications.
+    """Base class for building commandline applications.
 
-    Inheriting from this class ensures child applications behave consistently
-    and share the same version number.
+    Child classes should implement the following:
+
+    1. The application commandline interface in the ``__init__`` method
+    2. The primary application logic in the ``app_logic`` method
+
+    Unless set explicitly, the application description (``self.description``)
+    is pulled from the class docstring.
     """
 
     def __init__(self) -> None:
@@ -40,10 +45,8 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
             args: Parsed command line arguments
         """
 
-        raise NotImplementedError
-
     def error(self, message: str) -> None:
-        """Handle parsing errors and exit the application
+        """Handle errors and exit the application
 
         This method mimics the parent class behavior except error messages
         are included in the raised ``SystemExit`` exception. This makes for
@@ -80,8 +83,9 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
             app.app_logic(args)
 
         # Handle interrupt with cleaner error message
-        except KeyboardInterrupt:
+        except KeyboardInterrupt:  # pragma: no cover
             exit('User interrupt detected - exiting...')
 
-        except Exception as excep:
+        # Route errors to the CLI parser's error handler
+        except Exception as excep:  # pragma: no cover
             app.error(str(excep))

@@ -1,21 +1,21 @@
 """Tests for the ``crc-scontrol`` application."""
 
-from unittest import TestCase, skip
+from unittest import TestCase
 
 from apps.crc_show_config import CrcShowConfig
-from apps.utils.system_info import Slurm
 
 
 class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
-    @skip('Requires slurm utilities to be installed')
-    def test_clusters_are_valid_args(self) -> None:
-        """Test clusters defined in common settings are valid values for the ``--cluster`` argument"""
+    def test_default_partition_is_none(self) -> None:
+        """Test the cluster argument defaults to ``all`` clusters"""
 
-        app = CrcShowConfig()
+        args, _ = CrcShowConfig().parse_known_args(['-c', 'cluster'])
+        self.assertIsNone(args.partition)
 
-        for cluster in Slurm.get_cluster_names():
-            known_args, unknown_args = app.parse_known_args(['--cluster', cluster])
-            self.assertEqual(cluster, known_args.cluster)
-            self.assertFalse(unknown_args)
+    def test_print_defaults_to_false(self) -> None:
+        """Test the ``prin-command`` option is disabled by default"""
+
+        args, _ = CrcShowConfig().parse_known_args(['-c', 'cluster'])
+        self.assertFalse(args.print_command)

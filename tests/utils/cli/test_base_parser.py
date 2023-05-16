@@ -1,4 +1,4 @@
-"""Tests for the ``Parser`` class."""
+"""Tests for the ``BaseParser`` class."""
 
 import re
 from unittest import TestCase
@@ -14,7 +14,7 @@ class DummyApp(BaseParser):
 
 
 class ParserDescription(TestCase):
-    """Test the generation of CLI application descriptions"""
+    """Test the generation of application descriptions"""
 
     def test_matches_class_docs(self) -> None:
         """Test CLI descriptions match class documentation

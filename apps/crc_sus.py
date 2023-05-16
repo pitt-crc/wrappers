@@ -47,6 +47,7 @@ class CrcSus(BaseParser):
         if db_record is None:
             raise ValueError('ERROR: No proposal for the given account was found')
 
+        # Convert the DB record into a dictionary
         allocations = dict()
         for cluster in Slurm.get_cluster_names():
             if cluster in db_record:
@@ -67,11 +68,11 @@ class CrcSus(BaseParser):
         """
 
         output_lines = [f'Account {account}']
-        cluster_name_length = max(len(cluster) for cluster in allocation)
 
+        # Right justify cluster names to the same length
+        cluster_name_length = max(len(cluster) for cluster in allocation)
         for cluster, sus in allocation.items():
-            cluster_name = cluster.rjust(cluster_name_length)
-            output_lines.append(f' cluster {cluster_name} has {sus:,} SUs')
+            output_lines.append(f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs')
 
         return '\n'.join(output_lines)
 
