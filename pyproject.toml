@@ -58,4 +58,4 @@ optional = true
 sphinx = "6.2.1"
 sphinx-autoapi = "2.1.0"
 sphinx-copybutton = "0.5.2"
-sphinx-rtd-theme = "1.2.0"
+sphinx-rtd-theme = "1.2.1"
