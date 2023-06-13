@@ -21,6 +21,7 @@ class CrcInteractive(BaseParser):
     """Launch an interactive Slurm session."""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
+    min_mpi_cores = {'mpi': 48, 'opa-high-mem': 28}
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
 
@@ -96,6 +97,11 @@ class CrcInteractive(BaseParser):
         # Check the minimum number of nodes are requested for mpi
         if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.min_mpi_nodes:
             self.error(f'You must use at least {self.min_mpi_nodes} nodes when using the MPI cluster')
+
+        # Check the minimum number of cores are requested for mpi
+        if args.mpi and args.num_cores < self.min_mpi_cores[args.partition]:
+            self.error(f'You must request at least {self.min_mpi_cores[args.partition]} '
+                       f'cores per node when using the MPI cluster {args.partition} partition')
 
         # Check a partition is specified if the user is requesting invest
         if args.invest and not args.partition:
