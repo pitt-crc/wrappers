@@ -3,8 +3,8 @@
 from argparse import Namespace
 from typing import Dict
 
-from ._base_parser import BaseParser
-from ._system_info import Shell, SlurmInfo
+from .utils.cli import BaseParser
+from .utils.system_info import Shell, Slurm
 
 
 class CrcShowConfig(BaseParser):
@@ -15,13 +15,10 @@ class CrcShowConfig(BaseParser):
 
         super(CrcShowConfig, self).__init__()
 
-        self.add_argument(
-            '-c', '--cluster',
-            required=True,
-            choices=SlurmInfo.get_cluster_names(),
-            help='print partitions for the given cluster')
-
+        self.add_argument('-c', '--cluster', required=True, help='print partitions for the given cluster')
         self.add_argument('-p', '--partition', help='print information about nodes in the given partition')
+        self.add_argument('-z', '--print-command', action='store_true',
+                          help='print the equivalent slurm command and exit')
 
     @staticmethod
     def get_partition_info(cluster: str, partition: str) -> Dict[str, str]:
@@ -78,7 +75,7 @@ class CrcShowConfig(BaseParser):
         """
 
         if args.partition:
-            if args.partition not in SlurmInfo.get_partition_names(args.cluster):
+            if args.partition not in Slurm.get_partition_names(args.cluster):
                 self.error(f'Partition {args.partition} is not part of cluster {args.cluster}')
 
             self.print_node(args.cluster, args.partition)

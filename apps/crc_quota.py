@@ -18,8 +18,8 @@ import sys
 from argparse import Namespace
 from typing import Optional, Tuple
 
-from ._base_parser import BaseParser
-from ._system_info import Shell
+from .utils.cli import BaseParser
+from .utils.system_info import Shell
 
 
 class AbstractFilesystemUsage:

@@ -5,8 +5,8 @@ import sys
 import termios
 import tty
 from shlex import split
-from subprocess import Popen, PIPE
-from typing import Union, Tuple, Set
+from subprocess import PIPE, Popen
+from typing import Set, Tuple, Union
 
 
 class Shell:
@@ -32,7 +32,7 @@ class Shell:
             # Restore the original standard input settings
             termios.tcsetattr(file_descriptor, termios.TCSADRAIN, old_settings)
 
-        print('')  # Bump terminal onto a new line
+        print()  # Bump terminal onto a new line
         return character
 
     @staticmethod
@@ -59,7 +59,7 @@ class Shell:
         return out_decoded
 
 
-class SlurmInfo:
+class Slurm:
     """Class for fetching Slurm config data."""
 
     ignore_clusters = {'azure'}
@@ -74,6 +74,18 @@ class SlurmInfo:
         'isenocak-mpi',
         'power9'
     }
+
+    @staticmethod
+    def is_installed() -> bool:
+        """Return whether ``sacctmgr`` is installed on the host machine"""
+
+        try:
+            Shell.run_command('sacctmgr --version')
+
+        except FileNotFoundError:
+            return False
+
+        return True
 
     @classmethod
     def get_cluster_names(cls, include_all_clusters: bool = False) -> Set[str]:

@@ -38,11 +38,12 @@ are built specifically for the CRC and depend on internal CRC systems.
    :glob:
 
    autoapi/apps/index
-   autoapi/apps/[!_]**/*
+   autoapi/apps/[!utils]**/*
 
 .. toctree::
    :hidden:
    :caption: Utility Modules:
    :glob:
 
-   autoapi/apps/_**/*
+   autoapi/apps/utils/*
+   autoapi/apps/utils/**

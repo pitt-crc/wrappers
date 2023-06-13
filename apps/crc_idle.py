@@ -6,10 +6,10 @@ Resource summaries are provided for GPU and CPU partitions.
 """
 
 from argparse import Namespace
-from typing import Tuple, Dict
+from typing import Dict, Tuple
 
-from ._base_parser import BaseParser
-from ._system_info import Shell, SlurmInfo
+from .utils.cli import BaseParser
+from .utils.system_info import Shell, Slurm
 
 
 class CrcIdle(BaseParser):
@@ -176,6 +176,6 @@ class CrcIdle(BaseParser):
         """
 
         for cluster in self.get_cluster_list(args):
-            partitions_to_print = args.partition or SlurmInfo.get_partition_names(cluster)
+            partitions_to_print = args.partition or Slurm.get_partition_names(cluster)
             for partition in partitions_to_print:
                 self.print_partition_summary(cluster, partition)
