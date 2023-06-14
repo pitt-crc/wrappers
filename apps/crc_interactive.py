@@ -28,6 +28,7 @@ class CrcInteractive(BaseParser):
     default_time = '1'  # Default runtime
     default_nodes = 1  # Default number of nodes
     default_cores = 1  # Default number of requested cores
+    default_mpi_cores = 28 # Default number of request cores on an MPI partition
     default_mem = 1  # Default memory in GB
     default_gpus = 0  # Default number of GPUs
 
@@ -95,12 +96,12 @@ class CrcInteractive(BaseParser):
             self.error(f'{check_time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
 
         # Check the minimum number of nodes are requested for mpi
-        if args.mpi and (not args.partition == 'compbio') and args.num_nodes < self.min_mpi_nodes:
+        if args.mpi and args.num_nodes < self.min_mpi_nodes:
             self.error(f'You must use at least {self.min_mpi_nodes} nodes when using the MPI cluster')
 
         # Check the minimum number of cores are requested for mpi
-        if args.mpi and args.num_cores < self.min_mpi_cores[args.partition]:
-            self.error(f'You must request at least {self.min_mpi_cores[args.partition]} '
+        if args.mpi and args.num_cores < self.min_mpi_cores.get(args.partition, self.default_mpi_cores):
+            self.error(f'You must request at least {self.min_mpi_cores.get(args.partition, self.default_mpi_cores)} '
                        f'cores per node when using the MPI cluster {args.partition} partition')
 
         # Check a partition is specified if the user is requesting invest
