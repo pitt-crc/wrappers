@@ -9,7 +9,7 @@ import os
 from argparse import Namespace
 from typing import Dict
 
-import dataset
+from bank.orm import DBConnection
 
 from .utils.cli import BaseParser
 from .utils.system_info import Slurm
@@ -39,7 +39,7 @@ class CrcSus(BaseParser):
         """
 
         # Connect to the database and get the table with proposal service units
-        database = dataset.connect(self.banking_db_path, sqlite_wal_mode=False)
+        database = DBConnection.configure(self.banking_db_path)
         table = database['proposal']
 
         # Ensure a proposal exists for the given account
