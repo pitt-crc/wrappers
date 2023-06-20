@@ -9,7 +9,7 @@ import os
 from argparse import Namespace
 from typing import Dict
 
-from bank.orm import DBConnection
+import sqlalchemy as sa
 
 from .utils.cli import BaseParser
 from .utils.system_info import Slurm
@@ -28,30 +28,34 @@ class CrcSus(BaseParser):
         help_text = "slurm account name (defaults to the current user's primary group name)"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def get_allocation_info(self, account: str) -> Dict[str, int]:
+    def get_allocation_info(self, account_name: str) -> Dict[str, int]:
         """Return the service unit allocation for a given account name
 
         Args:
-            account: The name of the account
+            account_name: The name of the account
 
         Returns:
             A dictionary mapping cluster names to the number of service units
         """
 
         # Connect to the database and get the table with proposal service units
-        database = DBConnection.configure(self.banking_db_path)
-        table = database['proposal']
+        engine = sa.create_engine(self.banking_db_path)
+        connection = engine.connect()
 
         # Ensure a proposal exists for the given account
-        db_record = table.find_one(account=account)
-        if db_record is None:
+        account_id = connection.execute(sa.text("SELECT id FROM account where account.name == 'test'")).scalars().first()
+
+        proposals = connection.execute(sa.text(f"SELECT * FROM proposal where proposal.account_id = {account_id}")).scalars().all()
+
+        if proposals is None:
             raise ValueError('ERROR: No proposal for the given account was found')
 
         # Convert the DB record into a dictionary
+        allocs = connection.execute(sa.text(f"SELECT * from allocation where allocation.proposal_id == {proposals[-1]}")).all()
+
         allocations = dict()
-        for cluster in Slurm.get_cluster_names():
-            if cluster in db_record:
-                allocations[cluster] = db_record[cluster]
+        for cluster in allocs:
+            allocations[cluster.cluster_name] = cluster.service_units_total - cluster.service_units_used
 
         return allocations
 
