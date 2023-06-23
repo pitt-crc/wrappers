@@ -7,7 +7,7 @@ and will not work without a running bank installation.
 from argparse import Namespace
 from datetime import datetime
 
-import dataset
+import sqlalchemy as sa
 
 from .utils.cli import BaseParser
 from .utils.system_info import Shell
@@ -37,15 +37,20 @@ class CrcProposalEnd(BaseParser):
         Returns:
             The proposal end date as a ``datetime`` object
         """
+        
+        # Connect to the database and get the table with proposal service units
+        engine = sa.create_engine(self.banking_db_path)
+        connection = engine.connect()
+        
+        # Ensure a proposal exists for the given account
+        account_id = connection.execute(sa.text("SELECT id FROM account where account.name == 'test'")).scalars().first()
 
-        database = dataset.connect(self.banking_db_path, sqlite_wal_mode=False)
-        table = database['proposal']
+        proposals = connection.execute(sa.text(f"SELECT * FROM proposal where proposal.account_id = {account_id}")).all()
 
-        db_record = table.find_one(account=account)
-        if db_record is None:
-            self.error(f"The account: {account} doesn't appear to exist")
+        if proposals is None:
+            raise ValueError('ERROR: No proposal for the given account was found')
 
-        return db_record['end_date']
+        return proposals[-1].end_date
 
     def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
@@ -57,5 +62,4 @@ class CrcProposalEnd(BaseParser):
         end_date = self.get_proposal_end_date(args.account)
 
         # Format the account name and end date as an easy-to-read string
-        date_str = end_date.strftime("%m/%d/%y")
-        print(f"Proposal ends on {args.account} for account {date_str} on H2P")
+        print(f"Proposal ends on {end_date} for account {args.account} on H2P")
