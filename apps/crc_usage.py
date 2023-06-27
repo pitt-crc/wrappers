@@ -35,6 +35,6 @@ class CrcUsage(BaseParser):
         account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
         if not account_exists:
             raise RuntimeError(f"No slurm account was found with the name '{args.account}'.")
-        
+
         account = AccountServices(args.account)
         print(account._build_usage_table())
