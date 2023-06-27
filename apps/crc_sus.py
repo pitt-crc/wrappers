@@ -4,54 +4,38 @@ This application is designed to interface with the CRC banking application
 and will not work without a running bank installation.
 """
 
-import grp
-import os
 from argparse import Namespace
 from typing import Dict
 
-import sqlalchemy as sa
+from bank.account_logic import AccountServices
 
 from .utils.cli import BaseParser
-from .utils.system_info import Slurm
+from .utils.system_info import Shell
 
 
 class CrcSus(BaseParser):
     """Display the number of service units allocated to an account."""
 
-    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
-
     def __init__(self) -> None:
         """Define the application commandline interface"""
 
         super().__init__()
-        default_group = grp.getgrgid(os.getgid()).gr_name
-        help_text = "slurm account name (defaults to the current user's primary group name)"
+        default_group = Shell.run_command("id -gn")
+        help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def get_allocation_info(self, account_name: str) -> Dict[str, int]:
+    def get_allocation_info(self, account: str) -> Dict[str, int]:
         """Return the service unit allocation for a given account name
 
         Args:
-            account_name: The name of the account
+            account: The name of the account
 
         Returns:
             A dictionary mapping cluster names to the number of service units
         """
 
-        # Connect to the database and get the table with proposal service units
-        engine = sa.create_engine(self.banking_db_path)
-        connection = engine.connect()
-
-        # Ensure a proposal exists for the given account
-        account_id = connection.execute(sa.text("SELECT id FROM account where account.name == 'test'")).scalars().first()
-
-        proposals = connection.execute(sa.text(f"SELECT * FROM proposal where proposal.account_id = {account_id}")).scalars().all()
-
-        if proposals is None:
-            raise ValueError('ERROR: No proposal for the given account was found')
-
-        # Convert the DB record into a dictionary
-        allocs = connection.execute(sa.text(f"SELECT * from allocation where allocation.proposal_id == {proposals[-1]}")).all()
+        acct = AccountServices(account)
+        allocs = acct._get_active_proposal_allocation_info()
 
         allocations = dict()
         for cluster in allocs:
@@ -76,7 +60,11 @@ class CrcSus(BaseParser):
         # Right justify cluster names to the same length
         cluster_name_length = max(len(cluster) for cluster in allocation)
         for cluster, sus in allocation.items():
-            output_lines.append(f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs')
+            if sus > 0:
+                out = f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs remaining'
+            else:
+                out = f" cluster {cluster:>{cluster_name_length}} is LOCKED due to exceeding usage limits"
+            output_lines.append(out)
 
         return '\n'.join(output_lines)
 
