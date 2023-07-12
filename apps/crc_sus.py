@@ -3,14 +3,14 @@
 This application is designed to interface with the CRC banking application
 and will not work without a running bank installation.
 """
-
+import grp
+import os
 from argparse import Namespace
 from typing import Dict
 
 from bank.account_logic import AccountServices
 
 from .utils.cli import BaseParser
-from .utils.system_info import Shell
 
 
 class CrcSus(BaseParser):
@@ -20,7 +20,7 @@ class CrcSus(BaseParser):
         """Define the application commandline interface"""
 
         super().__init__()
-        default_group = Shell.run_command("id -gn")
+        default_group = grp.getgrgid(os.getgid()).gr_name
         help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
