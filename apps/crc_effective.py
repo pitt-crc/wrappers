@@ -1,6 +1,7 @@
 """Display the effectiveness of recent completed jobs for a given user."""
 
 from argparse import Namespace
+import os
 from typing import Dict
 
 from .utils.cli import BaseParser
@@ -16,14 +17,23 @@ class CrcEffective(BaseParser):
         super(CrcEffective, self).__init__()
 
         self.add_argument('-u', '--user',
-                          required=True,
-                          help='User to check job effectiveness for')
+                          default=os.getlogin(),
+                          help='CRC username')
 
         self.add_argument('-M', '--cluster',
                           required=True,
-                          help='Cluster the jobs ran on')
+                          help='Cluster that the job(s) ran on')
 
-        #TODO: Add logic for supplying a time interval to find jobs between
+        #TODO: Sacct can mess with the slurm database if a sufficiently large time 
+        #interval is provided, protect against this somehow?
+
+        self.add_argument('-S', '--starttime',
+                          default='midnight',
+                          help=f'Show jobs that completed after this date/time (default is midnight')
+
+        self.add_argument('-E', '--endtime',
+                          default='now',
+                          help=f'Show jobs that completed before this date/time (default is now')
 
         #TODO: Add logic for supplying a number of jobs to retrieve effectiveness for?
         #self.add_argument('-n', '--num-jobs',
@@ -33,22 +43,25 @@ class CrcEffective(BaseParser):
                           #help='Number of completed jobs to display effectiveness for')
 
     @staticmethod
-    def get_job_ids(cluster: str, user: str) -> list[str]:
+    def get_job_ids(cluster: str, user: str, startTime: str, endTime: str) -> list[str]:
         """Return a dictionary with order as the key and job ID as the value
 
         Args:
             cluster: The name of the cluster to get the job on
             user: The user ID to get job info for
+            startTime: Date after which to look for jobs
+            endTime: Date before which to look for jobs
 
         Returns:
             A dictionary of job ID  values fetched from ``sacct``
         """
 
-        sacct_command = f"sacct -M {cluster} -X -P -n -u {user} -o jobid,state"
+        sacct_command = f"sacct -M {cluster} -S {startTime} -E {endTime} -X -P -n -u {user} -o jobid,state"
+        print(f"Your sacct command: {sacct_command}")
         cmd_out = Shell.run_command(sacct_command).split()
 
         if not cmd_out:
-            print(f"ERROR: No recently completed jobs found on {cluster} for {user}")
+            print(f"ERROR: No jobs on {cluster} completed between {startTime} and {endTime} for {user}")
             exit()
 
         job_ids = []
@@ -70,16 +83,15 @@ class CrcEffective(BaseParser):
             A dictionary of job information values provided by ``seff``
         """
 
-        #TODO ssh to head node?
-
         output = []
         for job_id in job_ids:
+            #TODO: seff will need to live somewhere where it can have the right permissions
             seff_command = f"/ix/crc/nlc60/github/seff -M {cluster} {job_id}"
             output.append(Shell.run_command(seff_command))
 
         return output
 
-    def print_effectiveness(self, cluster: str, user: str) -> None:
+    def print_effectiveness(self, cluster: str, user: str, startTime: str, endTime: str) -> None:
         """Print the SLURM priority information of a given job in a more human readable format
 
         Args:
@@ -87,9 +99,10 @@ class CrcEffective(BaseParser):
             jobid: The job ID of the job
         """
 
-        job_ids = self.get_job_ids(cluster, user)
+        job_ids = self.get_job_ids(cluster, user, startTime, endTime)
         output = self.get_seff_info(cluster,job_ids)
 
+        print(f"Showing jobs on {cluster} that completed between {startTime} and {endTime} for {user}:\n")
         for job in output:
             print(f"{job}\n")
 
@@ -110,8 +123,8 @@ class CrcEffective(BaseParser):
             print("ERROR: Effectiveness output is currently not provided for jobs running on GPU resource")
             exit()
 
-        user = args.user
-        user = user.lower()
+        #Make sure username is lower-case
+        user = args.user.lower()
 
-        self.print_effectiveness(cluster, user)
+        self.print_effectiveness(cluster, user, args.starttime, args.endtime)
 
