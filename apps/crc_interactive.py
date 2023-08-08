@@ -55,7 +55,7 @@ class CrcInteractive(BaseParser):
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
             '-t', '--time', default=self.default_time,
-            help=f'run time in hours or hours:minutes [default: {self.default_time}] hour')
+            help=f'run time in hours or hours:minutes [default: {self.default_time} hour] ')
 
         resource_args.add_argument(
             '-n', '--num-nodes', type=int, default=self.default_nodes,
