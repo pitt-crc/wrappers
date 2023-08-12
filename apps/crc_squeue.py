@@ -12,8 +12,8 @@ class CrcSqueue(BaseParser):
     """Summarize currently running Slurm jobs."""
 
     # Formats for output data depending on user provided arguments
-    output_format_user = "-o '%.7i %.3P %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
-    output_format_all = "-o '%.7i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
+    output_format_user = "-o '%.8i %.3P %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
+    output_format_all = "-o '%.8i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
 
     def __init__(self) -> None:
         """Define the application commandline interface"""
