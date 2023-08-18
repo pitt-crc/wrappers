@@ -8,13 +8,14 @@ import grp
 import os
 from argparse import Namespace
 
-from bank.account_logic import AccountServices
-
 from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
+
 class CrcUsage(BaseParser):
     """Display a Slurm account's cluster usage."""
+
+    banking_executable = '/ihome/crc/bank/crc_bank.py usage'
 
     def __init__(self) -> None:
         """Define the application commandline interface"""
@@ -36,5 +37,4 @@ class CrcUsage(BaseParser):
         if not account_exists:
             raise RuntimeError(f"No slurm account was found with the name '{args.account}'.")
 
-        account = AccountServices(args.account)
-        print(account._build_usage_table())
+        print(Shell.run_command(f'{self.banking_executable} {args.account}'))

@@ -3,25 +3,29 @@
 This application is designed to interface with the CRC banking application
 and will not work without a running bank installation.
 """
+
 import grp
 import os
 from argparse import Namespace
 from typing import Dict
 
-from bank.account_logic import AccountServices
+import dataset
 
 from .utils.cli import BaseParser
+from .utils.system_info import Slurm
 
 
 class CrcSus(BaseParser):
     """Display the number of service units allocated to an account."""
+
+    banking_db_path = 'sqlite:////ihome/crc/bank/crc_bank.db'
 
     def __init__(self) -> None:
         """Define the application commandline interface"""
 
         super().__init__()
         default_group = grp.getgrgid(os.getgid()).gr_name
-        help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
+        help_text = "slurm account name (defaults to the current user's primary group name)"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     def get_allocation_info(self, account: str) -> Dict[str, int]:
@@ -34,12 +38,20 @@ class CrcSus(BaseParser):
             A dictionary mapping cluster names to the number of service units
         """
 
-        acct = AccountServices(account)
-        allocs = acct._get_active_proposal_allocation_info()
+        # Connect to the database and get the table with proposal service units
+        database = dataset.connect(self.banking_db_path, sqlite_wal_mode=False)
+        table = database['proposal']
 
+        # Ensure a proposal exists for the given account
+        db_record = table.find_one(account=account)
+        if db_record is None:
+            raise ValueError('ERROR: No proposal for the given account was found')
+
+        # Convert the DB record into a dictionary
         allocations = dict()
-        for cluster in allocs:
-            allocations[cluster.cluster_name] = cluster.service_units_total - cluster.service_units_used
+        for cluster in Slurm.get_cluster_names():
+            if cluster in db_record:
+                allocations[cluster] = db_record[cluster]
 
         return allocations
 
@@ -60,11 +72,7 @@ class CrcSus(BaseParser):
         # Right justify cluster names to the same length
         cluster_name_length = max(len(cluster) for cluster in allocation)
         for cluster, sus in allocation.items():
-            if sus > 0:
-                out = f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs remaining'
-            else:
-                out = f" cluster {cluster:>{cluster_name_length}} is LOCKED due to exceeding usage limits"
-            output_lines.append(out)
+            output_lines.append(f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs')
 
         return '\n'.join(output_lines)
 
