@@ -33,8 +33,8 @@ class OutputStringFormatting(TestCase):
         output_string = CrcSus().build_output_string(account='sam', smp=10, htc=20)
         expected_string = (
             'Account sam\n'
-            ' cluster smp has 10 SUs\n'
-            ' cluster htc has 20 SUs'
+            ' cluster smp has 10 SUs remaining\n'
+            ' cluster htc has 20 SUs remaining'
         )
 
         self.assertEqual(expected_string, output_string)
