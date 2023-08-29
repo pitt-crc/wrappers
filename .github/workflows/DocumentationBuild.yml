@@ -23,6 +23,10 @@ jobs:
         with:
           virtualenvs-create: false
 
+      - name: Set Up Bank DB Location
+        shell: bash
+        run: mkdir -p /ihome/crc/bank 
+      
       - name: Install dependencies
         shell: bash
         run: poetry install --with docs
