@@ -24,7 +24,7 @@ jobs:
           virtualenvs-create: false
 
       - name: Set Up Bank DB Location
-        run: mkdir -p /ihome/crc/bank 
+        run: sudo mkdir -p /ihome/crc/bank 
       
       - name: Install dependencies
         shell: bash
