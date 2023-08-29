@@ -25,7 +25,7 @@ class CrcInteractive(BaseParser):
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
 
-    default_time = '1'  # Default runtime
+    default_time = '1:00'  # Default runtime
     default_nodes = 1  # Default number of nodes
     default_cores = 1  # Default number of requested cores
     default_mpi_cores = 28 # Default number of request cores on an MPI partition
@@ -55,7 +55,7 @@ class CrcInteractive(BaseParser):
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
             '-t', '--time', default=self.default_time,
-            help=f'run time in hours or hours:minutes [default: {self.default_time}]')
+            help=f'run time in hours or hours:minutes [default: {self.default_time} hour] ')
 
         resource_args.add_argument(
             '-n', '--num-nodes', type=int, default=self.default_nodes,
