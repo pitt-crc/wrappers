@@ -28,7 +28,7 @@ class CrcInteractive(BaseParser):
     default_time = time(1)  # Default runtime
     default_nodes = 1  # Default number of nodes
     default_cores = 1  # Default number of requested cores
-    default_mpi_cores = 28 # Default number of request cores on an MPI partition
+    default_mpi_cores = 28  # Default number of request cores on an MPI partition
     default_mem = 1  # Default memory in GB
     default_gpus = 0  # Default number of GPUs
 
@@ -91,8 +91,12 @@ class CrcInteractive(BaseParser):
             ArgumentTypeError: If the input string is not in the correct format or cannot be parsed.
         """
 
+        time_list = time_str.split(':')
+        if len(time_list) > 3:
+            raise ArgumentTypeError(f'Could not parse time value {time_str}')
+
         try:
-            return time(*time_str.split(':')[0])
+            return time(*map(int, time_list))
 
         except Exception:
             raise ArgumentTypeError(f'Could not parse time value {time_str}')
