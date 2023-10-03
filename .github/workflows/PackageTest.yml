@@ -13,9 +13,9 @@ jobs:
       fail-fast: false
       matrix:
         slurm_version:
-          - "20.02.5.1"
-          - "20.11.9.1"
-          - "22.05.2.1"
+          - 20.11.9.1
+          - 22.05.2.1
+          - 23.02.5.1
         python_version:
           - "3.8"
           - "3.9"
@@ -36,7 +36,7 @@ jobs:
         run: mkdir -p /ihome/crc/bank 
 
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install poetry
         run: |
