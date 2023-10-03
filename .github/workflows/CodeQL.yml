@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ main ]
   schedule:
-    - cron: 25 5 * * 0
+    - cron: 0 7 1 * *
 
 jobs:
   analyze:
@@ -23,16 +23,26 @@ jobs:
         language: [ python ]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
-      with:
-        category: /language:${{matrix.language}}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: /language:${{matrix.language}}
+
+  # Use this job for branch protection rules
+  report-codeql-status:
+    name: Report CodeQL Status
+    if: always()
+    needs: analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check build status
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
