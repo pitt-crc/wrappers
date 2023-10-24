@@ -29,6 +29,7 @@ classifiers = [
 ]
 
 [tool.poetry.scripts]
+crc-effective = "apps.crc_effective:CrcEffective.execute"
 crc-idle = "apps.crc_idle:CrcIdle.execute"
 crc-interactive = "apps.crc_interactive:CrcInteractive.execute"
 crc-job-stats = "apps.crc_job_stats:CrcJobStats.execute"
