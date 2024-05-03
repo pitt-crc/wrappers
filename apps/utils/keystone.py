@@ -20,12 +20,6 @@ def get_allocations_all(keystone_url: str, auth_header: dict) -> dict:
     response.raise_for_status()
     return response.json()
 
-def get_allocations_pk(keystone_url: str, primary_key: int, auth_header: dict) -> dict:
-    """Get an individual Resource Allocation's information from keystone"""
-
-    response = requests.get(f"{keystone_url}/allocations/allocations/{primary_key}", headers=auth_header)
-    response.raise_for_status()
-    return response.json()
 
 def get_allocation_requests(keystone_url: str, auth_header: dict) -> dict:
     """Get all Resource Allocation Request information from keystone"""
