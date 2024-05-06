@@ -49,10 +49,7 @@ class CrcUsage(BaseParser):
         per_cluster_totals = dict()
 
         # Print request and allocation information for active allocations from the provided group
-        for request in [request for request in requests
-                        if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])
-                        and int(request['group']) == group_id]:
-
+        for request in requests:
             summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"])
             summary_table.add_row(["", "CLUSTER", "SERVICE UNITS"])
             for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
@@ -91,7 +88,7 @@ class CrcUsage(BaseParser):
                 keystone_group_id = int(group['id'])
 
         if not keystone_group_id:
-            print(f"No research group found in Keystone for account {args.account}")
+            print(f"No allocation data found in accounting system for '{args.account}'")
             exit()
 
         self.print_tables(args.account, keystone_group_id, auth_header)
