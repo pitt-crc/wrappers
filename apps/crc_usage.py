@@ -29,11 +29,13 @@ class CrcUsage(BaseParser):
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     @staticmethod
-    def build_usage_table(account_name: str, group_id: int, auth_header: dict) -> PrettyTable:
-        """Build a human-readable usage table for the slurm account with info from Keystone and sreport"""
+    def print_tables(account_name: str, group_id: int, auth_header: dict) -> None:
+        """Build and print human-readable summary and usage tables for the slurm account with info from Keystone and sreport"""
 
-        output_table = PrettyTable(header=False, padding_width=5)
-
+        summary_table = PrettyTable(header=True, padding_width=5)
+        summary_table.field_names(["ID", "TITLE", "EXPIRATION DATE"])
+        usage_table = PrettyTable(header=True,padding_width=5)
+        
         requests = get_allocation_requests(KEYSTONE_URL, auth_header)
         # Requests have the following format:
         # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
@@ -43,21 +45,24 @@ class CrcUsage(BaseParser):
         # allocations have the following format:
         # {'id': 111135, 'requested': 50000, 'awarded': 50000, 'final': None, 'cluster': 1, 'request': 33241}
 
-        output_table.title = f"{account_name} Resource Allocation Information"
+        summary_table.title = f"Resource Allocation Request Information for {account_name}"
+        usage_table.title = f"Summary of Usage"
+        per_cluster_totals = dict()
 
         # Print request and allocation information for active allocations from the provided group
-        output_table.add_row(["The following Allocations are contributing towards your group's total:","",""])
         for request in [request for request in requests if date.fromisoformat(request['active']) <= date.today() and
-                        date.fromisoformat(request['expire']) > date.today()]:i
-            if request['group'] != group_id:
-                continue
-            output_table.add_row(["ID", "TITLE", "EXPIRATION DATE"])
-            output_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"])
-            output_table.add_row(["","CLUSTER","SERVICE UNITS"])
+                        date.fromisoformat(request['expire']) > date.today() and int(request['group']) == group_id]:
+            summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"])
+            summary_table.add_row(["","CLUSTER","SERVICE UNITS"])
             for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
-                output_table.add_row(["", f"{allocation['awarded']}", f"{CLUSTERS[allocation['cluster']]}"])
+                cluster = CLUSTERS[allocation['cluster']]
+                awarded = allocation['awarded']
+                per_cluster_totals.setdefault(cluster,0)
+                per_cluster_totals[cluster] += awarded
+                summary_table.add_row(["", f"{awarded}", f"{cluster}"])
 
-        return output_table
+        print(summary_table)
+        print(usage_table)
         # TODO: usage per user from sreport relative to start of earliest active allocation
         # TODO: total usage relative to limit raw
         # TODO: total usage relative to limit percentage
@@ -79,13 +84,13 @@ class CrcUsage(BaseParser):
 
         # Determine if provided or default account is in Keystone
         accessible_research_groups = get_researchgroups(KEYSTONE_URL, auth_header)
-        group_id = None
+        keystone_group_id = None
         for group in accessible_research_groups:
             if args.account == group['name']:
                 keystone_group_id = int(group['id'])
 
-        if not group_id:
+        if not keystone_group_id:
             print(f"No research group found in Keystone for account {args.account}")
             exit()
 
-        print(self.build_usage_table(args.account, keystone_group_id, auth_header))
+        self.print_tables(args.account, keystone_group_id, auth_header)
