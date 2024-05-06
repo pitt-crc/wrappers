@@ -155,7 +155,7 @@ class Slurm:
         """Check if the provided slurm account exists"""
 
         cmd = f'sacctmgr -n list account account={account_name} format=account%30'
-        account_exists = subprocess_call(cmd.split())
+        account_exists = Shell.subprocess_call(cmd.split())
         if not account_exists:
             raise RuntimeError(f"No Slurm account was found with the name '{account_name}'.")
 
@@ -176,12 +176,15 @@ class Slurm:
             f"sreport -nP cluster accountutilizationbyuser Cluster={cluster} Account={account_name} -t Hours Start={start} -T Billing Format=Proper,Used")
 
         try:
-            total, *data = subprocess_call(cmd).split('\n')
+            total, *data = Shell.subprocess_call(cmd).split('\n')
         except ValueError:
             return None
 
+        if not data:
+            return None
+
         out_data = dict()
-        out_data['total'] = total
+        out_data['total'] = total.strip('|')
         for line in data:
             user, usage = line.split('|')
             usage = int(usage)
