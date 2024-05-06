@@ -44,13 +44,14 @@ class CrcSus(BaseParser):
         return allocations
 
     @staticmethod
-    def build_output_string(account: str, **allocation: int) -> str:
+    def build_output_string(account: str, used: int,total:int,cluster:str) -> str:
         """Build a string describing an account's service unit allocation
 
         Args:
             account: The name of the account
-            allocation: The number of service units allocated for each cluster
-
+            total: The number of service units allocated for each cluster
+            used: number of SUs used on the cluster 
+            cluster: name of cluster
         Returns:
             A string summarizing the account allocation
         """
@@ -58,8 +59,7 @@ class CrcSus(BaseParser):
         output_lines = [f'Account {account}']
 
         # Right justify cluster names to the same length
-        cluster_name_length = max(len(cluster) for cluster in allocation)
-        for cluster, sus in allocation.items():
+            sus=total-used 
             if sus > 0:
                 out = f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs remaining'
             else:
@@ -74,7 +74,27 @@ class CrcSus(BaseParser):
         Args:
             args: Parsed command line arguments
         """
+                account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
+        if not account_exists:
+            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
 
-        account_info = self.get_allocation_info(args.account)
-        output_string = self.build_output_string(args.account, **account_info)
-        print(output_string)
+        auth_header = get_auth_header(KEYSTONE_URL,
+                                      {'username': os.environ["USER"],
+                                       'password': getpass("Please enter your CRC login password:\n")})
+        requests = get_allocation_requests(KEYSTONE_URL, auth_header)
+
+
+         for request in requests
+             for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
+                cluster = CLUSTERS[allocation['cluster']]
+                awarded = allocation['awarded']
+                used = Shell.run_command(f'sreport cluster AccountUtilizationByUser -n -T billing -t hours cluster={cluster} accounts={args.account} users={args.user} start={request['active']} end={request['expire']} format=Used')
+                per_cluster_totals.setdefault(cluster, 0)
+                per_cluster_totals[cluster] += awarded
+                output_string = self.build_output_string(args.account, used,per_cluster_totals[cluster])
+                print(output_string)
+ 
+                 
+        
+        #account_info = self.get_allocation_info(args.account)
+      
