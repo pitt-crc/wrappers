@@ -31,8 +31,11 @@ class CrcProposalEnd(BaseParser):
             args: Parsed command line arguments
         """
 
-        acct = AccountServices(args.account)
-        end_date = acct._get_active_proposal_end_date()
+       requests = get_allocation_requests(KEYSTONE_URL, auth_header)
+        # Requests have the following format:
+        # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
+        # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
+
 
         # Format the account name and end date as an easy-to-read string
-        print(f"The active proposal for account {args.account} ends on {end_date}")
+        print(f"The active proposal for account {args.account} ends on {request['expire']} ")
