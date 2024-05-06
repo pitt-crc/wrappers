@@ -25,14 +25,21 @@ class CrcProposalEnd(BaseParser):
         help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def app_logic(self, args: Namespace,auth_header: dict) -> None:
+    def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
 
         Args:
             args: Parsed command line arguments
         """
 
-       requests = get_allocation_requests(KEYSTONE_URL, auth_header)
+        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
+        if not account_exists:
+            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
+        auth_header = get_auth_header(KEYSTONE_URL,
+                                      {'username': os.environ["USER"],
+                                       'password': getpass("Please enter your CRC login password:\n")})
+
+        requests = get_allocation_requests(KEYSTONE_URL, auth_header)
         # Requests have the following format:
         # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
         # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
