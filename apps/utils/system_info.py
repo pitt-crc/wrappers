@@ -58,6 +58,26 @@ class Shell:
 
         return out_decoded
 
+    @staticmethod
+    def subprocess_call(args: list[str]) -> str:
+        """Wrapper method for executing shell commands via ``Popen.communicate``
+
+        Args:
+            args: A sequence of program arguments
+
+        Returns:
+            The piped output to STDOUT
+        """
+
+        process = Popen(args, stdout=PIPE, stderr=PIPE)
+        out, err = process.communicate()
+
+        if process.returncode != 0:
+            message = f"Error executing shell command: {' '.join(args)} \n {err.decode('utf-8').strip()}"
+            raise RuntimeError(message)
+
+        return out.decode("utf-8").strip()
+
 
 class Slurm:
     """Class for fetching Slurm config data."""
@@ -128,3 +148,44 @@ class Slurm:
             partition_names -= cls.ignore_partitions
 
         return partition_names
+
+    @classmethod
+    def check_slurm_account_exists(cls, account_name: str) -> None:
+        """Check if the provided slurm account exists"""
+
+        cmd = f'sacctmgr -n list account account={args.account} format=account%30'
+        account_exists = subprocess_call(cmd.split())
+        if not account_exists:
+            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
+
+    @classmethod
+    def get_cluster_usage_by_user(cls, account_name: str, start_date: date, cluster: str) -> int:
+        """Return the total billable usage in hours for a given Slurm account
+
+        Args:
+            account_name: The name of the account to get usage for
+            cluster: The name of the cluster to get usage on
+
+        Returns:
+            An integer representing the total (historical + current) billing TRES hours usage from sshare
+        """
+
+        start = start_date.isoformat()
+        cmd = split(
+            f"sreport -nP cluster accountutilizationbyuser Cluster={cluster} Account={account_name} -t Hours Start={start} -T Billing Format=Proper,Used")
+
+        try:
+            total, *data = subprocess_call(cmd).split('\n')
+        except ValueError:
+            return None
+
+        out_data = dict()
+        out_data['total'] = total
+        for line in data:
+            user, usage = line.split('|')
+            usage = int(usage)
+            out_data[user] = usage
+
+        return out_data
+
+
