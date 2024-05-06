@@ -1,6 +1,7 @@
 """Utility functions used across various wrappers for interacting with keystone"""
 
 import requests
+from datetime import date
 
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
@@ -26,8 +27,10 @@ def get_allocations_all(keystone_url: str, auth_header: dict) -> dict:
 def get_allocation_requests(keystone_url: str, group_pk: int, auth_header: dict) -> dict:
     """Get all Resource Allocation Request information from keystone"""
 
-    response = requests.get(f"{keystone_url}/allocations/requests/?group={group_pk}", headers=auth_header)
-    # TODO: query for active proposals
+    today = date.today().isoformat()
+
+    response = requests.get(f"{keystone_url}/allocations/requests/?group={group_pk}&active_lte{today}&expire_gt{today}",
+                            headers=auth_header)
     response.raise_for_status()
     return response.json()
 
