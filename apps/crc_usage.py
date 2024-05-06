@@ -40,7 +40,7 @@ class CrcUsage(BaseParser):
         # Initialize table for summary of requests and allocations
         summary_table = PrettyTable(header=True, padding_width=5)
         summary_table.title = f"Resource Allocation Request Information for {account_name}"
-        summary_table.field_names(["ID", "TITLE", "EXPIRATION DATE"])
+        summary_table.field_names = ["ID", "TITLE", "EXPIRATION DATE"]
 
         # Initialize table for summary of usage
         usage_table = PrettyTable(header=True, padding_width=5)
