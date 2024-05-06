@@ -7,6 +7,7 @@ and will not work without a running bank installation.
 import grp
 import os
 from argparse import Namespace
+from .utils.keystone import *
 
 from bank.account_logic import AccountServices
 
@@ -24,7 +25,7 @@ class CrcProposalEnd(BaseParser):
         help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def app_logic(self, args: Namespace) -> None:
+    def app_logic(self, args: Namespace,auth_header: dict) -> None:
         """Logic to evaluate when executing the application
 
         Args:
