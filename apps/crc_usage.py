@@ -13,6 +13,7 @@ from bank.account_logic import AccountServices
 from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
+
 class CrcUsage(BaseParser):
     """Display a Slurm account's cluster usage."""
 

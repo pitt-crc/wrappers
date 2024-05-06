@@ -9,8 +9,8 @@ this application does support dynamic cluster discovery. New clusters need
 to be manually added (or removed) by updating the application CLI arguments.
 """
 
-from argparse import Namespace
-from datetime import datetime
+from argparse import Namespace, ArgumentTypeError
+from datetime import time
 from os import system
 
 from .utils.cli import BaseParser
@@ -25,10 +25,10 @@ class CrcInteractive(BaseParser):
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
 
-    default_time = '1:00'  # Default runtime
+    default_time = time(1)  # Default runtime
     default_nodes = 1  # Default number of nodes
     default_cores = 1  # Default number of requested cores
-    default_mpi_cores = 28 # Default number of request cores on an MPI partition
+    default_mpi_cores = 28  # Default number of request cores on an MPI partition
     default_mem = 1  # Default memory in GB
     default_gpus = 0  # Default number of GPUs
 
@@ -54,8 +54,8 @@ class CrcInteractive(BaseParser):
         resource_args = self.add_argument_group('Arguments for Increased Resources')
         resource_args.add_argument('-b', '--mem', type=int, default=self.default_mem, help='memory in GB')
         resource_args.add_argument(
-            '-t', '--time', default=self.default_time,
-            help=f'run time in hours or hours:minutes [default: {self.default_time} hour] ')
+            '-t', '--time', type=self.parse_time, default=self.default_time,
+            help=f'run time in hours or hours:minutes [default: {self.default_time}] ')
 
         resource_args.add_argument(
             '-n', '--num-nodes', type=int, default=self.default_nodes,
@@ -77,6 +77,30 @@ class CrcInteractive(BaseParser):
         additional_args.add_argument('-f', '--feature', help='specify a feature, e.g. `ti` for GPUs')
         additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP style submission')
 
+    @staticmethod
+    def parse_time(time_str: str) -> time:
+        """Parse a string representation of time in 'HH:MM:SS' format and return a time object
+
+        Args:
+            time_str: A string representing time in 'HH:MM:SS' format.
+
+        Returns:
+            time: A time object representing the parsed time.
+
+        Raises:
+            ArgumentTypeError: If the input string is not in the correct format or cannot be parsed.
+        """
+
+        time_list = time_str.split(':')
+        if len(time_list) > 3:
+            raise ArgumentTypeError(f'Could not parse time value {time_str}')
+
+        try:
+            return time(*map(int, time_list))
+
+        except Exception:
+            raise ArgumentTypeError(f'Could not parse time value {time_str}')
+
     def _validate_arguments(self, args: Namespace) -> None:
         """Exit the application if command line arguments are invalid
 
@@ -85,12 +109,7 @@ class CrcInteractive(BaseParser):
         """
 
         # Check wall time is between limits, enable both %H:%M format and integer hours
-        if args.time.isdecimal():
-            check_time = int(args.time)
-        else:
-            check_time = (
-                datetime.strptime(args.time, '%H:%M').hour +
-                datetime.strptime(args.time, '%H:%M').minute / 60)
+        check_time = args.time.hour + args.time.minute / 60 + args.time.second / 3600
 
         if not self.min_time <= check_time <= self.max_time:
             self.error(f'{check_time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
@@ -122,7 +141,7 @@ class CrcInteractive(BaseParser):
         srun_dict = {
             'partition': '--partition={}',
             'num_nodes': '--nodes={}',
-            'time': '--time={}:00',
+            'time': '--time={}',
             'reservation': '--reservation={}',
             'mem': '--mem={}g',
             'account': '--account={}',

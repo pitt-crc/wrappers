@@ -7,7 +7,6 @@ and will not work without a running bank installation.
 import grp
 import os
 from argparse import Namespace
-from datetime import datetime
 
 from bank.account_logic import AccountServices
 
