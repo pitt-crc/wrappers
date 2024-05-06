@@ -30,34 +30,35 @@ class CrcUsage(BaseParser):
 
     @staticmethod
     def print_tables(account_name: str, group_id: int, auth_header: dict) -> None:
-        """Build and print human-readable summary and usage tables for the slurm account with info from Keystone and sreport"""
+        """Build and print human-readable summary and usage tables for the slurm account with info from Keystone and
+        sreport"""
 
-        summary_table = PrettyTable(header=True, padding_width=5)
-        summary_table.field_names(["ID", "TITLE", "EXPIRATION DATE"])
-        usage_table = PrettyTable(header=True,padding_width=5)
-        
+        # Gather allocations and requests from Keystone
         requests = get_allocation_requests(KEYSTONE_URL, auth_header)
-        # Requests have the following format:
-        # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
-        # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
-
         allocations = get_allocations_all(KEYSTONE_URL, auth_header)
-        # allocations have the following format:
-        # {'id': 111135, 'requested': 50000, 'awarded': 50000, 'final': None, 'cluster': 1, 'request': 33241}
 
+        # Initialize table for summary of requests and allocations
+        summary_table = PrettyTable(header=True, padding_width=5)
         summary_table.title = f"Resource Allocation Request Information for {account_name}"
+        summary_table.field_names(["ID", "TITLE", "EXPIRATION DATE"])
+
+        # Initialize table for summary of usage
+        usage_table = PrettyTable(header=True, padding_width=5)
         usage_table.title = f"Summary of Usage"
+
         per_cluster_totals = dict()
 
         # Print request and allocation information for active allocations from the provided group
-        for request in [request for request in requests if date.fromisoformat(request['active']) <= date.today() and
-                        date.fromisoformat(request['expire']) > date.today() and int(request['group']) == group_id]:
+        for request in [request for request in requests
+                        if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])
+                        and int(request['group']) == group_id]:
+
             summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"])
-            summary_table.add_row(["","CLUSTER","SERVICE UNITS"])
+            summary_table.add_row(["", "CLUSTER", "SERVICE UNITS"])
             for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
                 cluster = CLUSTERS[allocation['cluster']]
                 awarded = allocation['awarded']
-                per_cluster_totals.setdefault(cluster,0)
+                per_cluster_totals.setdefault(cluster, 0)
                 per_cluster_totals[cluster] += awarded
                 summary_table.add_row(["", f"{awarded}", f"{cluster}"])
 
