@@ -12,8 +12,8 @@ from datetime import datetime, date
 
 from prettytable import PrettyTable
 from .utils.keystone import *
+from .utils.system_info import Slurm
 from .utils.cli import BaseParser
-from .utils.system_info import Shell
 
 
 class CrcUsage(BaseParser):
@@ -34,7 +34,7 @@ class CrcUsage(BaseParser):
         sreport"""
 
         # Gather allocations and requests from Keystone
-        requests = get_allocation_requests(KEYSTONE_URL, auth_header)
+        requests = get_allocation_requests(KEYSTONE_URL, group_id, auth_header)
         allocations = get_allocations_all(KEYSTONE_URL, auth_header)
 
         # Initialize table for summary of requests and allocations
@@ -46,24 +46,35 @@ class CrcUsage(BaseParser):
         usage_table = PrettyTable(header=True, padding_width=5)
         usage_table.title = f"Summary of Usage"
 
-        per_cluster_totals = dict()
+        per_cluster_awarded_totals = dict()
 
+        earliest_date = date.today()
         # Print request and allocation information for active allocations from the provided group
-        for request in requests:
+        for request in [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]:
+            start = date.fromisoformat(request['active'])
+            if start < earliest_date:
+                earliest_date = start
             summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"])
             summary_table.add_row(["", "CLUSTER", "SERVICE UNITS"])
             for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
                 cluster = CLUSTERS[allocation['cluster']]
                 awarded = allocation['awarded']
-                per_cluster_totals.setdefault(cluster, 0)
-                per_cluster_totals[cluster] += awarded
+                per_cluster_awarded_totals.setdefault(cluster, 0)
+                per_cluster_awarded_totals[cluster] += awarded
                 summary_table.add_row(["", f"{awarded}", f"{cluster}"])
-
         print(summary_table)
+
+        for cluster, total_awarded in per_cluster_awarded_totals.items():
+            usage_by_user = Slurm.get_cluster_usage_by_user(account_name=account_name, start_date=earliest_date, cluster=cluster)
+            total_used = usage_by_user.pop('total')
+            percent_used=total_used/total_awarded*100
+            usage_table.add_row([f"CLUSTER: {cluster}", f"TOTAL USED: {total_used}", f"TOTAL AWARDED: {total_awarded}", f"TOTAL % USED: {percent_used}"], divider=True)
+            usage_table.add_row(["","USER","USED","% USED"])
+            for user, usage in usage.items():
+                usage_table.add_row("", user, usage, usage/total_awarded*100)
+
         print(usage_table)
-        # TODO: usage per user from sreport relative to start of earliest active allocation
-        # TODO: total usage relative to limit raw
-        # TODO: total usage relative to limit percentage
+
 
     def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
@@ -72,10 +83,7 @@ class CrcUsage(BaseParser):
             args: Parsed command line arguments
         """
 
-        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
-        if not account_exists:
-            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
-
+        Slurm.check_slurm_account_exists(account_name=args.account)
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
