@@ -1,11 +1,12 @@
 """Utility class for fetching data and interacting with the parent system."""
 
+from datetime import date
 import re
+from shlex import split
+from subprocess import PIPE, Popen
 import sys
 import termios
 import tty
-from shlex import split
-from subprocess import PIPE, Popen
 from typing import Set, Tuple, Union
 
 
@@ -153,10 +154,10 @@ class Slurm:
     def check_slurm_account_exists(cls, account_name: str) -> None:
         """Check if the provided slurm account exists"""
 
-        cmd = f'sacctmgr -n list account account={args.account} format=account%30'
+        cmd = f'sacctmgr -n list account account={account_name} format=account%30'
         account_exists = subprocess_call(cmd.split())
         if not account_exists:
-            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
+            raise RuntimeError(f"No Slurm account was found with the name '{account_name}'.")
 
     @classmethod
     def get_cluster_usage_by_user(cls, account_name: str, start_date: date, cluster: str) -> int:
