@@ -8,7 +8,7 @@ import grp
 import os
 from argparse import Namespace
 from getpass import getpass
-from datetime import date
+from datetime import datetime, date
 
 from prettytable import PrettyTable
 from .utils.keystone import *
@@ -44,19 +44,20 @@ class CrcUsage(BaseParser):
         # {'id': 111135, 'requested': 50000, 'awarded': 50000, 'final': None, 'cluster': 1, 'request': 33241}
 
         output_table.title = f"{account_name} Resource Allocation Information"
-        #TODO: sources with end dates, filter down to active requests
 
         # Print request and allocation information for active allocations from the provided group
-        output_table.add_row("The following Allocations are contributing towards your group's total:")
-        for request in [request for request in requests if request['active'] <= date.today() and request['expire'] > date.today()]:
+        output_table.add_row(["The following Allocations are contributing towards your group's total:","",""])
+        for request in [request for request in requests if date.fromisoformat(request['active']) <= date.today() and
+                        date.fromisoformat(request['expire']) > date.today()]:i
             if request['group'] != group_id:
                 continue
-            output_table.add_row("ID", "TITLE", "EXPIRATION DATE")
-            output_table.add_row(f"{request['id']}", f"{request['title']}", f"{request['expire']}")
-            output_table.add_row("","CLUSTER","SERVICE UNITS")
+            output_table.add_row(["ID", "TITLE", "EXPIRATION DATE"])
+            output_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"])
+            output_table.add_row(["","CLUSTER","SERVICE UNITS"])
             for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
-                output_table.add_row("", f"{allocation['awarded']}", f"{CLUSTERS[allocation['cluster']]}")
+                output_table.add_row(["", f"{allocation['awarded']}", f"{CLUSTERS[allocation['cluster']]}"])
 
+        return output_table
         # TODO: usage per user from sreport relative to start of earliest active allocation
         # TODO: total usage relative to limit raw
         # TODO: total usage relative to limit percentage
