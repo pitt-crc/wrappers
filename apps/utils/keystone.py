@@ -27,3 +27,11 @@ def get_allocation_requests(keystone_url: str, auth_header: dict) -> dict:
     response = requests.get(f"{keystone_url}/allocations/requests/", headers=auth_header)
     response.raise_for_status()
     return response.json()
+
+
+def get_researchgroups(keystone_url: str, auth_header: dict) -> dict:
+    """Get all Resource Allocation Request information from keystone"""
+
+    response = requests.get(f"{keystone_url}/users/researchgroups/", headers=auth_header)
+    response.raise_for_status()
+    return response.json()

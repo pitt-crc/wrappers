@@ -11,7 +11,7 @@ from getpass import getpass
 from datetime import date
 
 from prettytable import PrettyTable
-from .utils.keystone import get_auth_header, get_allocations_all, get_allocation_requests, CLUSTERS, KEYSTONE_URL
+from .utils.keystone import *
 from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
@@ -29,12 +29,8 @@ class CrcUsage(BaseParser):
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     @staticmethod
-    def build_usage_table(account_name: str) -> PrettyTable:
+    def build_usage_table(account_name: str, group_id: int, auth_header: dict) -> PrettyTable:
         """Build a human-readable usage table for the slurm account with info from Keystone and sreport"""
-
-        auth_header = get_auth_header(KEYSTONE_URL,
-                           {'username': os.environ["USER"],
-                                      'password': getpass("Please enter your CRC login password:\n")})
 
         output_table = PrettyTable(header=False, padding_width=5)
 
@@ -50,8 +46,11 @@ class CrcUsage(BaseParser):
         output_table.title = f"{account_name} Resource Allocation Information"
         #TODO: sources with end dates, filter down to active requests
 
+        # Print request and allocation information for active allocations from the provided group
         output_table.add_row("The following Allocations are contributing towards your group's total:")
         for request in [request for request in requests if request['active'] <= date.today() and request['expire'] > date.today()]:
+            if request['group'] != group_id:
+                continue
             output_table.add_row("ID", "TITLE", "EXPIRATION DATE")
             output_table.add_row(f"{request['id']}", f"{request['title']}", f"{request['expire']}")
             output_table.add_row("","CLUSTER","SERVICE UNITS")
@@ -71,6 +70,21 @@ class CrcUsage(BaseParser):
 
         account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
         if not account_exists:
-            raise RuntimeError(f"No slurm account was found with the name '{args.account}'.")
+            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
 
-        print(self.build_usage_table(args.account))
+        auth_header = get_auth_header(KEYSTONE_URL,
+                                      {'username': os.environ["USER"],
+                                       'password': getpass("Please enter your CRC login password:\n")})
+
+        # Determine if provided or default account is in Keystone
+        accessible_research_groups = get_researchgroups(KEYSTONE_URL, auth_header)
+        group_id = None
+        for group in accessible_research_groups:
+            if args.account == group['name']:
+                keystone_group_id = int(group['id'])
+
+        if not group_id:
+            print(f"No research group found in Keystone for account {args.account}")
+            exit()
+
+        print(self.build_usage_table(args.account, keystone_group_id, auth_header))
