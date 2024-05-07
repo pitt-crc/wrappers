@@ -30,11 +30,9 @@ class OutputStringFormatting(TestCase):
     def test_output_matches_string(self) -> None:
         """Compare output string from the app with manually constructed expectation"""
 
-        output_string = CrcSus().build_output_string(account='sam', smp=10, htc=20)
+        output_string = CrcSus().build_output_string(account='sam', used=0, total=10, cluster='SMP')
         expected_string = (
-            'Account sam\n'
-            ' cluster smp has 10 SUs remaining\n'
-            ' cluster htc has 20 SUs remaining'
+            'Account sam\n cluster SMP has 10 SUs remaining'
         )
 
         self.assertEqual(expected_string, output_string)
