@@ -1,16 +1,20 @@
-"""Print an account's service unit allocation.
+"""Print an account's service unit allocation, with a usage value relative to that amount.
 
-This application is designed to interface with the CRC banking application
-and will not work without a running bank installation.
+This application is designed to interface with the Keystone banking system
+and will not work without a running keystone installation.
 """
+
+
 import grp
 import os
 from argparse import Namespace
+from getpass import getpass
+from datetime import date
 from typing import Dict
 
-from bank.account_logic import AccountServices
-
 from .utils.cli import BaseParser
+from .utils.keystone import *
+from .utils.system_info import Slurm
 
 
 class CrcSus(BaseParser):
@@ -24,33 +28,15 @@ class CrcSus(BaseParser):
         help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
-    def get_allocation_info(self, account: str) -> Dict[str, int]:
-        """Return the service unit allocation for a given account name
-
-        Args:
-            account: The name of the account
-
-        Returns:
-            A dictionary mapping cluster names to the number of service units
-        """
-
-        acct = AccountServices(account)
-        allocs = acct._get_active_proposal_allocation_info()
-
-        allocations = dict()
-        for cluster in allocs:
-            allocations[cluster.cluster_name] = cluster.service_units_total - cluster.service_units_used
-
-        return allocations
 
     @staticmethod
-    def build_output_string(account: str, used: int,total:int,cluster:str) -> str:
+    def build_output_string(account: str, used: int, total: int, cluster: str) -> str:
         """Build a string describing an account's service unit allocation
 
         Args:
             account: The name of the account
             total: The number of service units allocated for each cluster
-            used: number of SUs used on the cluster 
+            used: number of SUs used on the cluster
             cluster: name of cluster
         Returns:
             A string summarizing the account allocation
@@ -58,13 +44,13 @@ class CrcSus(BaseParser):
 
         output_lines = [f'Account {account}']
 
-        # Right justify cluster names to the same length
-            sus=total-used 
-            if sus > 0:
-                out = f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs remaining'
-            else:
-                out = f" cluster {cluster:>{cluster_name_length}} is LOCKED due to exceeding usage limits"
-            output_lines.append(out)
+        remaining = total - used
+
+        if remaining > 0:
+            out = f' cluster {cluster} has {remaining} SUs remaining'
+        else:
+            out = f" cluster {cluster} is LOCKED due to reaching usage limits"
+        output_lines.append(out)
 
         return '\n'.join(output_lines)
 
@@ -74,27 +60,48 @@ class CrcSus(BaseParser):
         Args:
             args: Parsed command line arguments
         """
-                account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
-        if not account_exists:
-            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
+
+        Slurm.check_slurm_account_exists(account_name=args.account)
 
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
-        requests = get_allocation_requests(KEYSTONE_URL, auth_header)
 
+        # Determine if provided or default account is in Keystone
+        accessible_research_groups = get_researchgroups(KEYSTONE_URL, auth_header)
+        keystone_group_id = None
+        for group in accessible_research_groups:
+            if args.account == group['name']:
+                keystone_group_id = int(group['id'])
 
-         for request in requests
-             for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
+        if not keystone_group_id:
+            print(f"No allocation data found in accounting system for '{args.account}'")
+            exit()
+
+        requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
+        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        if not requests:
+            print(f"No active resource allocation requests found in accounting system for '{args.account}'")
+            exit()
+
+        earliest_date = date.today()
+        per_cluster_totals = {}
+        for request in requests:
+            start = date.fromisoformat(request['active'])
+            if start < earliest_date:
+                earliest_date = start
+
+            for allocation in get_allocations_all(KEYSTONE_URL, request['id'], auth_header):
                 cluster = CLUSTERS[allocation['cluster']]
-                awarded = allocation['awarded']
-                used = Shell.run_command(f'sreport cluster AccountUtilizationByUser -n -T billing -t hours cluster={cluster} accounts={args.account} users={args.user} start={request['active']} end={request['expire']} format=Used')
                 per_cluster_totals.setdefault(cluster, 0)
-                per_cluster_totals[cluster] += awarded
-                output_string = self.build_output_string(args.account, used,per_cluster_totals[cluster])
-                print(output_string)
- 
-                 
-        
-        #account_info = self.get_allocation_info(args.account)
-      
+                per_cluster_totals[cluster] += allocation['awarded']
+
+        for cluster in per_cluster_totals:
+            used = Slurm.get_cluster_usage_by_user(args.account, earliest_date, cluster)
+            if not used:
+                used = 0
+            else:
+                used = used['total']
+
+
+            print(self.build_output_string(args.account, used, per_cluster_totals[cluster], cluster))
