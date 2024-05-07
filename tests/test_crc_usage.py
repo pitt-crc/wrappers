@@ -35,5 +35,5 @@ class MissingAccountError(TestCase):
         app = CrcUsage()
         args = app.parse_args(['dummy_account'])
 
-        with self.assertRaisesRegex(RuntimeError, f"No slurm account was found with the name 'dummy_account'"):
+        with self.assertRaisesRegex(RuntimeError, f"No Slurm account was found with the name 'dummy_account'."):
             app.app_logic(args)
