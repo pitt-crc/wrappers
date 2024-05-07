@@ -7,11 +7,12 @@ and will not work without a running bank installation.
 import grp
 import os
 from argparse import Namespace
+from datetime import date
 from getpass import getpass
 
+from .utils.cli import BaseParser
 from .utils.keystone import *
 from .utils.system_info import Slurm
-from .utils.cli import BaseParser
 
 
 class CrcProposalEnd(BaseParser):
@@ -49,10 +50,10 @@ class CrcProposalEnd(BaseParser):
             exit()
 
         requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
-        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        requests = [request for request in requests
+                    if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
         if not requests:
             print(f"No active resource allocation requests found in accounting system for '{args.account}'")
             exit()
         for request in requests:
             print(f"Resource Allocation Request: '{request['title']}' ends on {request['expire']} ")
-

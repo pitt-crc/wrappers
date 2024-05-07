@@ -9,6 +9,7 @@ import os
 from argparse import Namespace
 from datetime import date
 from getpass import getpass
+
 from prettytable import PrettyTable
 
 from .utils.cli import BaseParser
@@ -35,7 +36,8 @@ class CrcUsage(BaseParser):
 
         # Gather requests from Keystone
         requests = get_allocation_requests(KEYSTONE_URL, group_id, auth_header)
-        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        requests = [request for request in requests
+                    if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
         if not requests:
             print("No active Resource Allocation Requests found in the accounting system for '{account_name}'")
             exit()
@@ -66,31 +68,35 @@ class CrcUsage(BaseParser):
                 per_cluster_awarded_totals.setdefault(cluster, 0)
                 per_cluster_awarded_totals[cluster] += awarded
                 summary_table.add_row(["", f"{cluster}", f"{awarded}"])
-            summary_table.add_row(["","",""], divider=True)
+            summary_table.add_row(["", "", ""], divider=True)
 
         print(summary_table)
         for cluster, total_awarded in per_cluster_awarded_totals.items():
-            usage_by_user = Slurm.get_cluster_usage_by_user(account_name=account_name, start_date=earliest_date, cluster=cluster)
+            usage_by_user = Slurm.get_cluster_usage_by_user(account_name=account_name,
+                                                            start_date=earliest_date,
+                                                            cluster=cluster)
             if not usage_by_user:
-                usage_table.add_row([f"{cluster}", f"TOTAL USED: 0", f"AWARDED: {total_awarded}", f"% USED: 0"], divider=True)
-                usage_table.add_row(["","","",""], divider=True)
+                usage_table.add_row([f"{cluster}", f"TOTAL USED: 0", f"AWARDED: {total_awarded}", f"% USED: 0"],
+                                    divider=True)
+                usage_table.add_row(["", "", "", ""], divider=True)
                 continue
 
             total_used = usage_by_user.pop('total')
-            percent_used=int(total_used)//int(total_awarded)*100
-            usage_table.add_row([f"{cluster}", f"TOTAL USED: {total_used}", f"AWARDED: {total_awarded}", f"% USED: {percent_used}"], divider=True)
-            usage_table.add_row(["","USER","USED","% USED"])
-            usage_table.add_row(["","----","----","----"])
+            percent_used = int(total_used) // int(total_awarded) * 100
+            usage_table.add_row(
+                [f"{cluster}", f"TOTAL USED: {total_used}", f"AWARDED: {total_awarded}", f"% USED: {percent_used}"],
+                divider=True)
+            usage_table.add_row(["", "USER", "USED", "% USED"])
+            usage_table.add_row(["", "----", "----", "----"])
             for user, usage in usage_by_user.items():
-                percent = int(usage)//int(total_awarded)*100
+                percent = int(usage) // int(total_awarded) * 100
                 if percent == 0:
                     percent = '< 1%'
                 usage_table.add_row(["", user, int(usage), percent])
 
-            usage_table.add_row(["","","",""], divider=True)
+            usage_table.add_row(["", "", "", ""], divider=True)
 
         print(usage_table)
-
 
     def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application

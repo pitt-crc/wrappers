@@ -140,11 +140,12 @@ class Slurm:
             raise RuntimeError(f"No Slurm account was found with the name '{account_name}'.")
 
     @classmethod
-    def get_cluster_usage_by_user(cls, account_name: str, start_date: date, cluster: str) -> int:
+    def get_cluster_usage_by_user(cls, account_name: str, start_date: date, cluster: str) -> dict:
         """Return the total billable usage in hours for a given Slurm account
 
         Args:
             account_name: The name of the account to get usage for
+            start_date: date object for the start date to supply to sreport
             cluster: The name of the cluster to get usage on
 
         Returns:
@@ -152,7 +153,8 @@ class Slurm:
         """
 
         start = start_date.isoformat()
-        cmd = f"sreport -nP cluster accountutilizationbyuser Cluster={cluster} Account={account_name} -t Hours Start={start} -T Billing Format=Proper,Used"
+        cmd = (f"sreport -nP cluster accountutilizationbyuser Cluster={cluster} Account={account_name} -t Hours "
+               f"Start={start} -T Billing Format=Proper,Used")
 
         try:
             total, *data = Shell.run_command(cmd).split('\n')
@@ -170,5 +172,3 @@ class Slurm:
             out_data[user] = usage
 
         return out_data
-
-
