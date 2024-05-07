@@ -2,6 +2,7 @@
 
 import getpass
 from argparse import Namespace
+from datetime import datetime, date
 from time import sleep
 
 from .utils.cli import BaseParser
@@ -52,7 +53,24 @@ class CrcSqueue(BaseParser):
         Args:
             args: Parsed command line arguments
         """
+        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
+        if not account_exists:
+            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
+        auth_header = get_auth_header(KEYSTONE_URL,
+                                      {'username': os.environ["USER"],
+                                       'password': getpass("Please enter your CRC login password:\n")})
 
+        requests = get_allocation_requests(KEYSTONE_URL, auth_header)
+        # Requests have the following format:
+        # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
+        # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
+
+
+        # Check if proposal will expire within 30 days. If yes, print a message to inform the user
+        if (date.fromisoformat(request['expire'])-date.today()).days<30 
+              print(f"The active proposal for account {args.account} will expire soon on {request['expire']}. Please begin working on a new proposal if you want to run jobs beyond that date.")
+      
+        
         command = self.build_slurm_command(args)
         if args.print_command:
             print(command)
