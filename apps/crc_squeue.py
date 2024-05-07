@@ -73,9 +73,14 @@ class CrcSqueue(BaseParser):
 
         requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
 
-        # Check if proposal will expire within 30 days. If yes, print a message to inform the user
-        if (date.fromisoformat(request['expire'])-date.today()).days<30 
-              print(f"The active proposal for account {args.account} will expire soon on {request['expire']}. Please begin working on a new proposal if you want to run jobs beyond that date.")
+        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        if not requests:
+            print(f"No active resource allocation requests found in accounting system for '{args.account}'")
+            exit()
+        for request in requests:    
+           # Check if proposal will expire within 30 days. If yes, print a message to inform the user
+           if (date.fromisoformat(request['expire'])-date.today()).days<30 
+                print(f"The active proposal for account {args.account} will expire soon on {request['expire']}. Please begin working on a new proposal if you want to run jobs beyond that date.")
       
         
         command = self.build_slurm_command(args)
