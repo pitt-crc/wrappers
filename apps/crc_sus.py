@@ -59,12 +59,12 @@ class CrcSus(BaseParser):
         output_lines = [f'Account {account}']
 
         # Right justify cluster names to the same length
-            sus=total-used 
-            if sus > 0:
-                out = f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs remaining'
-            else:
-                out = f" cluster {cluster:>{cluster_name_length}} is LOCKED due to exceeding usage limits"
-            output_lines.append(out)
+        sus=total-used 
+        if sus > 0:
+            out = f' cluster {cluster:>{cluster_name_length}} has {sus:,} SUs remaining'
+        else:
+            out = f" cluster {cluster:>{cluster_name_length}} is LOCKED due to exceeding usage limits"
+        output_lines.append(out)
 
         return '\n'.join(output_lines)
 
@@ -74,7 +74,8 @@ class CrcSus(BaseParser):
         Args:
             args: Parsed command line arguments
         """
-                account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
+
+        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
         if not account_exists:
             raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
 
@@ -84,7 +85,7 @@ class CrcSus(BaseParser):
         requests = get_allocation_requests(KEYSTONE_URL, auth_header)
 
 
-         for request in requests
+         for request in requests:
              for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
                 cluster = CLUSTERS[allocation['cluster']]
                 awarded = allocation['awarded']
@@ -93,8 +94,4 @@ class CrcSus(BaseParser):
                 per_cluster_totals[cluster] += awarded
                 output_string = self.build_output_string(args.account, used,per_cluster_totals[cluster])
                 print(output_string)
- 
-                 
-        
-        #account_info = self.get_allocation_info(args.account)
-      
+
