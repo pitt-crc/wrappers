@@ -72,11 +72,6 @@ class CrcSqueue(BaseParser):
             exit()
 
         requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
-        
-        # Requests have the following format:
-        # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
-        # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
-
 
         # Check if proposal will expire within 30 days. If yes, print a message to inform the user
         if (date.fromisoformat(request['expire'])-date.today()).days<30 
