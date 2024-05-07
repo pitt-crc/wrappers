@@ -59,26 +59,6 @@ class Shell:
 
         return out_decoded
 
-    @staticmethod
-    def subprocess_call(args: list[str]) -> str:
-        """Wrapper method for executing shell commands via ``Popen.communicate``
-
-        Args:
-            args: A sequence of program arguments
-
-        Returns:
-            The piped output to STDOUT
-        """
-
-        process = Popen(args, stdout=PIPE, stderr=PIPE)
-        out, err = process.communicate()
-
-        if process.returncode != 0:
-            message = f"Error executing shell command: {' '.join(args)} \n {err.decode('utf-8').strip()}"
-            raise RuntimeError(message)
-
-        return out.decode("utf-8").strip()
-
 
 class Slurm:
     """Class for fetching Slurm config data."""
@@ -155,7 +135,7 @@ class Slurm:
         """Check if the provided slurm account exists"""
 
         cmd = f'sacctmgr -n list account account={account_name} format=account%30'
-        account_exists = Shell.subprocess_call(cmd.split())
+        account_exists = Shell.run_command(cmd)
         if not account_exists:
             raise RuntimeError(f"No Slurm account was found with the name '{account_name}'.")
 
@@ -172,11 +152,10 @@ class Slurm:
         """
 
         start = start_date.isoformat()
-        cmd = split(
-            f"sreport -nP cluster accountutilizationbyuser Cluster={cluster} Account={account_name} -t Hours Start={start} -T Billing Format=Proper,Used")
+        cmd = f"sreport -nP cluster accountutilizationbyuser Cluster={cluster} Account={account_name} -t Hours Start={start} -T Billing Format=Proper,Used"
 
         try:
-            total, *data = Shell.subprocess_call(cmd).split('\n')
+            total, *data = Shell.run_command(cmd).split('\n')
         except ValueError:
             return None
 
