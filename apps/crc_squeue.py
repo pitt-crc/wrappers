@@ -5,8 +5,9 @@ from argparse import Namespace
 from datetime import datetime, date
 from time import sleep
 
+from .utils.keystone import *
+from .utils.system_info import Slurm
 from .utils.cli import BaseParser
-from .utils.system_info import Shell
 
 
 class CrcSqueue(BaseParser):
