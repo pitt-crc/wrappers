@@ -7,10 +7,10 @@ and will not work without a running bank installation.
 import grp
 import os
 from argparse import Namespace
+from getpass import getpass
+
 from .utils.keystone import *
-
-from bank.account_logic import AccountServices
-
+from .utils.system_info import Slurm
 from .utils.cli import BaseParser
 
 
@@ -32,9 +32,8 @@ class CrcProposalEnd(BaseParser):
             args: Parsed command line arguments
         """
 
-        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
-        if not account_exists:
-            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
+        Slurm.check_slurm_account_exists(args.account)
+
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
@@ -54,12 +53,6 @@ class CrcProposalEnd(BaseParser):
         if not requests:
             print(f"No active resource allocation requests found in accounting system for '{args.account}'")
             exit()
-        for request in requests:    
-              print(f"The active proposal for account {args.account} ends on {request['expire']} ")
-        # Requests have the following format:
-        # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
-        # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
+        for request in requests:
+            print(f"Resource Allocation Request: '{request['title']}' ends on {request['expire']} ")
 
-
-        # Format the account name and end date as an easy-to-read string
-      
