@@ -53,9 +53,9 @@ class CrcSqueue(BaseParser):
         Args:
             args: Parsed command line arguments
         """
-        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
-        if not account_exists:
-            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
+        
+        Slurm.check_slurm_account_exists(args.account)
+        
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
