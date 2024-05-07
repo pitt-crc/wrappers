@@ -44,6 +44,7 @@ crc-usage = "apps.crc_usage:CrcUsage.execute"
 [tool.poetry.dependencies]
 python = "^3.8.0"
 requests = "^2.31.0"
+prettytable = "^3.10.0"
 
 [tool.poetry.group.tests]
 optional = true
