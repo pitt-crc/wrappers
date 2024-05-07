@@ -7,13 +7,13 @@ and will not work without the application running on keystone.crc.pitt.edu.
 import grp
 import os
 from argparse import Namespace
-from getpass import getpass
 from datetime import datetime, date
-
+from getpass import getpass
 from prettytable import PrettyTable
-from .utils.keystone import *
+
 from .utils.cli import BaseParser
-from .utils.system_info import Shell
+from .utils.keystone import *
+from .utils.system_info import Slurm
 
 
 class CrcUsage(BaseParser):
@@ -30,42 +30,67 @@ class CrcUsage(BaseParser):
 
     @staticmethod
     def print_tables(account_name: str, group_id: int, auth_header: dict) -> None:
-        """Build and print human-readable summary and usage tables for the slurm account with info from Keystone and sreport"""
+        """Build and print human-readable summary and usage tables for the slurm account with info from Keystone and
+        sreport"""
 
-        summary_table = PrettyTable(header=True, padding_width=5)
-        summary_table.field_names(["ID", "TITLE", "EXPIRATION DATE"])
-        usage_table = PrettyTable(header=True,padding_width=5)
-        
-        requests = get_allocation_requests(KEYSTONE_URL, auth_header)
-        # Requests have the following format:
-        # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
-        # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
+        # Gather requests from Keystone
+        requests = get_allocation_requests(KEYSTONE_URL, group_id, auth_header)
+        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        if not requests:
+            print("No active Resource Allocation Requests found in the accounting system for '{account_name}'")
+            exit()
 
-        allocations = get_allocations_all(KEYSTONE_URL, auth_header)
-        # allocations have the following format:
-        # {'id': 111135, 'requested': 50000, 'awarded': 50000, 'final': None, 'cluster': 1, 'request': 33241}
-
+        # Initialize table for summary of requests and allocations
+        summary_table = PrettyTable(header=True, padding_width=5, max_width=80)
         summary_table.title = f"Resource Allocation Request Information for {account_name}"
-        usage_table.title = f"Summary of Usage"
-        per_cluster_totals = dict()
+        summary_table.field_names = ["ID", "TITLE", "EXPIRATION DATE"]
 
+        # Initialize table for summary of usage
+        usage_table = PrettyTable(header=False, padding_width=5, max_width=80)
+        usage_table.title = f"Summary of Usage across all Clusters"
+
+        per_cluster_awarded_totals = dict()
+
+        earliest_date = date.today()
         # Print request and allocation information for active allocations from the provided group
-        for request in [request for request in requests if date.fromisoformat(request['active']) <= date.today() and
-                        date.fromisoformat(request['expire']) > date.today() and int(request['group']) == group_id]:
-            summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"])
-            summary_table.add_row(["","CLUSTER","SERVICE UNITS"])
-            for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
+        for request in requests:
+            start = date.fromisoformat(request['active'])
+            if start < earliest_date:
+                earliest_date = start
+            summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"], divider=True)
+            summary_table.add_row(["", "CLUSTER", "SERVICE UNITS"])
+            summary_table.add_row(["", "----", "----"])
+            for allocation in get_allocations_all(KEYSTONE_URL, request['id'], auth_header):
                 cluster = CLUSTERS[allocation['cluster']]
                 awarded = allocation['awarded']
-                per_cluster_totals.setdefault(cluster,0)
-                per_cluster_totals[cluster] += awarded
-                summary_table.add_row(["", f"{awarded}", f"{cluster}"])
+                per_cluster_awarded_totals.setdefault(cluster, 0)
+                per_cluster_awarded_totals[cluster] += awarded
+                summary_table.add_row(["", f"{cluster}", f"{awarded}"])
+            summary_table.add_row(["","",""], divider=True)
 
         print(summary_table)
+        for cluster, total_awarded in per_cluster_awarded_totals.items():
+            usage_by_user = Slurm.get_cluster_usage_by_user(account_name=account_name, start_date=earliest_date, cluster=cluster)
+            if not usage_by_user:
+                usage_table.add_row([f"{cluster}", f"TOTAL USED: 0", f"AWARDED: {total_awarded}", f"% USED: 0"], divider=True)
+                usage_table.add_row(["","","",""], divider=True)
+                continue
+
+            total_used = usage_by_user.pop('total')
+            percent_used=int(total_used)//int(total_awarded)*100
+            usage_table.add_row([f"{cluster}", f"TOTAL USED: {total_used}", f"AWARDED: {total_awarded}", f"% USED: {percent_used}"], divider=True)
+            usage_table.add_row(["","USER","USED","% USED"])
+            usage_table.add_row(["","----","----","----"])
+            for user, usage in usage_by_user.items():
+                percent = int(usage)//int(total_awarded)*100
+                if percent == 0:
+                    percent = '< 1%'
+                usage_table.add_row(["", user, int(usage), percent])
+
+            usage_table.add_row(["","","",""], divider=True)
+
         print(usage_table)
-        # TODO: usage per user from sreport relative to start of earliest active allocation
-        # TODO: total usage relative to limit raw
-        # TODO: total usage relative to limit percentage
+
 
     def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application
@@ -74,10 +99,7 @@ class CrcUsage(BaseParser):
             args: Parsed command line arguments
         """
 
-        account_exists = Shell.run_command(f'sacctmgr -n list account account={args.account} format=account%30')
-        if not account_exists:
-            raise RuntimeError(f"No Slurm account was found with the name '{args.account}'.")
-
+        Slurm.check_slurm_account_exists(account_name=args.account)
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
@@ -90,7 +112,7 @@ class CrcUsage(BaseParser):
                 keystone_group_id = int(group['id'])
 
         if not keystone_group_id:
-            print(f"No research group found in Keystone for account {args.account}")
+            print(f"No allocation data found in accounting system for '{args.account}'")
             exit()
 
         self.print_tables(args.account, keystone_group_id, auth_header)
