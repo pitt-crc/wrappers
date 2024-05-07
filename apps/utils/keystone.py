@@ -1,7 +1,6 @@
 """Utility functions used across various wrappers for interacting with keystone"""
 
 import requests
-from datetime import date
 
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
