@@ -37,7 +37,7 @@ class CrcUsage(BaseParser):
         requests = get_allocation_requests(KEYSTONE_URL, group_id, auth_header)
         requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
         if not requests:
-            print("No active Resource Allocation Requests found in the accounting system for '{account_name}'")
+            print(f"No active Resource Allocation Requests found in the accounting system for '{account_name}'")
             exit()
 
         # Initialize table for summary of requests and allocations
