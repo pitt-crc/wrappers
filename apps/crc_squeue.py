@@ -60,7 +60,19 @@ class CrcSqueue(BaseParser):
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
 
-        requests = get_allocation_requests(KEYSTONE_URL, auth_header)
+
+        accessible_research_groups = get_researchgroups(KEYSTONE_URL, auth_header)
+        keystone_group_id = None
+        for group in accessible_research_groups:
+            if args.account == group['name']:
+                keystone_group_id = int(group['id'])
+
+        if not keystone_group_id:
+            print(f"No allocation data found in accounting system for '{args.account}'")
+            exit()
+
+        requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
+        
         # Requests have the following format:
         # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
         # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
