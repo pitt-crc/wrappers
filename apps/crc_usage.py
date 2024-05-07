@@ -7,13 +7,13 @@ and will not work without the application running on keystone.crc.pitt.edu.
 import grp
 import os
 from argparse import Namespace
-from getpass import getpass
 from datetime import datetime, date
-
+from getpass import getpass
 from prettytable import PrettyTable
+
+from .utils.cli import BaseParser
 from .utils.keystone import *
 from .utils.system_info import Slurm
-from .utils.cli import BaseParser
 
 
 class CrcUsage(BaseParser):
@@ -33,9 +33,8 @@ class CrcUsage(BaseParser):
         """Build and print human-readable summary and usage tables for the slurm account with info from Keystone and
         sreport"""
 
-        # Gather allocations and requests from Keystone
+        # Gather requests from Keystone
         requests = get_allocation_requests(KEYSTONE_URL, group_id, auth_header)
-        allocations = get_allocations_all(KEYSTONE_URL, auth_header)
 
         # Initialize table for summary of requests and allocations
         summary_table = PrettyTable(header=True, padding_width=5, max_width=80)
@@ -57,7 +56,7 @@ class CrcUsage(BaseParser):
             summary_table.add_row([f"   {request['id']}    ", f"    {request['title']}    ", f"    {request['expire']}    "], divider=True)
             summary_table.add_row(["", "CLUSTER", "SERVICE UNITS"])
             summary_table.add_row(["", "----", "----"])
-            for allocation in [allocation for allocation in allocations if allocation['request'] == request['id']]:
+            for allocation in get_allocations_all(KEYSTONE_URL, request['id'], auth_header):
                 cluster = CLUSTERS[allocation['cluster']]
                 awarded = allocation['awarded']
                 per_cluster_awarded_totals.setdefault(cluster, 0)
