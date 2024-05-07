@@ -50,11 +50,16 @@ class CrcProposalEnd(BaseParser):
             exit()
 
         requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
-    
+        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        if not requests:
+            print(f"No active resource allocation requests found in accounting system for '{args.account}'")
+            exit()
+        for request in requests:    
+              print(f"The active proposal for account {args.account} ends on {request['expire']} ")
         # Requests have the following format:
         # {'id': 33241, 'title': 'Resource Allocation Request for hban', 'description': 'Migration from CRC Bank',
         # 'submitted': '2024-04-30', 'status': 'AP', 'active': '2024-04-05', 'expire': '2024-04-30', 'group': 1293}
 
 
         # Format the account name and end date as an easy-to-read string
-        print(f"The active proposal for account {args.account} ends on {request['expire']} ")
+      
