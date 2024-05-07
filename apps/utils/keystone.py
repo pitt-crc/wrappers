@@ -27,8 +27,6 @@ def get_allocations_all(keystone_url: str, request_pk: int, auth_header: dict) -
 def get_allocation_requests(keystone_url: str, group_pk: int, auth_header: dict) -> dict:
     """Get all AllocationRequest information from keystone for a given group"""
 
-    today = date.today().isoformat()
-
     response = requests.get(f"{keystone_url}/allocations/requests/?group={group_pk}&status=AP",headers=auth_header)
     response.raise_for_status()
     return response.json()

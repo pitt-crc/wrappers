@@ -8,8 +8,10 @@ and will not work without a running keystone installation.
 import grp
 import os
 from argparse import Namespace
+from getpass import getpass
 from datetime import date
 from typing import Dict
+import pdb
 
 from .utils.cli import BaseParser
 from .utils.keystone import *
@@ -35,7 +37,7 @@ class CrcSus(BaseParser):
         Args:
             account: The name of the account
             total: The number of service units allocated for each cluster
-            used: number of SUs used on the cluster 
+            used: number of SUs used on the cluster
             cluster: name of cluster
         Returns:
             A string summarizing the account allocation
@@ -44,11 +46,11 @@ class CrcSus(BaseParser):
         output_lines = [f'Account {account}']
 
         remaining = total - used
-        # Right justify cluster names to the same length
+
         if remaining > 0:
-            out = f' cluster {cluster:>{cluster_name_length}} has {remaining:,} SUs remaining'
+            out = f' cluster {cluster} has {remaining} SUs remaining'
         else:
-            out = f" cluster {cluster:>{cluster_name_length}} is LOCKED due to reaching usage limits"
+            out = f" cluster {cluster} is LOCKED due to reaching usage limits"
         output_lines.append(out)
 
         return '\n'.join(output_lines)
@@ -78,10 +80,14 @@ class CrcSus(BaseParser):
             exit()
 
         requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
+        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        if not requests:
+            print(f"No active resource allocation requests found in accounting system for '{args.account}'")
+            exit()
 
         earliest_date = date.today()
         per_cluster_totals = {}
-        for request in [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]:
+        for request in requests:
             start = date.fromisoformat(request['active'])
             if start < earliest_date:
                 earliest_date = start
@@ -92,5 +98,11 @@ class CrcSus(BaseParser):
                 per_cluster_totals[cluster] += allocation['awarded']
 
         for cluster in per_cluster_totals:
-            used = Slurm.get_cluster_usage_by_user(args.account, earliest_date.isoformat(), cluster)
-            print(self.build_output_string(args.account, used['total'], per_cluster_totals[cluster], cluster))
+            used = Slurm.get_cluster_usage_by_user(args.account, earliest_date, cluster)
+            if not used:
+                used = 0
+            else:
+                used = used['total']
+
+
+            print(self.build_output_string(args.account, used, per_cluster_totals[cluster], cluster))

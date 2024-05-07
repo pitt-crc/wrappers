@@ -35,6 +35,10 @@ class CrcUsage(BaseParser):
 
         # Gather requests from Keystone
         requests = get_allocation_requests(KEYSTONE_URL, group_id, auth_header)
+        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        if not requests:
+            print("No active Resource Allocation Requests found in the accounting system for '{account_name}'")
+            exit()
 
         # Initialize table for summary of requests and allocations
         summary_table = PrettyTable(header=True, padding_width=5, max_width=80)
@@ -43,17 +47,17 @@ class CrcUsage(BaseParser):
 
         # Initialize table for summary of usage
         usage_table = PrettyTable(header=False, padding_width=5, max_width=80)
-        usage_table.title = f"Summary of Usage"
+        usage_table.title = f"Summary of Usage across all Clusters"
 
         per_cluster_awarded_totals = dict()
 
         earliest_date = date.today()
         # Print request and allocation information for active allocations from the provided group
-        for request in [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]:
+        for request in requests:
             start = date.fromisoformat(request['active'])
             if start < earliest_date:
                 earliest_date = start
-            summary_table.add_row([f"   {request['id']}    ", f"    {request['title']}    ", f"    {request['expire']}    "], divider=True)
+            summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"], divider=True)
             summary_table.add_row(["", "CLUSTER", "SERVICE UNITS"])
             summary_table.add_row(["", "----", "----"])
             for allocation in get_allocations_all(KEYSTONE_URL, request['id'], auth_header):
@@ -65,22 +69,26 @@ class CrcUsage(BaseParser):
             summary_table.add_row(["","",""], divider=True)
 
         print(summary_table)
-
         for cluster, total_awarded in per_cluster_awarded_totals.items():
-            usage_by_user = Slurm.get_cluster_usage_by_user(account_name=account_name, start_date=earliest_date, cluster=cluster) 
-            if usage_by_user:
-                total_used = usage_by_user.pop('total')
-                percent_used=int(total_used)//int(total_awarded)*100
-                usage_table.add_row([f"{cluster}", f"TOTAL USED: {total_used}", f"AWARDED: {total_awarded}", f"% USED: {percent_used}"], divider=True)
-                usage_table.add_row(["","USER","USED","% USED"])
-                usage_table.add_row(["","----","----","----"])
-                for user, usage in usage_by_user.items():
-                    percent = int(usage)//int(total_awarded)*100
-                    if percent == 0:
-                        percent = '< 1%'
-                    usage_table.add_row(["", user, int(usage), percent])
-
+            usage_by_user = Slurm.get_cluster_usage_by_user(account_name=account_name, start_date=earliest_date, cluster=cluster)
+            if not usage_by_user:
+                usage_table.add_row([f"{cluster}", f"TOTAL USED: 0", f"AWARDED: {total_awarded}", f"% USED: 0"], divider=True)
                 usage_table.add_row(["","","",""], divider=True)
+                continue
+
+            total_used = usage_by_user.pop('total')
+            percent_used=int(total_used)//int(total_awarded)*100
+            usage_table.add_row([f"{cluster}", f"TOTAL USED: {total_used}", f"AWARDED: {total_awarded}", f"% USED: {percent_used}"], divider=True)
+            usage_table.add_row(["","USER","USED","% USED"])
+            usage_table.add_row(["","----","----","----"])
+            for user, usage in usage_by_user.items():
+                percent = int(usage)//int(total_awarded)*100
+                if percent == 0:
+                    percent = '< 1%'
+                usage_table.add_row(["", user, int(usage), percent])
+
+            usage_table.add_row(["","","",""], divider=True)
+
         print(usage_table)
 
 
