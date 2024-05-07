@@ -8,9 +8,8 @@ and will not work without a running keystone installation.
 import grp
 import os
 from argparse import Namespace
-from getpass import getpass
 from datetime import date
-from typing import Dict
+from getpass import getpass
 
 from .utils.cli import BaseParser
 from .utils.keystone import *
@@ -27,7 +26,6 @@ class CrcSus(BaseParser):
         default_group = grp.getgrgid(os.getgid()).gr_name
         help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
-
 
     @staticmethod
     def build_output_string(account: str, used: int, total: int, cluster: str) -> str:
@@ -79,7 +77,8 @@ class CrcSus(BaseParser):
             exit()
 
         requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
-        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+        requests = [request for request in requests
+                    if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
         if not requests:
             print(f"No active resource allocation requests found in accounting system for '{args.account}'")
             exit()
@@ -102,6 +101,5 @@ class CrcSus(BaseParser):
                 used = 0
             else:
                 used = used['total']
-
 
             print(self.build_output_string(args.account, used, per_cluster_totals[cluster], cluster))
