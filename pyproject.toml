@@ -43,7 +43,6 @@ crc-usage = "apps.crc_usage:CrcUsage.execute"
 
 [tool.poetry.dependencies]
 python = "^3.8.0"
-crc-bank = "^0.2.3"
 requests = "^2.31.0"
 
 [tool.poetry.group.tests]
