@@ -29,12 +29,12 @@ class CrcUsage(BaseParser):
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
 
     @staticmethod
-    def print_summary_table(alloc_requests: [dict], account_name: str, awarded_totals: dict) -> None:
+    def print_summary_table(alloc_requests: [dict], account_name: str, per_request_totals: dict) -> None:
         """Build and print a human-readable summary table for the slurm account with info from Keystone"""
 
         # Initialize table for summary of requests and allocations
-        summary_table = PrettyTable(header=True, padding_width=4, max_width=80)
-        summary_table.title = f"Resource Allocation Request Information for {account_name}"
+        summary_table = PrettyTable(header=True, padding_width=2, max_table_width=79, min_table_width=79)
+        summary_table.title = f"Resource Allocation Request Information for '{account_name}'"
         summary_table.field_names = ["ID", "TITLE", "EXPIRATION DATE"]
 
         # Print request and allocation information for active allocations from the provided group
@@ -43,6 +43,7 @@ class CrcUsage(BaseParser):
             summary_table.add_row([f"{request['id']}", f"{request['title']}", f"{request['expire']}"], divider=True)
             summary_table.add_row(["", "CLUSTER", "SERVICE UNITS"])
             summary_table.add_row(["", "----", "----"])
+            awarded_totals = per_request_totals[request['id']]
 
             for cluster, total in awarded_totals.items():
                 summary_table.add_row(["", f"{cluster}", f"{total}"])
@@ -57,8 +58,8 @@ class CrcUsage(BaseParser):
         sreport"""
 
         # Initialize table for summary of usage
-        usage_table = PrettyTable(header=False, padding_width=5, max_width=80)
-        usage_table.title = f"Summary of Usage across all Clusters"
+        usage_table = PrettyTable(header=False, padding_width=2, max_table_width=79, min_table_width=79)
+        usage_table.title = f"Summary of Usage Across All Clusters"
 
         for cluster, total_awarded in awarded_totals.items():
             usage_by_user = Slurm.get_cluster_usage_by_user(account_name=account_name,
@@ -77,10 +78,10 @@ class CrcUsage(BaseParser):
                 divider=True)
             usage_table.add_row(["", "USER", "USED", "% USED"])
             usage_table.add_row(["", "----", "----", "----"])
-            for user, usage in usage_by_user.items():
+            for user, usage in sorted(usage_by_user.items(), key=lambda item: item[1], reverse=True):
                 percent = int((usage / total_awarded * 100) // 1)
                 if percent == 0:
-                    percent = '< 1%'
+                    percent = '<1'
                 usage_table.add_row(["", user, int(usage), percent])
 
             usage_table.add_row(["", "", "", ""], divider=True)
@@ -98,13 +99,19 @@ class CrcUsage(BaseParser):
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
-        # Determine if provided or default account is in Keystone
-        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
+
         # Gather AllocationRequests from Keystone
+        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
         alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
         if not (keystone_group_id and alloc_requests):
             print(f"No active allocation data found in the accounting system for '{args.account}'")
             exit()
-        awarded_totals = get_awarded_totals(alloc_requests, auth_header)
-        self.print_summary_table(alloc_requests, args.account, auth_header)
-        self.print_usage_table(args.account, awarded_totals, get_earliest_startdate(requests))
+
+        self.print_summary_table(alloc_requests,
+                                 args.account,
+                                 get_per_cluster_totals(alloc_requests, auth_header,per_request=True))
+
+        self.print_usage_table(args.account,
+                               get_per_cluster_totals(alloc_requests, auth_header),
+                               get_earliest_startdate(alloc_requests))
+
