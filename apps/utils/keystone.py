@@ -42,7 +42,7 @@ def get_researchgroup_id(keystone_url: str, account_name: str, auth_header: dict
 
     try:
         group_id = int(response.json()[0]['id'])
-    except:
+    except IndexError:
         group_id = None
 
     return group_id
