@@ -68,7 +68,7 @@ class CrcSus(BaseParser):
             print(f"No active allocation information found in accounting system for '{args.account}'")
             exit()
 
-        per_cluster_totals = get_awarded_totals(alloc_requests, auth_header)
+        per_cluster_totals = get_per_cluster_totals(alloc_requests, auth_header)
         earliest_date = get_earliest_startdate(alloc_requests)
 
         for cluster in per_cluster_totals:
@@ -76,6 +76,6 @@ class CrcSus(BaseParser):
             if not used:
                 used = 0
             else:
-                used = used['total']
+                used = int(used['total'])
 
             print(self.build_output_string(args.account, used, per_cluster_totals[cluster], cluster))
