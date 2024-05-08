@@ -47,6 +47,7 @@ def get_researchgroup_id(keystone_url: str, account_name: str, auth_header: dict
 
     return group_id
 
+
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
     """Given a number of requests, determine the earliest start date across them"""
 
@@ -58,6 +59,7 @@ def get_earliest_startdate(alloc_requests: [dict]) -> date:
 
     return earliest_date
 
+
 def get_per_cluster_totals(alloc_requests: [dict], auth_header: dict, per_request: bool = False) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
@@ -68,11 +70,10 @@ def get_per_cluster_totals(alloc_requests: [dict], auth_header: dict, per_reques
         for allocation in get_request_allocations(KEYSTONE_URL, request['id'], auth_header):
             cluster = CLUSTERS[allocation['cluster']]
             if per_request:
-                per_cluster_totals[request['id']].setdefault(cluster,0)
+                per_cluster_totals[request['id']].setdefault(cluster, 0)
                 per_cluster_totals[request['id']][cluster] += allocation['awarded']
             else:
                 per_cluster_totals.setdefault(cluster, 0)
                 per_cluster_totals[cluster] += allocation['awarded']
 
     return per_cluster_totals
-

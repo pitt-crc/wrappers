@@ -109,9 +109,8 @@ class CrcUsage(BaseParser):
 
         self.print_summary_table(alloc_requests,
                                  args.account,
-                                 get_per_cluster_totals(alloc_requests, auth_header,per_request=True))
+                                 get_per_cluster_totals(alloc_requests, auth_header, per_request=True))
 
         self.print_usage_table(args.account,
                                get_per_cluster_totals(alloc_requests, auth_header),
                                get_earliest_startdate(alloc_requests))
-
