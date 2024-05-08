@@ -36,7 +36,7 @@ class CrcProposalEnd(BaseParser):
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
-        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, auth_header)
+        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
         alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
 
         if not (keystone_group_id and requests):

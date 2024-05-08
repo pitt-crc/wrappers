@@ -107,4 +107,4 @@ class CrcUsage(BaseParser):
             exit()
         awarded_totals = get_awarded_totals(alloc_requests, auth_header)
         self.print_summary_table(alloc_requests, args.account, auth_header)
-        self.print_usage_table(args.account, awarded_totals, self.get_earliest_startdate(requests))
+        self.print_usage_table(args.account, awarded_totals, get_earliest_startdate(requests))
