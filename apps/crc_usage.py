@@ -43,7 +43,7 @@ class CrcUsage(BaseParser):
             exit()
 
         # Initialize table for summary of requests and allocations
-        summary_table = PrettyTable(header=True, padding_width=5, max_width=80)
+        summary_table = PrettyTable(header=True, padding_width=4, max_width=80)
         summary_table.title = f"Resource Allocation Request Information for {account_name}"
         summary_table.field_names = ["ID", "TITLE", "EXPIRATION DATE"]
 
@@ -89,7 +89,7 @@ class CrcUsage(BaseParser):
             usage_table.add_row(["", "USER", "USED", "% USED"])
             usage_table.add_row(["", "----", "----", "----"])
             for user, usage in usage_by_user.items():
-                percent = int(usage) // int(total_awarded) * 100
+                percent = int((usage / total_awarded * 100) // 1)
                 if percent == 0:
                     percent = '< 1%'
                 usage_table.add_row(["", user, int(usage), percent])
