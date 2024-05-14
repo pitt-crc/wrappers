@@ -7,10 +7,11 @@ and will not work without a running bank installation.
 import grp
 import os
 from argparse import Namespace
-
-from bank.account_logic import AccountServices
+from getpass import getpass
 
 from .utils.cli import BaseParser
+from .utils.keystone import *
+from .utils.system_info import Slurm
 
 
 class CrcProposalEnd(BaseParser):
@@ -31,8 +32,16 @@ class CrcProposalEnd(BaseParser):
             args: Parsed command line arguments
         """
 
-        acct = AccountServices(args.account)
-        end_date = acct._get_active_proposal_end_date()
+        Slurm.check_slurm_account_exists(args.account)
+        auth_header = get_auth_header(KEYSTONE_URL,
+                                      {'username': os.environ["USER"],
+                                       'password': getpass("Please enter your CRC login password:\n")})
+        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
+        alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
 
-        # Format the account name and end date as an easy-to-read string
-        print(f"The active proposal for account {args.account} ends on {end_date}")
+        if not (keystone_group_id and requests):
+            print(f"No active allocation information found in accounting system for '{args.account}'")
+            exit()
+
+        for request in alloc_requests:
+            print(f"Resource Allocation Request: '{request['title']}' ends on {request['expire']} ")
