@@ -102,6 +102,11 @@ class CrcUsage(BaseParser):
 
         # Gather AllocationRequests from Keystone
         keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
+        if not keystone_group_id:
+            print(f"No Slurm Account found in the accounting system for '{args.account}'. \n"
+                  f"Please submit a ticket to the CRC team to ensure your allocation was properly configured")
+            exit()
+
         alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
         if not (keystone_group_id and alloc_requests):
             print(f"No active allocation data found in the accounting system for '{args.account}'")
