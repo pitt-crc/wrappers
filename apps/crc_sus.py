@@ -64,9 +64,10 @@ class CrcSus(BaseParser):
         # Determine if provided or default account is in Keystone
         keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
         alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
-        if not (keystone_group_id and alloc_requests):
-            print(f"No active allocation information found in accounting system for '{args.account}'")
-            exit()
+        if not alloc_requests:
+            print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
+            print("Showing SUs for most recently expired Resource Allocation Request:\033[0m")
+            alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
 
         per_cluster_totals = get_per_cluster_totals(alloc_requests, auth_header)
         earliest_date = get_earliest_startdate(alloc_requests)
