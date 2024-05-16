@@ -65,7 +65,7 @@ class CrcSus(BaseParser):
         keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
         alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
         if not alloc_requests:
-            print(f"No active allocation information found in accounting system for '{args.account}!\n'")
+            print(f"No active allocation information found in accounting system for '{args.account}'!\n")
             print("Showing SUs for most recently expired Resource Allocation Request:")
             alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
 
