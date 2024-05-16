@@ -29,7 +29,9 @@ def get_active_requests(keystone_url: str, group_pk: int, auth_header: dict) -> 
     """Get all active AllocationRequest information from keystone for a given group"""
 
     today = date.today().isoformat()
-    response = requests.get(f"{keystone_url}/allocations/requests/?group={group_pk}&status=AP&active__lte={today}&expire__gt={today}", headers=auth_header)
+    response = requests.get(
+        f"{keystone_url}/allocations/requests/?group={group_pk}&status=AP&active__lte={today}&expire__gt={today}",
+        headers=auth_header)
     response.raise_for_status()
     return [request for request in response.json()]
 
@@ -66,7 +68,9 @@ def get_most_recent_expired_request(keystone_url: str, group_pk: int, auth_heade
     """Get the single most recently expired AllocationRequest information from keystone for a given group"""
 
     today = date.today().isoformat()
-    response = requests.get(f"{keystone_url}/allocations/requests/?ordering=-expire&group={group_pk}&status=AP&expire__lte={today}", headers=auth_header)
+    response = requests.get(
+        f"{keystone_url}/allocations/requests/?ordering=-expire&group={group_pk}&status=AP&expire__lte={today}",
+        headers=auth_header)
     response.raise_for_status()
 
     return [response.json()[0]]
