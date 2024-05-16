@@ -40,8 +40,8 @@ class CrcProposalEnd(BaseParser):
         alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
 
         if not alloc_requests:
-            print(f"No active allocation information found in accounting system for '{args.account}'!\n")
-            print("Showing end date for most recently expired Resource Allocation Request:")
+            print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
+            print("Showing end date for most recently expired Resource Allocation Request:\033[0m")
             alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
 
         for request in alloc_requests:
