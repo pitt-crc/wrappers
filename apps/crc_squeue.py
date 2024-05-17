@@ -1,5 +1,6 @@
 """A simple wrapper around the Slurm ``squeue`` command."""
 
+import grp
 import getpass
 from argparse import Namespace
 from datetime import datetime, date
@@ -54,34 +55,29 @@ class CrcSqueue(BaseParser):
         Args:
             args: Parsed command line arguments
         """
-        
-        Slurm.check_slurm_account_exists(args.account)
+        default_group = grp.getgrgid(os.getgid()).gr_name
+        Slurm.check_slurm_account_exists(account_name=default_group)
         
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
 
-
-        accessible_research_groups = get_researchgroups(KEYSTONE_URL, auth_header)
-        keystone_group_id = None
-        for group in accessible_research_groups:
-            if args.account == group['name']:
-                keystone_group_id = int(group['id'])
-
+        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, default_group, auth_header)
+ 
         if not keystone_group_id:
-            print(f"No allocation data found in accounting system for '{args.account}'")
+            print(f"No allocation data found in accounting system for '{default_group}'")
             exit()
 
         requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
 
         requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
         if not requests:
-            print(f"No active resource allocation requests found in accounting system for '{args.account}'")
+            print(f"No active resource allocation requests found in accounting system for '{default_group}'")
             exit()
         for request in requests:    
            # Check if proposal will expire within 30 days. If yes, print a message to inform the user
            if (date.fromisoformat(request['expire'])-date.today()).days<30 
-                print(f"The active proposal for account {args.account} will expire soon on {request['expire']}. Please begin working on a new proposal if you want to run jobs beyond that date.")
+                print(f"The active proposal for account {default_group} will expire soon on {request['expire']}. Please begin working on a new proposal if you want to run jobs beyond that date.")
       
         
         command = self.build_slurm_command(args)
