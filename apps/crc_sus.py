@@ -4,13 +4,10 @@ This application is designed to interface with the Keystone banking system
 and will not work without a running keystone installation.
 """
 
-
 import grp
 import os
 from argparse import Namespace
 from getpass import getpass
-from datetime import date
-from typing import Dict
 
 from .utils.cli import BaseParser
 from .utils.keystone import *
@@ -27,7 +24,6 @@ class CrcSus(BaseParser):
         default_group = grp.getgrgid(os.getgid()).gr_name
         help_text = f"SLURM account name [defaults to your primary group: {default_group}]"
         self.add_argument('account', nargs='?', default=default_group, help=help_text)
-
 
     @staticmethod
     def build_output_string(account: str, used: int, total: int, cluster: str) -> str:
@@ -62,46 +58,25 @@ class CrcSus(BaseParser):
         """
 
         Slurm.check_slurm_account_exists(account_name=args.account)
-
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
-
         # Determine if provided or default account is in Keystone
-        accessible_research_groups = get_researchgroups(KEYSTONE_URL, auth_header)
-        keystone_group_id = None
-        for group in accessible_research_groups:
-            if args.account == group['name']:
-                keystone_group_id = int(group['id'])
+        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
+        alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
+        if not alloc_requests:
+            print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
+            print("Showing SUs for most recently expired Resource Allocation Request:\033[0m")
+            alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
 
-        if not keystone_group_id:
-            print(f"No allocation data found in accounting system for '{args.account}'")
-            exit()
-
-        requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
-        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
-        if not requests:
-            print(f"No active resource allocation requests found in accounting system for '{args.account}'")
-            exit()
-
-        earliest_date = date.today()
-        per_cluster_totals = {}
-        for request in requests:
-            start = date.fromisoformat(request['active'])
-            if start < earliest_date:
-                earliest_date = start
-
-            for allocation in get_allocations_all(KEYSTONE_URL, request['id'], auth_header):
-                cluster = CLUSTERS[allocation['cluster']]
-                per_cluster_totals.setdefault(cluster, 0)
-                per_cluster_totals[cluster] += allocation['awarded']
+        per_cluster_totals = get_per_cluster_totals(alloc_requests, auth_header)
+        earliest_date = get_earliest_startdate(alloc_requests)
 
         for cluster in per_cluster_totals:
             used = Slurm.get_cluster_usage_by_user(args.account, earliest_date, cluster)
             if not used:
                 used = 0
             else:
-                used = used['total']
-
+                used = int(used['total'])
 
             print(self.build_output_string(args.account, used, per_cluster_totals[cluster], cluster))
