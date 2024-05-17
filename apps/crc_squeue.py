@@ -1,7 +1,8 @@
 """A simple wrapper around the Slurm ``squeue`` command."""
 
+import os
 import grp
-import getpass
+from getpass import getpass
 from argparse import Namespace
 from datetime import datetime, date
 from time import sleep
@@ -55,15 +56,16 @@ class CrcSqueue(BaseParser):
         Args:
             args: Parsed command line arguments
         """
+
         default_group = grp.getgrgid(os.getgid()).gr_name
         Slurm.check_slurm_account_exists(account_name=default_group)
-        
+
         auth_header = get_auth_header(KEYSTONE_URL,
                                       {'username': os.environ["USER"],
                                        'password': getpass("Please enter your CRC login password:\n")})
 
         keystone_group_id = get_researchgroup_id(KEYSTONE_URL, default_group, auth_header)
- 
+
         if not keystone_group_id:
             print(f"No allocation data found in accounting system for '{default_group}'")
             exit()
@@ -74,12 +76,12 @@ class CrcSqueue(BaseParser):
         if not requests:
             print(f"No active resource allocation requests found in accounting system for '{default_group}'")
             exit()
-        for request in requests:    
+        for request in requests:
            # Check if proposal will expire within 30 days. If yes, print a message to inform the user
-           if (date.fromisoformat(request['expire'])-date.today()).days<30 
-                print(f"The active proposal for account {default_group} will expire soon on {request['expire']}. Please begin working on a new proposal if you want to run jobs beyond that date.")
-      
-        
+           if (date.fromisoformat(request['expire']) - date.today()).days < 30:
+                print(f"The active proposal for account {default_group} will expire soon on {request['expire']}."
+                      "Please begin working on a new Resource Allocation Request if you want to run jobs beyond that date.")
+
         command = self.build_slurm_command(args)
         if args.print_command:
             print(command)
