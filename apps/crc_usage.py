@@ -7,7 +7,7 @@ and will not work without the application running on keystone.crc.pitt.edu.
 import grp
 import os
 from argparse import Namespace
-from datetime import datetime, date
+from datetime import date
 from getpass import getpass
 from prettytable import PrettyTable
 

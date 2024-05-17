@@ -11,7 +11,6 @@ from argparse import Namespace
 from getpass import getpass
 from datetime import date
 from typing import Dict
-import pdb
 
 from .utils.cli import BaseParser
 from .utils.keystone import *
