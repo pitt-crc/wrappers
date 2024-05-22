@@ -2,13 +2,13 @@
 
 import os
 import grp
-import getpass
+from getpass import getpass, getuser
 from argparse import Namespace
 from datetime import datetime, date
 from time import sleep
 
 from .utils.keystone import *
-from .utils.system_info import Slurm
+from .utils.system_info import Slurm, Shell
 from .utils.cli import BaseParser
 
 
@@ -44,7 +44,7 @@ class CrcSqueue(BaseParser):
             command_options.append(cls.output_format_all)
 
         else:
-            user = f'-u {getpass.getuser()}'
+            user = f'-u {getuser()}'
             command_options.append(user)
             command_options.append(cls.output_format_user)
 
