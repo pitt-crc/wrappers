@@ -29,9 +29,6 @@ jobs:
       - name: Setup environment
         run: /usr/local/bin/entrypoint.sh
 
-      - name: Set Up Bank DB Location
-        run: mkdir -p /ihome/crc/bank 
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
