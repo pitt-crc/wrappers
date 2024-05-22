@@ -2,7 +2,7 @@
 
 import os
 import grp
-from getpass import getpass
+import getpass
 from argparse import Namespace
 from datetime import datetime, date
 from time import sleep
