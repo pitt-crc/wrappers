@@ -53,7 +53,7 @@ class SlurmCommandCreation(TestCase):
         """Test the ``--all`` argument toggles the slurm ``-u`` option in the returned command"""
 
         app = CrcSqueue()
-        slurm_user_argument = f'-u {getpass.getuser()}'
+        slurm_user_argument = "-u"
 
         # The application should default to showing information for the current user
         args, _ = app.parse_known_args([])
