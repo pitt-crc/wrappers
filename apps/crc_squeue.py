@@ -61,7 +61,7 @@ class CrcSqueue(BaseParser):
         Slurm.check_slurm_account_exists(account_name=default_group)
 
         auth_header = get_auth_header(KEYSTONE_URL,
-                                      {'username': os.environ["USER"],
+                                      {'username': getuser(),
                                        'password': getpass("Please enter your CRC login password:\n")})
 
         keystone_group_id = get_researchgroup_id(KEYSTONE_URL, default_group, auth_header)
@@ -75,7 +75,7 @@ class CrcSqueue(BaseParser):
         if not requests:
             print(f"No active resource allocation requests found in accounting system for '{default_group}'")
             exit()
-            
+
         for request in requests:
            # Check if proposal will expire within 30 days. If yes, print a message to inform the user
            if (date.fromisoformat(request['expire']) - date.today()).days < 30:
