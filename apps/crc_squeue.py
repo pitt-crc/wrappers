@@ -70,12 +70,12 @@ class CrcSqueue(BaseParser):
             print(f"No allocation data found in accounting system for '{default_group}'")
             exit()
 
-        requests = get_allocation_requests(KEYSTONE_URL, keystone_group_id, auth_header)
+        requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
 
-        requests = [request for request in requests if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
         if not requests:
             print(f"No active resource allocation requests found in accounting system for '{default_group}'")
             exit()
+            
         for request in requests:
            # Check if proposal will expire within 30 days. If yes, print a message to inform the user
            if (date.fromisoformat(request['expire']) - date.today()).days < 30:
