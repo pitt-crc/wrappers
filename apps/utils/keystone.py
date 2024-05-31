@@ -6,7 +6,7 @@ import requests
 
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
-RAWUSAGE_RESET_DATE = '2024-05-07'
+RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
 def get_auth_header(keystone_url: str, auth_header: dict) -> dict:
@@ -63,10 +63,7 @@ def get_earliest_startdate(alloc_requests: [dict]) -> date:
         if start < earliest_date:
             earliest_date = start
 
-    if earliest_date < RAWUSAGE_RESET_DATE:
-        return RAWUSAGE_RESET_DATE
-
-    return earliest_date
+    return max(earliest_date, RAWUSAGE_RESET_DATE)
 
 
 def get_most_recent_expired_request(keystone_url: str, group_pk: int, auth_header: dict) -> [dict]:
