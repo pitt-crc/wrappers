@@ -6,6 +6,7 @@ import requests
 
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
+RAWUSAGE_RESET_DATE = '2024-05-07'
 
 
 def get_auth_header(keystone_url: str, auth_header: dict) -> dict:
@@ -53,13 +54,17 @@ def get_researchgroup_id(keystone_url: str, account_name: str, auth_header: dict
 
 
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
-    """Given a number of requests, determine the earliest start date across them"""
+    """Given a number of requests, determine the earliest start date across them. This takes the most recent rawusage
+    reset into account for accuracy against current limits and to prevent seeing >100% usage."""
 
     earliest_date = date.today()
     for request in alloc_requests:
         start = date.fromisoformat(request['active'])
         if start < earliest_date:
             earliest_date = start
+
+    if earliest_date < RAWUSAGE_RESET_DATE:
+        return RAWUSAGE_RESET_DATE
 
     return earliest_date
 
