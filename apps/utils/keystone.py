@@ -88,7 +88,11 @@ def get_enabled_cluster_ids(keystone_url: str, auth_header: dict) -> dict():
 
     return clusters
 
-def get_per_cluster_totals(alloc_requests: [dict], clusters: dict, auth_header: dict, per_request: bool = False) -> dict:
+
+def get_per_cluster_totals(alloc_requests: [dict],
+                           clusters: dict,
+                           auth_header: dict,
+                           per_request: bool = False) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
     per_cluster_totals = {}
