@@ -6,6 +6,7 @@ import requests
 
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
+RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
 def get_auth_header(keystone_url: str, auth_header: dict) -> dict:
@@ -28,10 +29,12 @@ def get_request_allocations(keystone_url: str, request_pk: int, auth_header: dic
 def get_active_requests(keystone_url: str, group_pk: int, auth_header: dict) -> [dict]:
     """Get all active AllocationRequest information from keystone for a given group"""
 
-    response = requests.get(f"{keystone_url}/allocations/requests/?group={group_pk}&status=AP", headers=auth_header)
+    today = date.today().isoformat()
+    response = requests.get(
+        f"{keystone_url}/allocations/requests/?group={group_pk}&status=AP&active__lte={today}&expire__gt={today}",
+        headers=auth_header)
     response.raise_for_status()
-    return [request for request in response.json()
-            if date.fromisoformat(request['active']) <= date.today() < date.fromisoformat(request['expire'])]
+    return [request for request in response.json()]
 
 
 def get_researchgroup_id(keystone_url: str, account_name: str, auth_header: dict) -> int:
@@ -43,13 +46,16 @@ def get_researchgroup_id(keystone_url: str, account_name: str, auth_header: dict
     try:
         group_id = int(response.json()[0]['id'])
     except IndexError:
-        group_id = None
+        print(f"No Slurm Account found in the accounting system for '{account_name}'. \n"
+              f"Please submit a ticket to the CRC team to ensure your allocation was properly configured")
+        exit()
 
     return group_id
 
 
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
-    """Given a number of requests, determine the earliest start date across them"""
+    """Given a number of requests, determine the earliest start date across them. This takes the most recent rawusage
+    reset into account for accuracy against current limits and to prevent seeing >100% usage."""
 
     earliest_date = date.today()
     for request in alloc_requests:
@@ -57,7 +63,19 @@ def get_earliest_startdate(alloc_requests: [dict]) -> date:
         if start < earliest_date:
             earliest_date = start
 
-    return earliest_date
+    return max(earliest_date, RAWUSAGE_RESET_DATE)
+
+
+def get_most_recent_expired_request(keystone_url: str, group_pk: int, auth_header: dict) -> [dict]:
+    """Get the single most recently expired AllocationRequest information from keystone for a given group"""
+
+    today = date.today().isoformat()
+    response = requests.get(
+        f"{keystone_url}/allocations/requests/?ordering=-expire&group={group_pk}&status=AP&expire__lte={today}",
+        headers=auth_header)
+    response.raise_for_status()
+
+    return [response.json()[0]]
 
 
 def get_per_cluster_totals(alloc_requests: [dict], auth_header: dict, per_request: bool = False) -> dict:
