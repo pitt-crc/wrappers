@@ -1,8 +1,11 @@
 """Utility functions used across various wrappers for interacting with keystone"""
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Literal, Optional, Union
 
 import requests
+
+ResponseContentType = Literal['json', 'text', 'content']
+ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
@@ -55,15 +58,45 @@ class KeystoneApi:
             "Content-Type": "application/json"
         }
 
-    def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    @staticmethod
+    def _process_response(response: requests.Response, response_type: ResponseContentType) -> ParsedResponseContent:
+        """Processes the response based on the expected response type.
+
+        Args:
+            response: The response object
+            response_type: The expected response type ('json', 'text', 'content')
+
+        Returns:
+            The response in the specified format
+
+        Raises:
+            ValueError: If the response type is invalid
+        """
+
+        if response_type == 'json':
+            return response.json()
+
+        elif response_type == 'text':
+            return response.text
+
+        elif response_type == 'content':
+            return response.content
+
+        else:
+            raise ValueError(f"Invalid response type: {response_type}")
+
+    def get(
+        self, endpoint: str, params: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+    ) -> ParsedResponseContent:
         """Makes a GET request to the specified endpoint.
 
         Args:
             endpoint: The API endpoint to send the GET request to
             params: The query parameters to include in the request
+            response_type: The expected response type ('json', 'text', 'content')
 
         Returns:
-            The JSON response from the API
+            The response from the API in the specified format
 
         Raises:
             requests.HTTPError: If the GET request fails
@@ -71,17 +104,20 @@ class KeystoneApi:
 
         response = requests.get(f"{self.base_url}/{endpoint}", headers=self._get_headers(), params=params)
         response.raise_for_status()
-        return response.json()
+        return self._process_response(response, response_type)
 
-    def post(self, endpoint: str, data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def post(
+        self, endpoint: str, data: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+    ) -> ParsedResponseContent:
         """Makes a POST request to the specified endpoint.
 
         Args:
             endpoint: The API endpoint to send the POST request to
             data: The JSON data to include in the POST request
+            response_type: The expected response type ('json', 'text', 'content')
 
         Returns:
-            The JSON response from the API
+            The response from the API in the specified format
 
         Raises:
             requests.HTTPError: If the POST request fails
@@ -89,17 +125,20 @@ class KeystoneApi:
 
         response = requests.post(f"{self.base_url}/{endpoint}", headers=self._get_headers(), json=data)
         response.raise_for_status()
-        return response.json()
+        return self._process_response(response, response_type)
 
-    def patch(self, endpoint: str, data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def patch(
+        self, endpoint: str, data: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+    ) -> ParsedResponseContent:
         """Makes a PATCH request to the specified endpoint.
 
         Args:
             endpoint: The API endpoint to send the PATCH request to
             data: The JSON data to include in the PATCH request
+            response_type: The expected response type ('json', 'text', 'content')
 
         Returns:
-            The JSON response from the API
+            The response from the API in the specified format
 
         Raises:
             requests.HTTPError: If the PATCH request fails
@@ -107,17 +146,20 @@ class KeystoneApi:
 
         response = requests.patch(f"{self.base_url}/{endpoint}", headers=self._get_headers(), json=data)
         response.raise_for_status()
-        return response.json()
+        return self._process_response(response, response_type)
 
-    def put(self, endpoint: str, data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def put(
+        self, endpoint: str, data: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+    ) -> ParsedResponseContent:
         """Makes a PUT request to the specified endpoint.
 
         Args:
             endpoint: The API endpoint to send the PUT request to
             data: The JSON data to include in the PUT request
+            response_type: The expected response type ('json', 'text', 'content')
 
         Returns:
-            The JSON response from the API
+            The response from the API in the specified format
 
         Raises:
             requests.HTTPError: If the PUT request fails
@@ -125,16 +167,17 @@ class KeystoneApi:
 
         response = requests.put(f"{self.base_url}/{endpoint}", headers=self._get_headers(), json=data)
         response.raise_for_status()
-        return response.json()
+        return self._process_response(response, response_type)
 
-    def delete(self, endpoint: str) -> Dict[str, Any]:
+    def delete(self, endpoint: str, response_type: ResponseContentType = 'json') -> ParsedResponseContent:
         """Makes a DELETE request to the specified endpoint.
 
         Args:
             endpoint: The API endpoint to send the DELETE request to
+            response_type: The expected response type ('json', 'text', 'content')
 
         Returns:
-            The JSON response from the API
+            The response from the API in the specified format
 
         Raises:
             requests.HTTPError: If the DELETE request fails
@@ -142,7 +185,7 @@ class KeystoneApi:
 
         response = requests.delete(f"{self.base_url}/{endpoint}", headers=self._get_headers())
         response.raise_for_status()
-        return response.json()
+        return self._process_response(response, response_type)
 
 
 def get_auth_header(keystone_url: str, auth_header: dict) -> dict:
