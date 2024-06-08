@@ -5,18 +5,22 @@ from typing import Any, Dict, Literal, Optional, Union
 
 import requests
 
-KEYSTONE_URL = "https://keystone.crc.pitt.edu"
-CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
-RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
-
+# Custom types
 ResponseContentType = Literal['json', 'text', 'content']
 ParsedResponseContent = Union[Dict[str, Any], str, bytes]
+
+# Default API configuratipn
+KEYSTONE_URL = "https://keystone.crc.pitt.edu"
+KEYSTONE_AUTH_ENDPOINT = 'authentication/new'
+
+CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
+RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
 class KeystoneApi:
     """API client for submitting requests to the Keystone API"""
 
-    def __init__(self, base_url: str) -> None:
+    def __init__(self, base_url: str = KEYSTONE_URL) -> None:
         """Initializes the KeystoneApi class with the base URL of the API.
 
         Args:
@@ -26,7 +30,7 @@ class KeystoneApi:
         self.base_url = base_url
         self._token: Optional[str] = None
 
-    def login(self, username: str, password: str, endpoint: str = 'authentication/new') -> None:
+    def login(self, username: str, password: str, endpoint: str = KEYSTONE_AUTH_ENDPOINT) -> None:
         """Logs in to the Keystone API and caches the JWT token.
 
         Args:
