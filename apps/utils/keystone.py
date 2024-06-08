@@ -15,22 +15,22 @@ class KeystoneApi:
         """Initializes the KeystoneApi class with the base URL of the API.
 
         Args:
-            base_url: The base URL of the Keystone API.
+            base_url: The base URL of the Keystone API
         """
 
         self.base_url = base_url
         self._token: Optional[str] = None
 
-    def login(self, endpoint: str, username: str, password: str) -> None:
+    def login(self, username: str, password: str, endpoint: str = 'authentication/new') -> None:
         """Logs in to the Keystone API and caches the JWT token.
 
         Args:
-            endpoint: The API endpoint to send the authentication request to.
-            username: The username for authentication.
-            password: The password for authentication.
+            username: The username for authentication
+            password: The password for authentication
+            endpoint: The API endpoint to send the authentication request to
 
         Raises:
-            requests.HTTPError: If the login request fails.
+            requests.HTTPError: If the login request fails
         """
 
         response = requests.post(f"{self.base_url}/{endpoint}", json={"username": username, "password": password})
@@ -41,10 +41,10 @@ class KeystoneApi:
         """Constructs the headers for an authenticated request.
 
         Returns:
-            A dictionary of headers including the Authorization token.
+            A dictionary of headers including the Authorization token
 
         Raises:
-            ValueError: If the authentication token is not found.
+            ValueError: If the authentication token is not found
         """
 
         if not self._token:
@@ -59,14 +59,14 @@ class KeystoneApi:
         """Makes a GET request to the specified endpoint.
 
         Args:
-            endpoint: The API endpoint to send the GET request to.
-            params: The query parameters to include in the request.
+            endpoint: The API endpoint to send the GET request to
+            params: The query parameters to include in the request
 
         Returns:
-            The JSON response from the API.
+            The JSON response from the API
 
         Raises:
-            requests.HTTPError: If the GET request fails.
+            requests.HTTPError: If the GET request fails
         """
 
         response = requests.get(f"{self.base_url}/{endpoint}", headers=self._get_headers(), params=params)
@@ -77,14 +77,14 @@ class KeystoneApi:
         """Makes a POST request to the specified endpoint.
 
         Args:
-            endpoint: The API endpoint to send the POST request to.
-            data: The JSON data to include in the POST request.
+            endpoint: The API endpoint to send the POST request to
+            data: The JSON data to include in the POST request
 
         Returns:
-            The JSON response from the API.
+            The JSON response from the API
 
         Raises:
-            requests.HTTPError: If the POST request fails.
+            requests.HTTPError: If the POST request fails
         """
 
         response = requests.post(f"{self.base_url}/{endpoint}", headers=self._get_headers(), json=data)
@@ -95,14 +95,14 @@ class KeystoneApi:
         """Makes a PATCH request to the specified endpoint.
 
         Args:
-            endpoint: The API endpoint to send the PATCH request to.
-            data: The JSON data to include in the PATCH request.
+            endpoint: The API endpoint to send the PATCH request to
+            data: The JSON data to include in the PATCH request
 
         Returns:
-            The JSON response from the API.
+            The JSON response from the API
 
         Raises:
-            requests.HTTPError: If the PATCH request fails.
+            requests.HTTPError: If the PATCH request fails
         """
 
         response = requests.patch(f"{self.base_url}/{endpoint}", headers=self._get_headers(), json=data)
@@ -113,14 +113,14 @@ class KeystoneApi:
         """Makes a PUT request to the specified endpoint.
 
         Args:
-            endpoint: The API endpoint to send the PUT request to.
-            data: The JSON data to include in the PUT request.
+            endpoint: The API endpoint to send the PUT request to
+            data: The JSON data to include in the PUT request
 
         Returns:
-            The JSON response from the API.
+            The JSON response from the API
 
         Raises:
-            requests.HTTPError: If the PUT request fails.
+            requests.HTTPError: If the PUT request fails
         """
 
         response = requests.put(f"{self.base_url}/{endpoint}", headers=self._get_headers(), json=data)
@@ -131,13 +131,13 @@ class KeystoneApi:
         """Makes a DELETE request to the specified endpoint.
 
         Args:
-            endpoint: The API endpoint to send the DELETE request to.
+            endpoint: The API endpoint to send the DELETE request to
 
         Returns:
-            The JSON response from the API.
+            The JSON response from the API
 
         Raises:
-            requests.HTTPError: If the DELETE request fails.
+            requests.HTTPError: If the DELETE request fails
         """
 
         response = requests.delete(f"{self.base_url}/{endpoint}", headers=self._get_headers())
