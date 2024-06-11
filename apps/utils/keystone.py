@@ -5,7 +5,6 @@ from datetime import date
 import requests
 
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
-CLUSTERS = {1: 'MPI', 2: 'SMP', 3: 'HTC', 4: 'GPU'}
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
@@ -78,7 +77,22 @@ def get_most_recent_expired_request(keystone_url: str, group_pk: int, auth_heade
     return [response.json()[0]]
 
 
-def get_per_cluster_totals(alloc_requests: [dict], auth_header: dict, per_request: bool = False) -> dict:
+def get_enabled_cluster_ids(keystone_url: str, auth_header: dict) -> dict():
+    """Get the list of enabled clusters defined in Keystone along with their IDs"""
+
+    response = requests.get(f"{keystone_url}/allocations/clusters/?enabled=True", headers=auth_header)
+    response.raise_for_status()
+    clusters = {}
+    for cluster in response.json():
+        clusters[cluster['id']] = cluster['name']
+
+    return clusters
+
+
+def get_per_cluster_totals(alloc_requests: [dict],
+                           clusters: dict,
+                           auth_header: dict,
+                           per_request: bool = False) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
     per_cluster_totals = {}
@@ -86,7 +100,7 @@ def get_per_cluster_totals(alloc_requests: [dict], auth_header: dict, per_reques
         if per_request:
             per_cluster_totals[request['id']] = {}
         for allocation in get_request_allocations(KEYSTONE_URL, request['id'], auth_header):
-            cluster = CLUSTERS[allocation['cluster']]
+            cluster = clusters[allocation['cluster']]
             if per_request:
                 per_cluster_totals[request['id']].setdefault(cluster, 0)
                 per_cluster_totals[request['id']][cluster] += allocation['awarded']
