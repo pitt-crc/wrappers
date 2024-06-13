@@ -109,10 +109,12 @@ class CrcUsage(BaseParser):
             print("Showing usage information for most recently expired Resource Allocation Request: \033[0m")
             alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
 
+        clusters = get_enabled_cluster_ids(KEYSTONE_URL, auth_header)
+
         self.print_summary_table(alloc_requests,
                                  args.account,
-                                 get_per_cluster_totals(alloc_requests, auth_header, per_request=True))
+                                 get_per_cluster_totals(alloc_requests, clusters, auth_header, per_request=True))
 
         self.print_usage_table(args.account,
-                               get_per_cluster_totals(alloc_requests, auth_header),
+                               get_per_cluster_totals(alloc_requests, clusters, auth_header),
                                get_earliest_startdate(alloc_requests))
