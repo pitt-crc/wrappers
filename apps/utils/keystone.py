@@ -216,56 +216,39 @@ class KeystoneApi:
         return self._process_response(response, response_type)
 
 
-def get_auth_header(keystone_url: str, auth_header: dict) -> dict:
-    """ Generate an authorization header to be used for accessing information from keystone"""
-
-    response = requests.post(f"{keystone_url}/authentication/new/", json=auth_header, timeout=10)
-    response.raise_for_status()
-    tokens = response.json()
-    return {"Authorization": f"Bearer {tokens['access']}"}
-
-
-def get_request_allocations(keystone_url: str, request_pk: int, auth_header: dict) -> dict:
+def get_request_allocations(keystone_client: KeystoneApi, request_pk: int) -> dict:
     """Get All Allocation information from keystone for a given request"""
 
-    response = requests.get(f"{keystone_url}/allocations/allocations/?request={request_pk}",
-                            headers=auth_header,
-                            timeout=10
-                            )
-    response.raise_for_status()
-    return response.json()
+    return keystone_client.get('allocations/allocations/', {'request': request_pk}, 'json')
 
 
-def get_active_requests(keystone_url: str, group_pk: int, auth_header: dict) -> [dict]:
+def get_active_requests(keystone_client: KeystoneApi, group_pk: int) -> [dict]:
     """Get all active AllocationRequest information from keystone for a given group"""
 
     today = date.today().isoformat()
-    response = requests.get(
-        f"{keystone_url}/allocations/requests/?group={group_pk}&status=AP&active__lte={today}&expire__gt={today}",
-        headers=auth_header,
-        timeout=10
-    )
-    response.raise_for_status()
-    return [request for request in response.json()]
+    return [request for request in keystone_client.get('allocations/requests/',
+                                                       {'group': group_pk,
+                                                        'status': 'AP',
+                                                        'active__lte': today,
+                                                        'expire__gt': today},
+                                                       'json'
+                                                       )]
 
 
-def get_researchgroup_id(keystone_url: str, account_name: str, auth_header: dict) -> int:
+def get_researchgroup_id(keystone_client: KeystoneApi, account_name: str) -> int:
     """Get the Researchgroup ID from keystone for the specified Slurm account"""
 
-    response = requests.get(f"{keystone_url}/users/researchgroups/?name={account_name}",
-                            headers=auth_header,
-                            timeout=10
-                            )
-    response.raise_for_status()
-
+    # Attempt to get the primary key for the ResearchGroup
     try:
-        group_id = int(response.json()[0]['id'])
+        keystone_group_id = keystone_client.get('users/researchgroups/',
+                                                {'name': account_name},
+                                                'json')[0]['id']
     except IndexError:
         print(f"No Slurm Account found in the accounting system for '{account_name}'. \n"
               f"Please submit a ticket to the CRC team to ensure your allocation was properly configured")
         exit()
 
-    return group_id
+    return keystone_group_id
 
 
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
@@ -281,35 +264,32 @@ def get_earliest_startdate(alloc_requests: [dict]) -> date:
     return max(earliest_date, RAWUSAGE_RESET_DATE)
 
 
-def get_most_recent_expired_request(keystone_url: str, group_pk: int, auth_header: dict) -> [dict]:
+def get_most_recent_expired_request(keystone_client: KeystoneApi, group_pk: int) -> [dict]:
     """Get the single most recently expired AllocationRequest information from keystone for a given group"""
 
     today = date.today().isoformat()
-    response = requests.get(
-        f"{keystone_url}/allocations/requests/?ordering=-expire&group={group_pk}&status=AP&expire__lte={today}",
-        headers=auth_header,
-        timeout=10
-    )
-    response.raise_for_status()
+    return [keystone_client.get('allocations/requests/',
+                                {'group': group_pk,
+                                 'status': 'AP',
+                                 'ordering': '-expire',
+                                 'expire__lte': today},
+                                'json'
+                                )[0]]
 
-    return [response.json()[0]]
 
-
-def get_enabled_cluster_ids(keystone_url: str, auth_header: dict) -> dict():
+def get_enabled_cluster_ids(keystone_client: KeystoneApi) -> dict():
     """Get the list of enabled clusters defined in Keystone along with their IDs"""
 
-    response = requests.get(f"{keystone_url}/allocations/clusters/?enabled=True", headers=auth_header, timeout=10)
-    response.raise_for_status()
     clusters = {}
-    for cluster in response.json():
+    for cluster in keystone_client.get('/allocations/clusters/', {'enabled': True}, 'json'):
         clusters[cluster['id']] = cluster['name']
 
     return clusters
 
 
-def get_per_cluster_totals(alloc_requests: [dict],
+def get_per_cluster_totals(keystone_client: KeystoneApi,
+                           alloc_requests: [dict],
                            clusters: dict,
-                           auth_header: dict,
                            per_request: bool = False) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
@@ -317,7 +297,7 @@ def get_per_cluster_totals(alloc_requests: [dict],
     for request in alloc_requests:
         if per_request:
             per_cluster_totals[request['id']] = {}
-        for allocation in get_request_allocations(KEYSTONE_URL, request['id'], auth_header):
+        for allocation in get_request_allocations(keystone_client, request['id']):
             cluster = clusters[allocation['cluster']]
             if per_request:
                 per_cluster_totals[request['id']].setdefault(cluster, 0)
