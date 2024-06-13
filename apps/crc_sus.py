@@ -69,7 +69,10 @@ class CrcSus(BaseParser):
             print("Showing SUs for most recently expired Resource Allocation Request:\033[0m")
             alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
 
-        per_cluster_totals = get_per_cluster_totals(alloc_requests, auth_header)
+        per_cluster_totals = get_per_cluster_totals(alloc_requests,
+                                                    get_enabled_cluster_ids(KEYSTONE_URL, auth_header),
+                                                    auth_header)
+
         earliest_date = get_earliest_startdate(alloc_requests)
 
         for cluster in per_cluster_totals:
