@@ -36,35 +36,13 @@ class CrcProposalEnd(BaseParser):
         keystone_session = KeystoneApi()
         keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
 
-        # Attempt to get the primary key for the ResearchGroup
-        try:
-            keystone_group_id = keystone_session.get('users/researchgroups/',
-                                             {'name': args.account},
-                                             'json')[0]['id']
-        except IndexError:
-            print(f"No Slurm Account found in the accounting system for '{args.account}'. \n"
-                  f"Please submit a ticket to the CRC team to ensure your allocation was properly configured")
-            exit()
-
-        today = date.today().isoformat()
-        alloc_requests = [request for request in keystone_session.get('allocations/requests',
-                                                              {'group': keystone_group_id,
-                                                               'status': 'AP',
-                                                               'active__lte': today,
-                                                               'expire__gt': today},
-                                                              'json'
-                                                              )]
+        group_id = get_researchgroup_id(keystone_session, args.account)
+        alloc_requests = get_active_requests(keystone_session, group_id)
 
         if not alloc_requests:
             print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
             print("Showing end date for most recently expired Resource Allocation Request:\033[0m")
-            alloc_requests = [keystone_session.get('allocations/requests',
-                                           {'group': keystone_group_id,
-                                            'status': 'AP',
-                                            'ordering': '-expire',
-                                            'expire__lte': today},
-                                           'json'
-                                           )]
+            alloc_requests = get_most_recent_expired_request(keystone_session, group_id)
 
         for request in alloc_requests:
             print(f"'{request['title']}' ends on {request['expire']} ")
