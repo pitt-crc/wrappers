@@ -11,7 +11,7 @@ ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 
 # Default API configuratipn
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
-KEYSTONE_AUTH_ENDPOINT = 'authentication/new'
+KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
@@ -47,7 +47,7 @@ class KeystoneApi:
             timeout=self._timeout
         )
         response.raise_for_status()
-        self._token = response.json().get("token")
+        self._token = response.json().get("access")
 
     def _get_headers(self) -> Dict[str, str]:
         """Constructs the headers for an authenticated request.
