@@ -58,21 +58,19 @@ class CrcSus(BaseParser):
         """
 
         Slurm.check_slurm_account_exists(account_name=args.account)
-        auth_header = get_auth_header(KEYSTONE_URL,
-                                      {'username': os.environ["USER"],
-                                       'password': getpass("Please enter your CRC login password:\n")})
-        # Determine if provided or default account is in Keystone
-        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
-        alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
+        keystone_session = KeystoneApi()
+        keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
+
+        group_id = get_researchgroup_id(keystone_session, args.account)
+        alloc_requests = get_active_requests(keystone_session, group_id)
+
         if not alloc_requests:
             print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
-            print("Showing SUs for most recently expired Resource Allocation Request:\033[0m")
-            alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
+            print("Showing end date for most recently expired Resource Allocation Request:\033[0m")
+            alloc_requests = get_most_recent_expired_request(keystone_session, group_id)
 
-        per_cluster_totals = get_per_cluster_totals(alloc_requests,
-                                                    get_enabled_cluster_ids(KEYSTONE_URL, auth_header),
-                                                    auth_header)
-
+        per_cluster_totals = get_per_cluster_totals(keystone_session, alloc_requests,
+                                                    get_enabled_cluster_ids(keystone_session))
         earliest_date = get_earliest_startdate(alloc_requests)
 
         for cluster in per_cluster_totals:
