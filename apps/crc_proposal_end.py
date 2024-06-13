@@ -33,12 +33,12 @@ class CrcProposalEnd(BaseParser):
         """
 
         Slurm.check_slurm_account_exists(args.account)
-        keystone = KeystoneApi()
-        keystone.login(os.environ["User"], getpass("Please enter your CRC login password:\n"))
+        keystone_session = KeystoneApi()
+        keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
 
         # Attempt to get the primary key for the ResearchGroup
         try:
-            keystone_group_id = keystone.get('users/researchgroups/',
+            keystone_group_id = keystone_session.get('users/researchgroups/',
                                              {'name': args.account},
                                              'json')[0]['id']
         except IndexError:
@@ -47,7 +47,7 @@ class CrcProposalEnd(BaseParser):
             exit()
 
         today = date.today().isoformat()
-        alloc_requests = [request for request in keystone.get('allocations/requests',
+        alloc_requests = [request for request in keystone_session.get('allocations/requests',
                                                               {'group': keystone_group_id,
                                                                'status': 'AP',
                                                                'active__lte': today,
@@ -58,7 +58,7 @@ class CrcProposalEnd(BaseParser):
         if not alloc_requests:
             print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
             print("Showing end date for most recently expired Resource Allocation Request:\033[0m")
-            alloc_requests = [keystone.get('allocations/requests',
+            alloc_requests = [keystone_session.get('allocations/requests',
                                            {'group': keystone_group_id,
                                             'status': 'AP',
                                             'ordering': '-expire',
