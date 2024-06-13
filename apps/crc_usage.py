@@ -96,25 +96,24 @@ class CrcUsage(BaseParser):
         """
 
         Slurm.check_slurm_account_exists(account_name=args.account)
-        auth_header = get_auth_header(KEYSTONE_URL,
-                                      {'username': os.environ["USER"],
-                                       'password': getpass("Please enter your CRC login password:\n")})
+        keystone_session = KeystoneApi()
+        keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
 
         # Gather AllocationRequests from Keystone
-        keystone_group_id = get_researchgroup_id(KEYSTONE_URL, args.account, auth_header)
+        group_id = get_researchgroup_id(keystone_session, args.account)
+        alloc_requests = get_active_requests(keystone_session, group_id)
 
-        alloc_requests = get_active_requests(KEYSTONE_URL, keystone_group_id, auth_header)
         if not alloc_requests:
             print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
             print("Showing usage information for most recently expired Resource Allocation Request: \033[0m")
-            alloc_requests = get_most_recent_expired_request(KEYSTONE_URL, keystone_group_id, auth_header)
+            alloc_requests = get_most_recent_expired_request(keystone_session, group_id)
 
-        clusters = get_enabled_cluster_ids(KEYSTONE_URL, auth_header)
+        clusters = get_enabled_cluster_ids(keystone_session)
 
         self.print_summary_table(alloc_requests,
                                  args.account,
-                                 get_per_cluster_totals(alloc_requests, clusters, auth_header, per_request=True))
+                                 get_per_cluster_totals(keystone_session, alloc_requests, clusters, per_request=True))
 
         self.print_usage_table(args.account,
-                               get_per_cluster_totals(alloc_requests, clusters, auth_header),
+                               get_per_cluster_totals(keystone_session, alloc_requests, clusters),
                                get_earliest_startdate(alloc_requests))

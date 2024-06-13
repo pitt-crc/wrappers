@@ -7,6 +7,7 @@ Resource summaries are provided for GPU and CPU partitions.
 
 from argparse import Namespace
 from typing import Dict, Tuple
+import re
 
 from .utils.cli import BaseParser
 from .utils.system_info import Shell, Slurm
@@ -109,7 +110,7 @@ class CrcIdle(BaseParser):
             _, total, allocated, state = node_info.split('_')
 
             # If the node is in a downed state, report 0 resource availability.
-            if state in ['drain']:
+            if re.search("drain", state):
                 idle = 0
 
             else:
