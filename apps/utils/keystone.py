@@ -281,7 +281,7 @@ def get_enabled_cluster_ids(keystone_client: KeystoneApi) -> dict():
     """Get the list of enabled clusters defined in Keystone along with their IDs"""
 
     clusters = {}
-    for cluster in keystone_client.get('/allocations/clusters/', {'enabled': True}, 'json'):
+    for cluster in keystone_client.get('allocations/clusters/', {'enabled': True}, 'json'):
         clusters[cluster['id']] = cluster['name']
 
     return clusters
