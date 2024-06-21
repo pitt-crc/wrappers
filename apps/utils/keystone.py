@@ -9,9 +9,10 @@ import requests
 ResponseContentType = Literal['json', 'text', 'content']
 ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 
-# Default API configuratipn
+# Default API configuration
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
-KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
+DEFAULT_TIMEOUT = 10
+
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
@@ -27,15 +28,21 @@ class KeystoneApi:
 
         self.base_url = base_url
         self._token: Optional[str] = None
-        self._timeout: int = 10
 
-    def login(self, username: str, password: str, endpoint: str = KEYSTONE_AUTH_ENDPOINT) -> None:
+    def login(
+        self,
+        username: str,
+        password: str,
+        endpoint: str = 'authentication/new/',
+        timeout: int = DEFAULT_TIMEOUT
+    ) -> None:
         """Logs in to the Keystone API and caches the JWT token.
 
         Args:
             username: The username for authentication
             password: The password for authentication
             endpoint: The API endpoint to send the authentication request to
+            timeout: Number of seconds before he requests times out
 
         Raises:
             requests.HTTPError: If the login request fails
@@ -44,8 +51,9 @@ class KeystoneApi:
         response = requests.post(
             f"{self.base_url}/{endpoint}",
             json={"username": username, "password": password},
-            timeout=self._timeout
+            timeout=timeout
         )
+
         response.raise_for_status()
         self._token = response.json().get("access")
 
@@ -95,7 +103,11 @@ class KeystoneApi:
             raise ValueError(f"Invalid response type: {response_type}")
 
     def get(
-            self, endpoint: str, params: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+        self,
+        endpoint: str,
+        params: Optional[Dict[str, Any]] = None,
+        response_type: ResponseContentType = 'json',
+        timeout: int = DEFAULT_TIMEOUT
     ) -> ParsedResponseContent:
         """Makes a GET request to the specified endpoint.
 
@@ -103,6 +115,7 @@ class KeystoneApi:
             endpoint: The API endpoint to send the GET request to
             params: The query parameters to include in the request
             response_type: The expected response type ('json', 'text', 'content')
+            timeout: Number of seconds before he requests times out
 
         Returns:
             The response from the API in the specified format
@@ -114,13 +127,17 @@ class KeystoneApi:
         response = requests.get(f"{self.base_url}/{endpoint}",
                                 headers=self._get_headers(),
                                 params=params,
-                                timeout=self._timeout
+                                timeout=timeout
                                 )
         response.raise_for_status()
         return self._process_response(response, response_type)
 
     def post(
-            self, endpoint: str, data: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+        self,
+        endpoint: str,
+        data: Optional[Dict[str, Any]] = None,
+        response_type: ResponseContentType = 'json',
+        timeout: int = DEFAULT_TIMEOUT
     ) -> ParsedResponseContent:
         """Makes a POST request to the specified endpoint.
 
@@ -128,6 +145,7 @@ class KeystoneApi:
             endpoint: The API endpoint to send the POST request to
             data: The JSON data to include in the POST request
             response_type: The expected response type ('json', 'text', 'content')
+            timeout: Number of seconds before he requests times out
 
         Returns:
             The response from the API in the specified format
@@ -136,16 +154,21 @@ class KeystoneApi:
             requests.HTTPError: If the POST request fails
         """
 
-        response = requests.post(f"{self.base_url}/{endpoint}",
-                                 headers=self._get_headers(),
-                                 json=data,
-                                 timeout=self._timeout
-                                 )
+        response = requests.post(
+            f"{self.base_url}/{endpoint}",
+            headers=self._get_headers(),
+            json=data,
+            timeout=timeout
+        )
         response.raise_for_status()
         return self._process_response(response, response_type)
 
     def patch(
-            self, endpoint: str, data: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+        self,
+        endpoint: str,
+        data: Optional[Dict[str, Any]] = None,
+        response_type: ResponseContentType = 'json',
+        timeout: int = DEFAULT_TIMEOUT
     ) -> ParsedResponseContent:
         """Makes a PATCH request to the specified endpoint.
 
@@ -153,6 +176,7 @@ class KeystoneApi:
             endpoint: The API endpoint to send the PATCH request to
             data: The JSON data to include in the PATCH request
             response_type: The expected response type ('json', 'text', 'content')
+            timeout: Number of seconds before he requests times out
 
         Returns:
             The response from the API in the specified format
@@ -164,13 +188,17 @@ class KeystoneApi:
         response = requests.patch(f"{self.base_url}/{endpoint}",
                                   headers=self._get_headers(),
                                   json=data,
-                                  timeout=self._timeout
+                                  timeout=timeout
                                   )
         response.raise_for_status()
         return self._process_response(response, response_type)
 
     def put(
-            self, endpoint: str, data: Optional[Dict[str, Any]] = None, response_type: ResponseContentType = 'json'
+        self,
+        endpoint: str,
+        data: Optional[Dict[str, Any]] = None,
+        response_type: ResponseContentType = 'json',
+        timeout: int = DEFAULT_TIMEOUT
     ) -> ParsedResponseContent:
         """Makes a PUT request to the specified endpoint.
 
@@ -178,6 +206,7 @@ class KeystoneApi:
             endpoint: The API endpoint to send the PUT request to
             data: The JSON data to include in the PUT request
             response_type: The expected response type ('json', 'text', 'content')
+            timeout: Number of seconds before he requests times out
 
         Returns:
             The response from the API in the specified format
@@ -186,20 +215,28 @@ class KeystoneApi:
             requests.HTTPError: If the PUT request fails
         """
 
-        response = requests.put(f"{self.base_url}/{endpoint}",
-                                headers=self._get_headers(),
-                                json=data,
-                                timeout=self._timeout
-                                )
+        response = requests.put(
+            f"{self.base_url}/{endpoint}",
+            headers=self._get_headers(),
+            json=data,
+            timeout=timeout
+        )
+
         response.raise_for_status()
         return self._process_response(response, response_type)
 
-    def delete(self, endpoint: str, response_type: ResponseContentType = 'json') -> ParsedResponseContent:
+    def delete(
+        self,
+        endpoint: str,
+        response_type: ResponseContentType = 'json',
+        timeout: int = DEFAULT_TIMEOUT
+    ) -> ParsedResponseContent:
         """Makes a DELETE request to the specified endpoint.
 
         Args:
             endpoint: The API endpoint to send the DELETE request to
             response_type: The expected response type ('json', 'text', 'content')
+            timeout: Number of seconds before he requests times out
 
         Returns:
             The response from the API in the specified format
@@ -208,10 +245,7 @@ class KeystoneApi:
             requests.HTTPError: If the DELETE request fails
         """
 
-        response = requests.delete(f"{self.base_url}/{endpoint}",
-                                   headers=self._get_headers(),
-                                   timeout=self._timeout
-                                   )
+        response = requests.delete(f"{self.base_url}/{endpoint}", headers=self._get_headers(), timeout=timeout)
         response.raise_for_status()
         return self._process_response(response, response_type)
 
