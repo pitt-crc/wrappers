@@ -1,13 +1,15 @@
 """Utility functions used across various wrappers for interacting with keystone"""
 
 from datetime import date
-from typing import Any, Dict, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 import requests
+from requests import HTTPError
 
 # Custom types
 ResponseContentType = Literal['json', 'text', 'content']
 ParsedResponseContent = Union[Dict[str, Any], str, bytes]
+RecordQueryResult = Union[None, dict, List[dict]]
 
 # Default API configuration
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
@@ -18,6 +20,11 @@ RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 class KeystoneApi:
     """API client for submitting requests to the Keystone API"""
+
+    allocations_endpoint = 'allocations/allocations/'
+    requests_endpoint = 'allocations/requests/'
+    research_group_endpoint = 'users/researchgroups/'
+    users_endpoint = 'users/users/'
 
     def __init__(self, base_url: str = KEYSTONE_URL) -> None:
         """Initializes the KeystoneApi class with the base URL of the API.
@@ -124,11 +131,13 @@ class KeystoneApi:
             requests.HTTPError: If the GET request fails
         """
 
-        response = requests.get(f"{self.base_url}/{endpoint}",
-                                headers=self._get_headers(),
-                                params=params,
-                                timeout=timeout
-                                )
+        response = requests.get(
+            f"{self.base_url}/{endpoint}",
+            headers=self._get_headers(),
+            params=params,
+            timeout=timeout
+        )
+
         response.raise_for_status()
         return self._process_response(response, response_type)
 
@@ -160,6 +169,7 @@ class KeystoneApi:
             json=data,
             timeout=timeout
         )
+
         response.raise_for_status()
         return self._process_response(response, response_type)
 
@@ -185,11 +195,13 @@ class KeystoneApi:
             requests.HTTPError: If the PATCH request fails
         """
 
-        response = requests.patch(f"{self.base_url}/{endpoint}",
-                                  headers=self._get_headers(),
-                                  json=data,
-                                  timeout=timeout
-                                  )
+        response = requests.patch(
+            f"{self.base_url}/{endpoint}",
+            headers=self._get_headers(),
+            json=data,
+            timeout=timeout
+        )
+
         response.raise_for_status()
         return self._process_response(response, response_type)
 
@@ -248,6 +260,107 @@ class KeystoneApi:
         response = requests.delete(f"{self.base_url}/{endpoint}", headers=self._get_headers(), timeout=timeout)
         response.raise_for_status()
         return self._process_response(response, response_type)
+
+    def _get_records(
+        self,
+        endpoint: str,
+        pk: Optional[int] = None,
+        filters: Optional[dict] = None,
+        timeout=DEFAULT_TIMEOUT
+    ) -> RecordQueryResult:
+        """Fetch data from the specified endpoint with optional primary key and filters
+
+        Args:
+            endpoint: The API endpoint to send the GET request to
+            pk: Optional primary key to fetch a specific record
+            filters: Optional query parameters to include in the request
+
+        Returns:
+            The response from the API in JSON format
+        """
+
+        if pk is not None:
+            endpoint = f'{endpoint}{pk}/'
+
+        try:
+            return self.get(endpoint, params=filters, timeout=timeout)
+
+        except HTTPError as excep:
+            if excep.response.status_code == 404:
+                return None
+
+            raise
+
+    def get_allocation(
+        self,
+        pk: Optional[int] = None,
+        timeout: int = DEFAULT_TIMEOUT,
+        **filters
+    ) -> RecordQueryResult:
+        """Return allocation data from the API
+
+        Args:
+            pk: Optional primary key to fetch a specific allocation
+            timeout: Number of seconds before he requests times out
+            **filters: Additional filters to apply to the request
+
+        Returns:
+            A list of allocation records
+        """
+
+        return self._get_records(self.allocations_endpoint, pk, filters, timeout)
+
+    def get_allocation_request(
+        self,
+        pk: Optional[int] = None,
+        timeout: int = DEFAULT_TIMEOUT,
+        **filters
+    ) -> RecordQueryResult:
+        """Return allocation request data from the API
+
+        Args:
+            pk: Optional primary key to fetch a specific allocation request
+            timeout: Number of seconds before he requests times out
+            **filters: Additional filters to apply to the request
+
+        Returns:
+            A list of allocation request records
+        """
+
+        return self._get_records(self.requests_endpoint, pk, filters, timeout)
+
+    def get_research_group(
+        self,
+        pk: Optional[int] = None,
+        timeout: int = DEFAULT_TIMEOUT,
+        **filters
+    ) -> RecordQueryResult:
+        """Return research group data from the API
+
+        Args:
+            pk: Optional primary key to fetch a specific research group
+            timeout: Number of seconds before he requests times out
+            **filters: Additional filters to apply to the request
+
+        Returns:
+            A list of research group records
+        """
+
+        return self._get_records(self.research_group_endpoint, pk, filters, timeout)
+
+    def get_user(self, pk: Optional[int] = None, timeout: int = DEFAULT_TIMEOUT, **filters) -> RecordQueryResult:
+        """Return user data from the API
+
+        Args:
+            pk: Optional primary key to fetch a specific user
+            timeout: Number of seconds before he requests times out
+            **filters: Additional filters to apply to the request
+
+        Returns:
+            A list of user records
+        """
+
+        return self._get_records(self.users_endpoint, pk, filters, timeout)
 
 
 def get_request_allocations(keystone_client: KeystoneApi, request_pk: int) -> dict:
