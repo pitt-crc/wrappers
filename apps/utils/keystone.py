@@ -11,16 +11,16 @@ ResponseContentType = Literal['json', 'text', 'content']
 ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 RecordQueryResult = Union[None, dict, List[dict]]
 
-# Default API configuration
+# CRC specific API settings
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
-DEFAULT_TIMEOUT = 10
-
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
 class KeystoneApi:
     """API client for submitting requests to the Keystone API"""
 
+    timeout = 10
+    authentication_endpoint = 'authentication/new/'
     allocations_endpoint = 'allocations/allocations/'
     requests_endpoint = 'allocations/requests/'
     research_group_endpoint = 'users/researchgroups/'
@@ -40,15 +40,13 @@ class KeystoneApi:
         self,
         username: str,
         password: str,
-        endpoint: str = 'authentication/new/',
-        timeout: int = DEFAULT_TIMEOUT
+        timeout: int = timeout
     ) -> None:
         """Logs in to the Keystone API and caches the JWT token.
 
         Args:
             username: The username for authentication
             password: The password for authentication
-            endpoint: The API endpoint to send the authentication request to
             timeout: Number of seconds before he requests times out
 
         Raises:
@@ -56,7 +54,7 @@ class KeystoneApi:
         """
 
         response = requests.post(
-            f"{self.base_url}/{endpoint}",
+            f"{self.base_url}/{self.authentication_endpoint}",
             json={"username": username, "password": password},
             timeout=timeout
         )
@@ -114,7 +112,7 @@ class KeystoneApi:
         endpoint: str,
         params: Optional[Dict[str, Any]] = None,
         response_type: ResponseContentType = 'json',
-        timeout: int = DEFAULT_TIMEOUT
+        timeout: int = timeout
     ) -> ParsedResponseContent:
         """Makes a GET request to the specified endpoint.
 
@@ -146,7 +144,7 @@ class KeystoneApi:
         endpoint: str,
         data: Optional[Dict[str, Any]] = None,
         response_type: ResponseContentType = 'json',
-        timeout: int = DEFAULT_TIMEOUT
+        timeout: int = timeout
     ) -> ParsedResponseContent:
         """Makes a POST request to the specified endpoint.
 
@@ -178,7 +176,7 @@ class KeystoneApi:
         endpoint: str,
         data: Optional[Dict[str, Any]] = None,
         response_type: ResponseContentType = 'json',
-        timeout: int = DEFAULT_TIMEOUT
+        timeout: int = timeout
     ) -> ParsedResponseContent:
         """Makes a PATCH request to the specified endpoint.
 
@@ -210,7 +208,7 @@ class KeystoneApi:
         endpoint: str,
         data: Optional[Dict[str, Any]] = None,
         response_type: ResponseContentType = 'json',
-        timeout: int = DEFAULT_TIMEOUT
+        timeout: int = timeout
     ) -> ParsedResponseContent:
         """Makes a PUT request to the specified endpoint.
 
@@ -241,7 +239,7 @@ class KeystoneApi:
         self,
         endpoint: str,
         response_type: ResponseContentType = 'json',
-        timeout: int = DEFAULT_TIMEOUT
+        timeout: int = timeout
     ) -> ParsedResponseContent:
         """Makes a DELETE request to the specified endpoint.
 
@@ -266,7 +264,7 @@ class KeystoneApi:
         endpoint: str,
         pk: Optional[int] = None,
         filters: Optional[dict] = None,
-        timeout=DEFAULT_TIMEOUT
+        timeout=timeout
     ) -> RecordQueryResult:
         """Fetch data from the specified endpoint with optional primary key and filters
 
@@ -294,7 +292,7 @@ class KeystoneApi:
     def get_allocation(
         self,
         pk: Optional[int] = None,
-        timeout: int = DEFAULT_TIMEOUT,
+        timeout: int = timeout,
         **filters
     ) -> RecordQueryResult:
         """Return allocation data from the API
@@ -313,7 +311,7 @@ class KeystoneApi:
     def get_allocation_request(
         self,
         pk: Optional[int] = None,
-        timeout: int = DEFAULT_TIMEOUT,
+        timeout: int = timeout,
         **filters
     ) -> RecordQueryResult:
         """Return allocation request data from the API
@@ -332,7 +330,7 @@ class KeystoneApi:
     def get_research_group(
         self,
         pk: Optional[int] = None,
-        timeout: int = DEFAULT_TIMEOUT,
+        timeout: int = timeout,
         **filters
     ) -> RecordQueryResult:
         """Return research group data from the API
@@ -348,7 +346,7 @@ class KeystoneApi:
 
         return self._get_records(self.research_group_endpoint, pk, filters, timeout)
 
-    def get_user(self, pk: Optional[int] = None, timeout: int = DEFAULT_TIMEOUT, **filters) -> RecordQueryResult:
+    def get_user(self, pk: Optional[int] = None, timeout: int = timeout, **filters) -> RecordQueryResult:
         """Return user data from the API
 
         Args:
