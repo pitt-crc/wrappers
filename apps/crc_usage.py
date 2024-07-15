@@ -11,6 +11,7 @@ from getpass import getpass
 
 from prettytable import PrettyTable
 
+from keystone_client import KeystoneClient
 from .utils.cli import BaseParser
 from .utils.keystone import *
 from .utils.system_info import Slurm
@@ -96,7 +97,7 @@ class CrcUsage(BaseParser):
         """
 
         Slurm.check_slurm_account_exists(account_name=args.account)
-        keystone_session = KeystoneApi()
+        keystone_session = KeystoneClient(url=KEYSTONE_URL)
         keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
 
         # Gather AllocationRequests from Keystone
