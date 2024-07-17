@@ -42,7 +42,7 @@ crc-sus = "apps.crc_sus:CrcSus.execute"
 crc-usage = "apps.crc_usage:CrcUsage.execute"
 
 [tool.poetry.dependencies]
-python = "^3.8.0"
+python = "^3.9.0"
 requests = "^2.31.0"
 prettytable = "^3.10.0"
 
