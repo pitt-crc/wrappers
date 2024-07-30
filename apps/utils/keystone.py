@@ -25,11 +25,11 @@ def get_active_requests(session: KeystoneClient, group_pk: int) -> [dict]:
     """Get all active AllocationRequest information from keystone for a given group"""
 
     today = date.today().isoformat()
-    return [response.json() for response in session.http_get(session.schema.requests,
-                                                    {'group': group_pk,
-                                                     'status': 'AP',
-                                                     'active__lte': today,
-                                                     'expire__gt': today})]
+    return session.http_get(session.schema.requests,
+                                {'group': group_pk,
+                                 'status': 'AP',
+                                 'active__lte': today,
+                                 'expire__gt': today}).json()
 
 
 def get_researchgroup_id(session: KeystoneClient, account_name: str) -> int:
@@ -37,8 +37,7 @@ def get_researchgroup_id(session: KeystoneClient, account_name: str) -> int:
 
     # Attempt to get the primary key for the ResearchGroup
     try:
-        response = session.http_get(session.schema.research_groups, {'name': account_name}).json()
-        keystone_group_id = response[0]['id']
+        keystone_group_id = session.http_get(session.schema.research_groups, {'name': account_name}).json()[0]['id']
     except IndexError:
         print(f"No Slurm Account found in the accounting system for '{account_name}'. \n"
               f"Please submit a ticket to the CRC team to ensure your allocation was properly configured")
@@ -64,19 +63,18 @@ def get_most_recent_expired_request(session: KeystoneClient, group_pk: int) -> [
     """Get the single most recently expired AllocationRequest information from keystone for a given group"""
 
     today = date.today().isoformat()
-    return [request.json()[0] for request in session.http_get(session.schema.requests,
+    return session.http_get(session.schema.requests,
                              {'group': group_pk,
                               'status': 'AP',
                               'ordering': '-expire',
-                              'expire__lte': today})]
+                              'expire__lte': today}).json()[0]
 
 
 def get_enabled_cluster_ids(session: KeystoneClient) -> dict():
     """Get the list of enabled clusters defined in Keystone along with their IDs"""
 
     clusters = {}
-    response = session.http_get(session.schema.clusters, {'enabled': True})
-    for cluster in response.json():
+    for cluster in session.http_get(session.schema.clusters, {'enabled': True}).json():
         clusters[cluster['id']] = cluster['name']
 
     return clusters
