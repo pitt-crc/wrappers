@@ -20,7 +20,6 @@ def get_request_allocations(session: KeystoneClient, request_pk: int) -> dict:
 
     return session.http_get(session.schema.allocations, {'request': request_pk})
 
-
 def get_active_requests(session: KeystoneClient, group_pk: int) -> [dict]:
     """Get all active AllocationRequest information from keystone for a given group"""
 
@@ -37,7 +36,7 @@ def get_researchgroup_id(session: KeystoneClient, account_name: str) -> int:
 
     # Attempt to get the primary key for the ResearchGroup
     try:
-        keystone_group_id = session.http_get(session.schema.researchgroups,
+        keystone_group_id = session.http_get(session.schema.research_groups,
                                              {'name': account_name})[0]['id']
     except IndexError:
         print(f"No Slurm Account found in the accounting system for '{account_name}'. \n"
