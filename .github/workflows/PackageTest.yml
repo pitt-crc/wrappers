@@ -17,7 +17,7 @@ jobs:
           - 22.05.11
           - 23.02.5
         python_version:
-          - 3.8
+          - 3.9
 
     container:
       image: ghcr.io/pitt-crc/test-env:${{ matrix.slurm_version }}
@@ -35,10 +35,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install poetry
-        run: |
-          pip install poetry
-          poetry env use python${{ matrix.python_version }}
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
 
       - name: Install dependencies
         run: poetry install --with tests
