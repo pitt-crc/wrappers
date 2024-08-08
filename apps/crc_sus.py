@@ -58,7 +58,7 @@ class CrcSus(BaseParser):
         """
 
         Slurm.check_slurm_account_exists(account_name=args.account)
-        keystone_session = KeystoneApi()
+        keystone_session = KeystoneClient(url=KEYSTONE_URL)
         keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
 
         group_id = get_researchgroup_id(keystone_session, args.account)
