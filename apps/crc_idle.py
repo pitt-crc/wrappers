@@ -58,7 +58,7 @@ class CrcIdle(BaseParser):
         return specified_clusters or argument_clusters
 
     @staticmethod
-    def count_idle_cpu_resources(cluster: str, partition: str) -> dict[int, int]:
+    def _count_idle_cpu_resources(cluster: str, partition: str) -> dict[int, int]:
         """Return the idle CPU resources on a given cluster partition.
 
         Args:
@@ -83,7 +83,7 @@ class CrcIdle(BaseParser):
         return return_dict
 
     @staticmethod
-    def count_idle_gpu_resources(cluster: str, partition: str) -> dict[int, int]:
+    def _count_idle_gpu_resources(cluster: str, partition: str) -> dict[int, int]:
         """Return idle GPU resources on a given cluster partition.
 
         If the host node is in a `drain` state, the GPUs are reported as unavailable.
@@ -135,10 +135,10 @@ class CrcIdle(BaseParser):
 
         cluster_type = self.cluster_types[cluster]
         if cluster_type == 'GPUs':
-            return self.count_idle_gpu_resources(cluster, partition)
+            return self._count_idle_gpu_resources(cluster, partition)
 
         elif cluster_type == 'cores':
-            return self.count_idle_cpu_resources(cluster, partition)
+            return self._count_idle_cpu_resources(cluster, partition)
 
         raise ValueError(f'Unknown cluster type: {cluster}')
 
