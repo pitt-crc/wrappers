@@ -10,6 +10,7 @@ to be manually added (or removed) by updating the application CLI arguments.
 """
 
 from argparse import ArgumentTypeError, Namespace
+from collections import defaultdict
 from datetime import time
 from os import system
 
@@ -21,7 +22,7 @@ class CrcInteractive(BaseParser):
     """Launch an interactive Slurm session."""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
-    min_mpi_cores = {'mpi': 48, 'opa-high-mem': 28}
+    min_mpi_cores = defaultdict(lambda: 28, {'mpi': 48, 'opa-high-mem': 28})  # Minimum limit on requested cores per MPI partition
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
 
@@ -54,8 +55,8 @@ class CrcInteractive(BaseParser):
         # Arguments for specifying what cluster to start an interactive session on
         cluster_args = self.add_argument_group('Cluster Arguments')
         cluster_args.add_argument('-p', '--partition', help='run the session on a specific partition')
-        for abbrev, cluster in self.clusters.items():
-            cluster_args.add_argument(f'-{abbrev}', f'--{cluster}', action='store_true', help=f'launch a session on the {cluster_args} cluster')
+        for cluster, abbrev in self.clusters.items():
+            cluster_args.add_argument(f'-{abbrev}', f'--{cluster}', action='store_true', help=f'launch a session on the {cluster} cluster')
 
         # Arguments for requesting additional hardware resources
         resource_args = self.add_argument_group('Arguments for Increased Resources')
@@ -108,31 +109,32 @@ class CrcInteractive(BaseParser):
         except Exception:
             raise ArgumentTypeError(f'Could not parse time value {time_str}')
 
-    def _validate_arguments(self, args: Namespace) -> None:
-        """Exit the application if command line arguments are invalid
+    def parse_args(self, args=None, namespace=None) -> Namespace:
+        """Parse command line arguments"""
 
-        Args:
-            args: Parsed commandline arguments
-        """
+        args = super().parse_args(args, namespace)
 
         # Check wall time is between limits, enable both %H:%M format and integer hours
         check_time = args.time.hour + args.time.minute / 60 + args.time.second / 3600
-
         if not self.min_time <= check_time <= self.max_time:
-            self.error(f'{check_time} is not in {self.min_time} <= time <= {self.max_time}... exiting')
+            self.error(f'Requested time must be between {self.min_time} and {self.max_time}.')
 
         # Check the minimum number of nodes are requested for mpi
         if args.mpi and args.num_nodes < self.min_mpi_nodes:
-            self.error(f'You must use at least {self.min_mpi_nodes} nodes when using the MPI cluster')
+            self.error(f'You must use at least {self.min_mpi_nodes} nodes when using the MPI cluster.')
 
         # Check the minimum number of cores are requested for mpi
-        if args.mpi and args.num_cores < self.min_mpi_cores.get(args.partition, self.default_mpi_cores):
-            self.error(f'You must request at least {self.min_mpi_cores.get(args.partition, self.default_mpi_cores)} '
-                       f'cores per node when using the MPI cluster {args.partition} partition')
+        min_cores = self.min_mpi_cores[args.partition]
+        if args.mpi and args.num_cores < min_cores:
+            self.error(
+                f'You must request at least {min_cores} cores per node when using the {args.partition} partition on the MPI cluster.'
+            )
 
         # Check a partition is specified if the user is requesting invest
         if args.invest and not args.partition:
-            self.error('You must specify a partition when using the Investor cluster')
+            self.error('You must specify a partition when using the invest cluster.')
+
+        return args
 
     def create_srun_command(self, args: Namespace) -> str:
         """Create an ``srun`` command based on parsed command line arguments
@@ -192,7 +194,6 @@ class CrcInteractive(BaseParser):
             args.num_gpus = 1 if args.gpu else 0
 
         # Create the slurm command
-        self._validate_arguments(args)
         srun_command = self.create_srun_command(args)
 
         if args.print_command:
