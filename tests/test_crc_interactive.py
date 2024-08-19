@@ -1,4 +1,4 @@
-"""Tests for the ``crc-interactive`` application."""
+"""Tests for the `crc-interactive` application."""
 
 from argparse import ArgumentTypeError, Namespace
 from datetime import time
@@ -24,6 +24,15 @@ class ArgumentParsing(TestCase):
         self.assertEqual(CrcInteractive.default_cores, args.num_cores)
         self.assertEqual(CrcInteractive.default_mem, args.mem)
         self.assertEqual(CrcInteractive.default_gpus, args.num_gpus)
+
+    def test_default_gpus(self) -> None:
+        """Test the default number of GPUs is determined dynamically by cluster."""
+
+        smp_args = self.app.parse_args(['--smp'])
+        self.assertEqual(0, smp_args.num_gpus)
+
+        gpu_args = self.app.parse_args(['--gpu'])
+        self.assertEqual(1, gpu_args.num_gpus)
 
     def test_time_argument_out_of_range(self) -> None:
         """Test invalid time arguments raise an error."""

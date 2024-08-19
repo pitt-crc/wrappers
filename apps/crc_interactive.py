@@ -1,4 +1,4 @@
-"""A simple wrapper around the Slurm ``srun`` command
+"""A simple wrapper around the Slurm `srun` command.
 
 The application launches users into an interactive Slurm session on a
 user-selected cluster and (if specified) partition. Dedicated command line
@@ -87,7 +87,7 @@ class CrcInteractive(BaseParser):
 
     @staticmethod
     def parse_time(time_str: str) -> time:
-        """Parse a string representation of time in 'HH:MM:SS' format and return a time object
+        """Parse a string representation of time in 'HH:MM:SS' format and return a time object.
 
         Args:
             time_str: A string representing time in 'HH:MM:SS' format.
@@ -110,9 +110,13 @@ class CrcInteractive(BaseParser):
             raise ArgumentTypeError(f'Could not parse time value {time_str}')
 
     def parse_args(self, args=None, namespace=None) -> Namespace:
-        """Parse command line arguments"""
+        """Parse command line arguments."""
 
         args = super().parse_args(args, namespace)
+
+        # Set defaults that need to be determined dynamically
+        if not args.num_gpus:
+            args.num_gpus = 1 if args.gpu else 0
 
         # Check wall time is between limits, enable both %H:%M format and integer hours
         check_time = args.time.hour + args.time.minute / 60 + args.time.second / 3600
@@ -137,13 +141,13 @@ class CrcInteractive(BaseParser):
         return args
 
     def create_srun_command(self, args: Namespace) -> str:
-        """Create an ``srun`` command based on parsed command line arguments
+        """Create an `srun` command based on parsed command line arguments.
 
         Args:
-            args: A dictionary of parsed command line parsed_args
+            args: A dictionary of parsed command line parsed_args.
 
         Return:
-            The equivalent ``srun`` command as a string
+            The equivalent `srun` command as a string.
         """
 
         # Map arguments from the parent application to equivalent srun arguments
@@ -179,19 +183,15 @@ class CrcInteractive(BaseParser):
         return f'srun -M {cluster_to_run} {srun_args} --pty bash'
 
     def app_logic(self, args: Namespace) -> None:
-        """Logic to evaluate when executing the application
+        """Logic to evaluate when executing the application.
 
         Args:
-            args: Parsed command line arguments
+            args: Parsed command line arguments.
         """
 
         if not any(getattr(args, cluster, False) for cluster in Slurm.get_cluster_names()):
             self.print_help()
             self.exit()
-
-        # Set defaults that need to be determined dynamically
-        if not args.num_gpus:
-            args.num_gpus = 1 if args.gpu else 0
 
         # Create the slurm command
         srun_command = self.create_srun_command(args)
