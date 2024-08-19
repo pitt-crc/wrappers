@@ -9,7 +9,7 @@ this application does support dynamic cluster discovery. New clusters need
 to be manually added (or removed) by updating the application CLI arguments.
 """
 
-from argparse import Namespace, ArgumentTypeError
+from argparse import ArgumentTypeError, Namespace
 from datetime import time
 from os import system
 
@@ -32,6 +32,17 @@ class CrcInteractive(BaseParser):
     default_mem = 1  # Default memory in GB
     default_gpus = 0  # Default number of GPUs
 
+    # Clusters names to make available from the command line
+    # Maps cluster name to single character abbreviation use in the CLI
+    clusters = {
+        'smp': 's',
+        'gpu': 'g',
+        'mpi': 'm',
+        'invest': 'i',
+        'htc': 'd',
+        'teach': 'e'
+    }
+
     def __init__(self) -> None:
         """Define arguments for the command line interface."""
 
@@ -42,13 +53,9 @@ class CrcInteractive(BaseParser):
 
         # Arguments for specifying what cluster to start an interactive session on
         cluster_args = self.add_argument_group('Cluster Arguments')
-        cluster_args.add_argument('-s', '--smp', action='store_true', help='launch a session on the smp cluster')
-        cluster_args.add_argument('-g', '--gpu', action='store_true', help='launch a session on the gpu cluster')
-        cluster_args.add_argument('-m', '--mpi', action='store_true', help='launch a session on the mpi cluster')
-        cluster_args.add_argument('-i', '--invest', action='store_true', help='launch a session on the invest cluster')
-        cluster_args.add_argument('-d', '--htc', action='store_true', help='launch a session on the htc cluster')
-        cluster_args.add_argument('-e', '--teach', action='store_true', help='launch a session on the teach cluster')
         cluster_args.add_argument('-p', '--partition', help='run the session on a specific partition')
+        for abbrev, cluster in self.clusters.items():
+            cluster_args.add_argument(f'-{abbrev}', f'--{cluster}', action='store_true', help=f'launch a session on the {cluster_args} cluster')
 
         # Arguments for requesting additional hardware resources
         resource_args = self.add_argument_group('Arguments for Increased Resources')
@@ -161,7 +168,12 @@ class CrcInteractive(BaseParser):
         if (args.gpu or args.invest) and args.num_gpus:
             srun_args += ' ' + f'--gres=gpu:{args.num_gpus}'
 
-        cluster_to_run = next(cluster for cluster in Slurm.get_cluster_names() if getattr(args, cluster))
+        try:
+            cluster_to_run = next(cluster for cluster in self.clusters if getattr(args, cluster))
+
+        except StopIteration:
+            raise RuntimeError('Please specify which cluster to run on.')
+
         return f'srun -M {cluster_to_run} {srun_args} --pty bash'
 
     def app_logic(self, args: Namespace) -> None:
