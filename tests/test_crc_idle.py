@@ -2,7 +2,7 @@
 
 from argparse import Namespace
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import call, Mock, patch
 
 from apps.crc_idle import CrcIdle
 from apps.utils.system_info import Slurm
@@ -50,7 +50,7 @@ class ArgumentParsing(TestCase):
 class GetClusterList(TestCase):
     """Test the selection of which clusters to print"""
 
-    def test_get_cluster_list_no_arguments(self):
+    def test_get_cluster_list_no_arguments(self) -> None:
         """Test returned values when no clusters are specified."""
 
         app = CrcIdle()
@@ -60,7 +60,7 @@ class GetClusterList(TestCase):
         expected = tuple(app.cluster_types.keys())
         self.assertEqual(expected, result)
 
-    def test_get_cluster_list_with_cluster_arguments(self):
+    def test_get_cluster_list_with_cluster_arguments(self) -> None:
         """Test returned values when select clusters are specified."""
 
         app = CrcIdle()
@@ -68,3 +68,80 @@ class GetClusterList(TestCase):
         result = app.get_cluster_list(args)
 
         self.assertEqual(('smp', 'mpi'), result)
+
+
+class CountIdleResources(TestCase):
+    """Test the counting of idle CPU/DPU resources"""
+
+    @patch('apps.utils.Shell.run_command')
+    def test_count_idle_cpu_resources(self, mock_run_command: Mock) -> None:
+        """Test counting idle CPU resources."""
+
+        cluster = 'smp'
+        partition = 'default'
+        mock_run_command.return_value = "node1,2/4/0/4\nnode2,3/2/0/3"
+
+        app = CrcIdle()
+        result = app.count_idle_resources(cluster, partition)
+
+        expected = {4: 1, 2: 1}
+        self.assertEqual(expected, result)
+
+    @patch('apps.utils.Shell.run_command')
+    def test_count_idle_gpu_resources(self, mock_run_command: Mock) -> None:
+        """Test counting idle GPU resources."""
+
+        cluster = 'gpu'
+        partition = 'default'
+        mock_run_command.return_value = "node1_4_2_idle\nnode2_4_4_drain"
+
+        app = CrcIdle()
+        result = app.count_idle_resources(cluster, partition)
+        expected = {2: 1, 0: 1}
+        self.assertEqual(expected, result)
+
+
+class PrintPartitionSummary(TestCase):
+    """Test the printing of a partition summary"""
+
+    @patch('builtins.print')
+    def test_print_partition_summary_with_idle_resources(self, mock_print: Mock) -> None:
+        """Test printing a summary with idle resources."""
+
+        cluster = 'smp'
+        partition = 'default'
+        idle_resources = {2: 3, 4: 1}  # 3 nodes with 2 idle resources, 1 node with 4 idle resources
+
+        app = CrcIdle()
+        app.print_partition_summary(cluster, partition, idle_resources)
+
+        mock_print.assert_has_calls([
+            call(f'Cluster: {cluster}, Partition: {partition}'),
+            call('=' * 30),
+            call('   3 nodes w/   2 idle cores'),
+            call('   1 nodes w/   4 idle cores'),
+            call('')
+        ], any_order=False)
+
+    @patch('builtins.print')
+    def test_print_partition_summary_no_idle_resources(self, mock_print: Mock) -> None:
+        """Test printing a summary when no idle resources are available."""
+
+        cluster = 'smp'
+        partition = 'default'
+        idle_resources = dict()  # No idle resources
+
+        app = CrcIdle()
+        app.print_partition_summary(cluster, partition, idle_resources)
+
+        mock_print.assert_any_call(f'Cluster: {cluster}, Partition: {partition}')
+        mock_print.assert_any_call('=' * 30)
+        mock_print.assert_any_call(' No idle resources')
+        mock_print.assert_any_call('')
+
+        mock_print.assert_has_calls([
+            call(f'Cluster: {cluster}, Partition: {partition}'),
+            call('=====' * 6),
+            call(' No idle resources'),
+            call('')
+        ], any_order=False)
