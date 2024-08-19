@@ -144,7 +144,11 @@ class CreateSrunCommand(TestCase):
             openmp=False
         )
 
-        expected_command = 'srun -M gpu --export=ALL --nodes=2 --time=02:00:00 --mem=2g --ntasks-per-node=4 --gres=gpu:1 --pty bash'
+        expected_command = (
+            'srun -M gpu --export=ALL '
+            '--nodes=2 --time=02:00:00 --mem=2g --ntasks-per-node=4 --gres=gpu:1 --pty bash'
+        )
+
         actual_command = self.app.create_srun_command(args)
         self.assertEqual(expected_command, actual_command)
 
@@ -172,7 +176,11 @@ class CreateSrunCommand(TestCase):
             openmp=False
         )
 
-        expected_command = 'srun -M mpi --export=ALL --partition=mpi --nodes=3 --time=03:00:00 --mem=4g --ntasks-per-node=48 --pty bash'
+        expected_command = (
+            'srun -M mpi --export=ALL --partition=mpi '
+            '--nodes=3 --time=03:00:00 --mem=4g --ntasks-per-node=48 --pty bash'
+        )
+
         actual_command = self.app.create_srun_command(args)
         self.assertEqual(expected_command, actual_command)
 
@@ -200,7 +208,11 @@ class CreateSrunCommand(TestCase):
             openmp=False
         )
 
-        expected_command = 'srun -M invest --export=ALL --partition=invest-partition --nodes=1 --time=01:00:00 --mem=2g --ntasks-per-node=4 --pty bash'
+        expected_command = (
+            'srun -M invest --export=ALL --partition=invest-partition '
+            '--nodes=1 --time=01:00:00 --mem=2g --ntasks-per-node=4 --pty bash'
+        )
+
         actual_command = self.app.create_srun_command(args)
         self.assertEqual(expected_command, actual_command)
 
@@ -228,7 +240,11 @@ class CreateSrunCommand(TestCase):
             openmp=False
         )
 
-        expected_command = 'srun -M mpi --export=ALL --partition=opa-high-mem --nodes=2 --time=02:00:00 --mem=8g --ntasks-per-node=28 --pty bash'
+        expected_command = (
+            'srun -M mpi --export=ALL --partition=opa-high-mem '
+            '--nodes=2 --time=02:00:00 --mem=8g --ntasks-per-node=28 --pty bash'
+        )
+
         actual_command = self.app.create_srun_command(args)
         self.assertEqual(expected_command, actual_command)
 
