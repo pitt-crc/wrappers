@@ -36,7 +36,7 @@ class ArgumentParsing(TestCase):
         with self.assertRaisesRegex(SystemExit, 'Requested time must be', msg='Maximum MPI time not enforced.'):
             self.app.parse_args(['--smp', '--time', '00:50:00'])
 
-    def test_mpi_minimums(self):
+    def test_mpi_minimums(self) -> None:
         """Test minimum usage limits on MPI."""
 
         min_nodes = CrcInteractive.min_mpi_nodes
@@ -53,7 +53,7 @@ class ArgumentParsing(TestCase):
         with self.assertRaisesRegex(SystemExit, cores_error_message, msg='Minimum cores not enforced.'):
             self.app.parse_args(['--mpi', '--num-nodes', str(min_nodes), '--num-cores', str(min_cores - 1)])
 
-    def test_invest_partition_required(self):
+    def test_invest_partition_required(self) -> None:
         """Test a partition must be specified for the invest cluster."""
 
         with self.assertRaisesRegex(SystemExit, 'You must specify a partition'):
