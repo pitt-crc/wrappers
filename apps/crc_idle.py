@@ -5,29 +5,29 @@ summarize how many resources are available on each cluster partition.
 Resource summaries are provided for GPU and CPU partitions.
 """
 
-from argparse import Namespace
-from typing import Dict, Tuple
 import re
+from argparse import Namespace
+from collections import defaultdict
 
 from .utils.cli import BaseParser
-from .utils.system_info import Shell, Slurm
+from .utils import Shell, Slurm
 
 
 class CrcIdle(BaseParser):
     """Display idle Slurm resources."""
 
     # The type of resource available on a cluster
-    # Either ``cores`` or ``GPUs`` depending on the cluster type
-    cluster_types = {
-        'smp': 'cores',
-        'gpu': 'GPUs',
-        'mpi': 'cores',
-        'htc': 'cores'
-    }
-    default_type = 'cores'
+    # Either `cores` or `GPUs` depending on the cluster type
+    cluster_types = defaultdict(
+        lambda: 'cores',
+        smp='cores',
+        gpu='GPUs',
+        mpi='cores',
+        htc='cores',
+    )
 
     def __init__(self) -> None:
-        """Define arguments for the command line interface"""
+        """Define arguments for the command line interface."""
 
         super(CrcIdle, self).__init__()
         self.add_argument('-s', '--smp', action='store_true', help='list idle resources on the smp cluster')
@@ -37,8 +37,8 @@ class CrcIdle(BaseParser):
         self.add_argument('-d', '--htc', action='store_true', help='list idle resources on the htc cluster')
         self.add_argument('-p', '--partition', nargs='+', help='only include information for specific partitions')
 
-    def get_cluster_list(self, args: Namespace) -> Tuple[str]:
-        """Return a list of clusters specified by command line arguments
+    def get_cluster_list(self, args: Namespace) -> tuple[str]:
+        """Return a list of clusters specified by command line arguments.
 
         Returns a tuple of clusters specified by command line arguments. If no
         clusters were specified, then return a tuple of all cluster names.
@@ -50,14 +50,15 @@ class CrcIdle(BaseParser):
             A tuple of cluster names
         """
 
-        argument_options = self.cluster_types
-        argument_clusters = tuple(filter(lambda cluster: getattr(args, cluster), argument_options))
+        # Select only the specified clusters
+        argument_clusters = tuple(self.cluster_types.keys())
+        specified_clusters = tuple(filter(lambda cluster: getattr(args, cluster), argument_clusters))
 
         # Default to returning all clusters
-        return argument_clusters or argument_options
+        return specified_clusters or argument_clusters
 
     @staticmethod
-    def _idle_cpu_resources(cluster: str, partition: str) -> Dict[int, int]:
+    def count_idle_cpu_resources(cluster: str, partition: str) -> dict[int, int]:
         """Return the idle CPU resources on a given cluster partition
 
         Args:
@@ -83,10 +84,10 @@ class CrcIdle(BaseParser):
         return return_dict
 
     @staticmethod
-    def _idle_gpu_resources(cluster: str, partition: str) -> Dict[int, int]:
+    def count_idle_gpu_resources(cluster: str, partition: str) -> dict[int, int]:
         """Return idle GPU resources on a given cluster partition
 
-        If the host node is in a ``drain`` state, the GPUs are reported as unavailable.
+        If the host node is in a `drain` state, the GPUs are reported as unavailable.
 
         Args:
             cluster: The cluster to print a summary for
@@ -122,7 +123,7 @@ class CrcIdle(BaseParser):
 
         return return_dict
 
-    def count_idle_resources(self, cluster: str, partition: str) -> Dict[int, int]:
+    def count_idle_resources(self, cluster: str, partition: str) -> dict[int, int]:
         """Determine the number of idle resources on a given cluster partition
 
         The returned dictionary maps the number of idle resources (e.g., cores)
@@ -136,12 +137,12 @@ class CrcIdle(BaseParser):
             A dictionary mapping idle resources to number of nodes
         """
 
-        cluster_type = self.cluster_types.get(cluster, self.default_type)
+        cluster_type = self.cluster_types[cluster]
         if cluster_type == 'GPUs':
-            return self._idle_gpu_resources(cluster, partition)
+            return self.count_idle_gpu_resources(cluster, partition)
 
         elif cluster_type == 'cores':
-            return self._idle_cpu_resources(cluster, partition)
+            return self.count_idle_cpu_resources(cluster, partition)
 
         raise ValueError(f'Unknown cluster type: {cluster}')
 
@@ -157,7 +158,7 @@ class CrcIdle(BaseParser):
 
         output_width = 30
         header = f'Cluster: {cluster}, Partition: {partition}'
-        unit = self.cluster_types.get(cluster, self.default_type)
+        unit = self.cluster_types[cluster]
 
         print(header)
         print('=' * output_width)

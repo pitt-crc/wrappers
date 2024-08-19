@@ -1,6 +1,8 @@
-"""Tests for the ``crc-idle`` application"""
+"""Tests for the `crc-idle` application"""
 
-from unittest import TestCase, skip
+from argparse import Namespace
+from unittest import TestCase
+from unittest.mock import patch
 
 from apps.crc_idle import CrcIdle
 from apps.utils.system_info import Slurm
@@ -33,9 +35,9 @@ class ArgumentParsing(TestCase):
         self.assertFalse(args.htc)
         self.assertFalse(args.gpu)
 
-    @skip('Requires slurm utilities')
+    @patch('apps.utils.Slurm.get_cluster_names', new=lambda: tuple(CrcIdle.cluster_types.keys()))
     def test_clusters_default_to_false(self) -> None:
-        """Test all cluster flags default to a ``False`` value"""
+        """Test all cluster flags default to a `False` value"""
 
         app = CrcIdle()
         args, unknown_args = app.parse_known_args([])
@@ -45,25 +47,24 @@ class ArgumentParsing(TestCase):
             self.assertFalse(getattr(args, cluster))
 
 
-class ClusterList(TestCase):
-    """Test the selection of what clusters to print"""
+class GetClusterList(TestCase):
+    """Test the selection of which clusters to print"""
 
-    @skip('Requires slurm utilities')
-    def test_defaults_all_clusters(self) -> None:
-        """Test all clusters are returned if none are specified in the parsed arguments"""
+    def test_get_cluster_list_no_arguments(self):
+        """Test returned values when no clusters are specified."""
 
         app = CrcIdle()
-        args, unknown_args = app.parse_known_args(['-p', 'partition1'])
-        self.assertFalse(unknown_args)
+        args = Namespace(smp=False, gpu=False, mpi=False, invest=False, htc=False, partition=None)
+        result = app.get_cluster_list(args)
 
-        returned_clusters = app.get_cluster_list(args)
-        self.assertCountEqual(Slurm.get_cluster_names(), returned_clusters)
+        expected = tuple(app.cluster_types.keys())
+        self.assertEqual(expected, result)
 
-    def test_returns_arg_values(self) -> None:
-        """Test returned cluster names match the clusters specified in the parsed arguments"""
+    def test_get_cluster_list_with_cluster_arguments(self):
+        """Test returned values when select clusters are specified."""
+
         app = CrcIdle()
-        args, unknown_args = app.parse_known_args(['-s', '--mpi'])
-        self.assertFalse(unknown_args)
+        args = Namespace(smp=True, gpu=False, mpi=True, invest=False, htc=False, partition=None)
+        result = app.get_cluster_list(args)
 
-        returned_clusters = app.get_cluster_list(args)
-        self.assertCountEqual(['smp', 'mpi'], returned_clusters)
+        self.assertEqual(('smp', 'mpi'), result)
