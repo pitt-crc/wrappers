@@ -16,7 +16,7 @@ from .utils.cli import BaseParser
 class CrcIdle(BaseParser):
     """Display idle Slurm resources."""
 
-    # The type of resource available on a cluster
+    # Specify the type of resource available on each cluster
     # Either `cores` or `GPUs` depending on the cluster type
     cluster_types = defaultdict(
         lambda: 'cores',
