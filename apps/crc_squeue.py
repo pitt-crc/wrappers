@@ -1,4 +1,4 @@
-"""A simple wrapper around the Slurm ``squeue`` command."""
+"""A simple wrapper around the Slurm `squeue` command."""
 
 import getpass
 from argparse import Namespace
@@ -16,7 +16,7 @@ class CrcSqueue(BaseParser):
     output_format_all = "-o '%.8i %.3P %.6a %.6u %.35j %.2t %.12M %.6D %.4C %.50R %.20S'"
 
     def __init__(self) -> None:
-        """Define the application commandline interface"""
+        """Define the application commandline interface."""
 
         super(CrcSqueue, self).__init__()
         self.add_argument('-a', '--all', action='store_true', help='show all jobs (defaults to current user only)')
@@ -27,10 +27,10 @@ class CrcSqueue(BaseParser):
 
     @classmethod
     def build_slurm_command(cls, args: Namespace) -> str:
-        """Return an ``squeue`` command matching parsed command line arguments
+        """Return an `squeue` command matching parsed command line arguments.
 
         Args:
-            args: Parsed command line arguments
+            args: Parsed command line arguments.
         """
 
         # Build the base command
@@ -47,10 +47,10 @@ class CrcSqueue(BaseParser):
         return ' '.join(command_options)
 
     def app_logic(self, args: Namespace) -> None:
-        """Logic to evaluate when executing the application
+        """Logic to evaluate when executing the application.
 
         Args:
-            args: Parsed command line arguments
+            args: Parsed command line arguments.
         """
 
         command = self.build_slurm_command(args)

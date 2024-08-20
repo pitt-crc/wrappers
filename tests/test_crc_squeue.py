@@ -1,4 +1,4 @@
-"""Tests for the ``crc-squeue`` application."""
+"""Tests for the `crc-squeue` application."""
 
 import getpass
 from io import StringIO
@@ -12,7 +12,7 @@ class ArgumentParsing(TestCase):
     """Test the parsing of command line arguments"""
 
     def test_default_arguments_are_false(self) -> None:
-        """Test default values for all flag arguments are ``False``"""
+        """Test default values for all flag arguments are `False`."""
 
         args, _ = CrcSqueue().parse_known_args([])
         self.assertFalse(args.all)
@@ -20,13 +20,13 @@ class ArgumentParsing(TestCase):
         self.assertFalse(args.print_command)
 
     def test_defaults_to_all_clusters(self) -> None:
-        """Test the cluster argument defaults to ``all`` clusters"""
+        """Test the cluster argument defaults to `all` clusters."""
 
         args, _ = CrcSqueue().parse_known_args([])
         self.assertEqual('all', args.cluster)
 
     def test_custom_clusters(self) -> None:
-        """Test the custom cluster names are stored by the parser"""
+        """Test the custom cluster names are stored by the parser."""
 
         app = CrcSqueue()
         args, _ = app.parse_known_args(['-c', 'smp'])
@@ -36,7 +36,7 @@ class ArgumentParsing(TestCase):
         self.assertEqual('smp', args.cluster)
 
     def test_watch_argument_stores_const(self) -> None:
-        """Test the ``--watch`` argument stores the update interval as an integer"""
+        """Test the `--watch` argument stores the update interval as an integer."""
 
         app = CrcSqueue()
         args, _ = app.parse_known_args(['--w'])
@@ -47,10 +47,10 @@ class ArgumentParsing(TestCase):
 
 
 class SlurmCommandCreation(TestCase):
-    """Test the creation of ``squeue`` commands based on command line arguments"""
+    """Test the creation of `squeue` commands based on command line arguments."""
 
     def test_user_option(self) -> None:
-        """Test the ``--all`` argument toggles the slurm ``-u`` option in the returned command"""
+        """Test the `--all` argument toggles the slurm `-u` option in the returned command."""
 
         app = CrcSqueue()
         slurm_user_argument = f'-u {getpass.getuser()}'
@@ -60,13 +60,13 @@ class SlurmCommandCreation(TestCase):
         slurm_command = app.build_slurm_command(args)
         self.assertIn(slurm_user_argument, slurm_command, '-u flag is missing from slurm command')
 
-        # Make sure user option is disabled when ``--all`` argument is given
+        # Make sure user option is disabled when `--all` argument is given
         args, _ = app.parse_known_args(['--all'])
         slurm_command = app.build_slurm_command(args)
         self.assertNotIn(slurm_user_argument, slurm_command, '-u flag was added to slurm command')
 
     def test_cluster_name(self) -> None:
-        """Test the generated slurm command specifies the correct cluster"""
+        """Test the generated slurm command specifies the correct cluster."""
 
         app = CrcSqueue()
 
@@ -80,11 +80,11 @@ class SlurmCommandCreation(TestCase):
 
 
 class OutputFormat(TestCase):
-    """Test the correct output format is specified in the piped slurm command"""
+    """Test the correct output format is specified in the piped slurm command."""
 
     @patch('apps.utils.system_info.Shell.run_command')
     def test_defaults_to_user_format(self, mock_shell: Mock) -> None:
-        """Test the application defaults to using the ``output_format_user`` format"""
+        """Test the application defaults to using the `output_format_user` format."""
 
         CrcSqueue().execute([])
         executed_command = mock_shell.call_args.args[0]
@@ -92,7 +92,7 @@ class OutputFormat(TestCase):
 
     @patch('apps.utils.system_info.Shell.run_command')
     def test_all_flag(self, mock_shell: Mock) -> None:
-        """Test the application defaults to using the ``output_format_all`` format"""
+        """Test the application defaults to using the `output_format_all` format."""
 
         CrcSqueue().execute(['--all'])
         executed_command = mock_shell.call_args.args[0]
@@ -100,11 +100,11 @@ class OutputFormat(TestCase):
 
 
 class CommandExecution(TestCase):
-    """Test the execution of Slurm commands"""
+    """Test the execution of Slurm commands."""
 
     @patch('apps.utils.system_info.Shell.run_command')
     def test_slurm_command_executed(self, mock_shell: Mock) -> None:
-        """Test the slurm command is executed by the application"""
+        """Test the slurm command is executed by the application."""
 
         # Parse commandline arguments and generate the expected slurm command
         app = CrcSqueue()
@@ -117,7 +117,7 @@ class CommandExecution(TestCase):
     @patch('sys.stdout', new_callable=StringIO)
     @patch('apps.utils.system_info.Shell.run_command')
     def test_slurm_command_printed(self, mock_shell: Mock, mock_stdout: Mock) -> None:
-        """Test the slurm command is printed but not executed when ``-z`` is specified"""
+        """Test the slurm command is printed but not executed when `-z` is specified."""
 
         app = CrcSqueue()
 
