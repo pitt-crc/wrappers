@@ -42,9 +42,10 @@ crc-sus = "apps.crc_sus:CrcSus.execute"
 crc-usage = "apps.crc_usage:CrcUsage.execute"
 
 [tool.poetry.dependencies]
-python = "^3.8.0"
+python = "^3.9.0"
 requests = "^2.31.0"
 prettytable = "^3.10.0"
+keystone-api-client = "^0.3.16"
 
 [tool.poetry.group.tests]
 optional = true
@@ -56,7 +57,7 @@ coverage = "*"
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-sphinx = "7.1.2"
-sphinx-autoapi = "3.1.1"
+sphinx = "7.4.7"
+sphinx-autoapi = "3.2.1"
 sphinx-copybutton = "0.5.2"
 sphinx-rtd-theme = "2.0.0"
