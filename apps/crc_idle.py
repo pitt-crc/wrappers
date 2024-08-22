@@ -58,7 +58,7 @@ class CrcIdle(BaseParser):
         return specified_clusters or argument_clusters
 
     @staticmethod
-    def _count_idle_cpu_resources(cluster: str, partition: str) -> dict[int, int]:
+    def _count_idle_cpu_resources(cluster: str, partition: str) -> dict[int, dict[str, int]]:
         """Return the idle CPU resources on a given cluster partition.
 
         Args:
@@ -66,24 +66,36 @@ class CrcIdle(BaseParser):
             partition: The partition in the parent cluster.
 
         Returns:
-            A dictionary mapping the number of idle resources to the number of nodes with that many idle resources.
+            A dictionary mapping the number of idle resources to a dictionary with the number of nodes with that many
+            idle resources, minimum free memory, and maximum free memory on these nodes.
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = f'sinfo -h -M {cluster} -p {partition} -N -o %N,%C'
+        command = f'sinfo -h -M {cluster} -p {partition} -N -o %N,%C,%e'
         slurm_data = Shell.run_command(command).strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            node_name, resource_data = node_info.split(',')
+            node_name, resource_data, free_mem = node_info.split(',')
             allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
-            return_dict[idle] = return_dict.setdefault(idle, 0) + 1
+            if idle not in return_dict:
+                # Initialize a new entry for this idle count
+                return_dict[idle] = {
+                    'count': 1,
+                    'min_free_mem': int(free_mem),
+                    'max_free_mem': int(free_mem)
+                }
+            else:
+                # Update the count and min/max free memory
+                return_dict[idle]['count'] += 1
+                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], int(free_mem))
+                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], int(free_mem))
 
         return return_dict
 
     @staticmethod
-    def _count_idle_gpu_resources(cluster: str, partition: str) -> dict[int, int]:
+    def _count_idle_gpu_resources(cluster: str, partition: str) -> dict[int, dict[str, int]]:
         """Return idle GPU resources on a given cluster partition.
 
         If the host node is in a `drain` state, the GPUs are reported as unavailable.
@@ -97,14 +109,14 @@ class CrcIdle(BaseParser):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        slurm_output_format = "NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:' '"
+        slurm_output_format = "NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:'_',FreeMem ' '"
         command = f"sinfo -h -M {cluster} -p {partition} -N --Format={slurm_output_format}"
         slurm_data = Shell.run_command(command).strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            node_name, total, allocated, state = node_info.split('_')
+            node_name, total, allocated, state, free_mem = node_info.split('_')
 
             # If the node is in a downed state, report 0 resource availability.
             if re.search("drain", state):
@@ -115,11 +127,22 @@ class CrcIdle(BaseParser):
                 total = int(total[-1:])
                 idle = total - allocated
 
-            return_dict[idle] = return_dict.setdefault(idle, 0) + 1
+            if idle not in return_dict:
+                # Initialize a new entry for this idle count
+                return_dict[idle] = {
+                    'count': 1,
+                    'min_free_mem': int(free_mem),
+                    'max_free_mem': int(free_mem)
+                }
+            else:
+                # Update the count and min/max free memory
+                return_dict[idle]['count'] += 1
+                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], int(free_mem))
+                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], int(free_mem))
 
         return return_dict
 
-    def count_idle_resources(self, cluster: str, partition: str) -> dict[int, int]:
+    def count_idle_resources(self, cluster: str, partition: str) -> dict[int, dict[str, int]]:
         """Determine the number of idle resources on a given cluster partition.
 
         The returned dictionary maps the number of idle resources (e.g., cores)
@@ -151,14 +174,15 @@ class CrcIdle(BaseParser):
             idle_resources: Dictionary mapping idle resources to number of nodes
         """
 
-        output_width = 30
+        output_width = 70
         header = f'Cluster: {cluster}, Partition: {partition}'
         unit = self.cluster_types[cluster]
 
         print(header)
         print('=' * output_width)
         for idle, nodes in sorted(idle_resources.items()):
-            print(f'{nodes:4d} nodes w/ {idle:3d} idle {unit}')
+            print(f'{nodes["count"]:4d} nodes w/ {idle:3d} idle {unit} {(nodes["min_free_mem"]/1024):,.2f}G - '
+                  f'{(nodes["max_free_mem"]/1024):,.2f}G min-max free memory')
 
         if not idle_resources:
             print(' No idle resources')

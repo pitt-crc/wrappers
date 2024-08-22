@@ -79,12 +79,14 @@ class CountIdleResources(TestCase):
 
         cluster = 'smp'
         partition = 'default'
-        mock_run_command.return_value = "node1,2/4/0/4\nnode2,3/2/0/3"
+        mock_run_command.return_value = "node1,2/4/0/4,3500\nnode2,3/2/0/3,4000"
 
         app = CrcIdle()
         result = app.count_idle_resources(cluster, partition)
 
-        expected = {4: 1, 2: 1}
+        expected = {4: {'count': 1, 'min_free_mem': 3500, 'max_free_mem': 3500},
+                    2: {'count': 1, 'min_free_mem': 4000, 'max_free_mem': 4000}
+                    }
         self.assertEqual(expected, result)
 
     @patch('apps.utils.Shell.run_command')
@@ -93,11 +95,13 @@ class CountIdleResources(TestCase):
 
         cluster = 'gpu'
         partition = 'default'
-        mock_run_command.return_value = "node1_4_2_idle\nnode2_4_4_drain"
+        mock_run_command.return_value = "node1_4_2_idle_3500\nnode2_4_4_drain_4000"
 
         app = CrcIdle()
         result = app.count_idle_resources(cluster, partition)
-        expected = {2: 1, 0: 1}
+        expected = {2: {'count': 1, 'min_free_mem': 3500, 'max_free_mem': 3500},
+                    0: {'count': 1, 'min_free_mem': 4000, 'max_free_mem': 4000}
+                    }
         self.assertEqual(expected, result)
 
 
@@ -110,16 +114,18 @@ class PrintPartitionSummary(TestCase):
 
         cluster = 'smp'
         partition = 'default'
-        idle_resources = {2: 3, 4: 1}  # 3 nodes with 2 idle resources, 1 node with 4 idle resources
+        idle_resources = {2: {'count': 3, 'min_free_mem': 2500, 'max_free_mem': 3500},
+                          4: {'count': 1, 'min_free_mem': 3000, 'max_free_mem': 3000}
+                          }  # 3 nodes with 2 idle resources, 1 node with 4 idle resources
 
         app = CrcIdle()
         app.print_partition_summary(cluster, partition, idle_resources)
 
         mock_print.assert_has_calls([
             call(f'Cluster: {cluster}, Partition: {partition}'),
-            call('=' * 30),
-            call('   3 nodes w/   2 idle cores'),
-            call('   1 nodes w/   4 idle cores'),
+            call('=' * 70),
+            call('   3 nodes w/   2 idle cores 2.44G - 3.42G min-max free memory'),
+            call('   1 nodes w/   4 idle cores 2.93G - 2.93G min-max free memory'),
             call('')
         ], any_order=False)
 
@@ -135,13 +141,13 @@ class PrintPartitionSummary(TestCase):
         app.print_partition_summary(cluster, partition, idle_resources)
 
         mock_print.assert_any_call(f'Cluster: {cluster}, Partition: {partition}')
-        mock_print.assert_any_call('=' * 30)
+        mock_print.assert_any_call('=' * 70)
         mock_print.assert_any_call(' No idle resources')
         mock_print.assert_any_call('')
 
         mock_print.assert_has_calls([
             call(f'Cluster: {cluster}, Partition: {partition}'),
-            call('=====' * 6),
+            call('=====' * 14),
             call(' No idle resources'),
             call('')
         ], any_order=False)
