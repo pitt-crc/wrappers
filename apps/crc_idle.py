@@ -77,7 +77,7 @@ class CrcIdle(BaseParser):
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            node_name, resource_data, free_mem = node_info.split(',')
+            _, resource_data, free_mem = node_info.split(',')
             allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
             if idle not in return_dict:
                 # Initialize a new entry for this idle count
@@ -116,7 +116,7 @@ class CrcIdle(BaseParser):
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            node_name, total, allocated, state, free_mem = node_info.split('_')
+            _, total, allocated, state, free_mem = node_info.split('_')
 
             # If the node is in a downed state, report 0 resource availability.
             if re.search("drain", state):
