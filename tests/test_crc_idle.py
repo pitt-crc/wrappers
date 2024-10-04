@@ -95,7 +95,7 @@ class CountIdleResources(TestCase):
 
         cluster = 'gpu'
         partition = 'default'
-        mock_run_command.return_value = "node1_4_2_idle_3500\nnode2_4_4_drain_4000"
+        mock_run_command.return_value = "node1_4_2_idle_3500\nnode2_4_4_alloc_4000"
 
         app = CrcIdle()
         result = app.count_idle_resources(cluster, partition)
@@ -104,6 +104,18 @@ class CountIdleResources(TestCase):
                     }
         self.assertEqual(expected, result)
 
+    @patch('apps.utils.Shell.run_command')
+    def test_count_drain_gpu_resources(self, mock_run_command: Mock) -> None:
+        """Test counting drain GPU resources."""
+
+        cluster = 'gpu'
+        partition = 'default'
+        mock_run_command.return_value = "node1_4_2_drain*_N/A\nnode2_4_4_drain_N/A"
+
+        app = CrcIdle()
+        result = app.count_idle_resources(cluster, partition)
+        expected = {0: {'count': 2, 'min_free_mem': 0, 'max_free_mem': 0}}
+        self.assertEqual(expected, result)
 
 class PrintPartitionSummary(TestCase):
     """Test the printing of a partition summary"""
