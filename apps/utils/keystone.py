@@ -60,8 +60,8 @@ def get_most_recent_expired_request(session: KeystoneClient, group_pk: int) -> [
     """Get the single most recently expired AllocationRequest information from keystone for a given group"""
 
     today = date.today().isoformat()
-    return session.retrieve_request(
-        filters={'group': group_pk, 'status': 'AP', 'ordering': '-expire', 'expire__lte': today})[0]
+    requests = session.retrieve_request(filters={'group': group_pk, 'status': 'AP', 'expire__lte': today})
+    return sorted(requests, key=lambda request: request['expire'], reverse=True)[0]
 
 
 def get_enabled_cluster_ids(session: KeystoneClient) -> dict():
