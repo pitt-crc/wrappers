@@ -21,26 +21,26 @@ def get_request_allocations(session: KeystoneClient, request_pk: int) -> dict:
     return session.retrieve_allocation(filters={'request': request_pk})
 
 
-def get_active_requests(session: KeystoneClient, group_pk: int) -> [dict]:
-    """Get all active AllocationRequest information from keystone for a given group"""
+def get_active_requests(session: KeystoneClient, team_pk: int) -> [dict]:
+    """Get all active AllocationRequest information from keystone for a given team"""
 
     today = date.today().isoformat()
     return session.retrieve_request(
-        filters={'group': group_pk, 'status': 'AP', 'active__lte': today, 'expire__gt': today})
+        filters={'team': team_pk, 'status': 'AP', 'active__lte': today, 'expire__gt': today})
 
 
-def get_researchgroup_id(session: KeystoneClient, account_name: str) -> int:
-    """Get the Researchgroup ID from keystone for the specified Slurm account"""
+def get_team_id(session: KeystoneClient, account_name: str) -> int:
+    """Get the Team ID from keystone for the specified Slurm account"""
 
-    # Attempt to get the primary key for the ResearchGroup
+    # Attempt to get the primary key for the Team
     try:
-        keystone_group_id = session.retrieve_research_group(filters={'name': account_name})[0]['id']
+        keystone_team_id = session.retrieve_team(filters={'name': account_name})[0]['id']
     except IndexError:
         print(f"No Slurm Account found in the accounting system for '{account_name}'. \n"
               f"Please submit a ticket to the CRC team to ensure your allocation was properly configured")
         exit()
 
-    return keystone_group_id
+    return keystone_team_id
 
 
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
@@ -56,12 +56,12 @@ def get_earliest_startdate(alloc_requests: [dict]) -> date:
     return max(earliest_date, RAWUSAGE_RESET_DATE)
 
 
-def get_most_recent_expired_request(session: KeystoneClient, group_pk: int) -> [dict]:
-    """Get the single most recently expired AllocationRequest information from keystone for a given group"""
+def get_most_recent_expired_request(session: KeystoneClient, team_pk: int) -> [dict]:
+    """Get the single most recently expired AllocationRequest information from keystone for a given team"""
 
     today = date.today().isoformat()
     return session.retrieve_request(
-        filters={'group': group_pk, 'status': 'AP', 'ordering': '-expire', 'expire__lte': today})[0]
+        filters={'team': team_pk, 'status': 'AP', 'ordering': '-expire', 'expire__lte': today})[0]
 
 
 def get_enabled_cluster_ids(session: KeystoneClient) -> dict():
