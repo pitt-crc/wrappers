@@ -58,6 +58,6 @@ optional = true
 
 [tool.poetry.group.docs.dependencies]
 sphinx = "7.4.7"
-sphinx-autoapi = "3.2.1"
+sphinx-autoapi = "3.3.3"
 sphinx-copybutton = "0.5.2"
-sphinx-rtd-theme = "2.0.0"
+sphinx-rtd-theme = "3.0.1"
