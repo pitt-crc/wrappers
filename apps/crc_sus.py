@@ -66,8 +66,12 @@ class CrcSus(BaseParser):
 
         if not alloc_requests:
             print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
-            print("Showing remaining service unit amounts for most recently expired Resource Allocation Request:\033[0m")
-            alloc_requests = [get_most_recent_expired_request(keystone_session, group_id)]
+            print("Showing remaining service unit amounts for most recently expired Resource Allocation Request:\033[0m \n")
+            try:
+               alloc_requests = [get_most_recent_expired_request(keystone_session, group_id)]
+            except IndexError:
+                print("\033[91m\033[1mNo allocation information found. Either the group does not have any allocations, or you do not have permissions to view them. If you believe this to be a mistake, please submit a help ticket to the CRCD team. \033[0m \n")
+                exit()
 
         per_cluster_totals = get_per_cluster_totals(keystone_session, alloc_requests,
                                                     get_enabled_cluster_ids(keystone_session))
