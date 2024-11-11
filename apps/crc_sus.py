@@ -61,7 +61,7 @@ class CrcSus(BaseParser):
         keystone_session = KeystoneClient(url=KEYSTONE_URL)
         keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
 
-        group_id = get_researchgroup_id(keystone_session, args.account)
+        group_id = get_team_id(keystone_session, args.account)
         alloc_requests = get_active_requests(keystone_session, group_id)
 
         if not alloc_requests:
