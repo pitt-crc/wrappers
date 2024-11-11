@@ -1,6 +1,6 @@
 """Print the end date for an account's proposal.
 
-This application is designed to interface with the CRC banking application
+This application is designed to interface with the CRCD banking application
 and will not work without a running bank installation.
 """
 
@@ -15,7 +15,7 @@ from .utils.system_info import Slurm
 
 
 class CrcProposalEnd(BaseParser):
-    """Display the end date for an account's current CRC proposal."""
+    """Display the end date for an account's current CRCD proposal."""
 
     def __init__(self) -> None:
         """Define arguments for the command line interface"""
@@ -34,7 +34,7 @@ class CrcProposalEnd(BaseParser):
 
         Slurm.check_slurm_account_exists(args.account)
         keystone_session = KeystoneClient(url=KEYSTONE_URL)
-        keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
+        keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRCD login password:\n"))
 
         team_id = get_team_id(keystone_session, args.account)
         alloc_requests = get_active_requests(keystone_session, team_id)
