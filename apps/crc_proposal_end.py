@@ -34,7 +34,8 @@ class CrcProposalEnd(BaseParser):
 
         Slurm.check_slurm_account_exists(args.account)
         keystone_session = KeystoneClient(url=KEYSTONE_URL)
-        keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRCD login password:\n"))
+        keystone_session.login(username=os.environ["USER"],
+                               password=getpass("Please enter your CRCD login password:\n"))
 
         team_id = get_team_id(keystone_session, args.account)
         alloc_requests = get_active_requests(keystone_session, team_id)
@@ -45,7 +46,9 @@ class CrcProposalEnd(BaseParser):
             try:
                 alloc_requests = [get_most_recent_expired_request(keystone_session, team_id)]
             except IndexError:
-                print("\033[91m\033[1mNo allocation information found. Either the group does not have any allocations, or you do not have permissions to view them. If you believe this to be a mistake, please submit a help ticket to the CRCD team. \033[0m \n")
+                print("\033[91m\033[1mNo allocation information found. Either the group does not have any allocations, "
+                    "or you do not have permissions to view them. If you believe this to be a mistake, please submit a "
+                    "help ticket to the CRCD team. \033[0m \n")
                 exit()
 
         for request in alloc_requests:
