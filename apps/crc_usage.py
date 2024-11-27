@@ -54,8 +54,7 @@ class CrcUsage(BaseParser):
 
     @staticmethod
     def print_usage_table(account_name: str, awarded_totals: dict, earliest_date: date) -> None:
-        """Build and print a human-readable usage table for the slurm account with info from Keystone and
-        sreport"""
+        """Build and print a human-readable usage table for the slurm account with info from Keystone and sreport"""
 
         # Initialize table for summary of usage
         usage_table = PrettyTable(header=False, padding_width=2, max_table_width=79, min_table_width=79)
