@@ -21,26 +21,13 @@ def get_request_allocations(session: KeystoneClient, request_pk: int) -> dict:
     return session.retrieve_allocation(filters={'request': request_pk})
 
 
-def get_active_requests(session: KeystoneClient, team_pk: int) -> [dict]:
+def get_active_requests(session: KeystoneClient, account_name: str) -> [dict]:
     """Get all active AllocationRequest information from keystone for a given team"""
 
     today = date.today().isoformat()
     return session.retrieve_request(
-        filters={'team': team_pk, 'status': 'AP', 'active__lte': today, 'expire__gt': today})
-
-
-def get_team_id(session: KeystoneClient, account_name: str) -> int:
-    """Get the Team ID from keystone for the specified Slurm account"""
-
-    # Attempt to get the primary key for the Team
-    try:
-        keystone_team_id = session.retrieve_team(filters={'name': account_name})[0]['id']
-    except IndexError:
-        print(f"No Slurm Account found in the accounting system for '{account_name}'. \n"
-              f"Please submit a ticket to the CRC team to ensure your allocation was properly configured")
-        exit()
-
-    return keystone_team_id
+        search=account_name,
+        filters={'status': 'AP', 'active__lte': today, 'expire__gt': today})
 
 
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
@@ -56,12 +43,14 @@ def get_earliest_startdate(alloc_requests: [dict]) -> date:
     return max(earliest_date, RAWUSAGE_RESET_DATE)
 
 
-def get_most_recent_expired_request(session: KeystoneClient, team_pk: int) -> [dict]:
+def get_most_recent_expired_request(session: KeystoneClient, account_name: str) -> [dict]:
     """Get the single most recently expired AllocationRequest information from keystone for a given team"""
 
     today = date.today().isoformat()
     return session.retrieve_request(
-        filters={'team': team_pk, 'status': 'AP', 'ordering': '-expire', 'expire__lte': today})[0]
+        search=account_name,
+        order='-expire',
+        filters={'status': 'AP', 'expire__lte': today})[0]
 
 
 def get_enabled_cluster_ids(session: KeystoneClient) -> dict():
@@ -75,10 +64,10 @@ def get_enabled_cluster_ids(session: KeystoneClient) -> dict():
 
 
 def get_per_cluster_totals(session: KeystoneClient,
-    alloc_requests: [dict],
-    clusters: dict,
-    per_request: bool = False
-) -> dict:
+                           alloc_requests: [dict],
+                           clusters: dict,
+                           per_request: bool = False
+                           ) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
     per_cluster_totals = {}
