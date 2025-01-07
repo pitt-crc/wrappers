@@ -91,7 +91,7 @@ class CountIdleResources(TestCase):
 
     @patch('apps.utils.Shell.run_command')
     def test_count_down_cpu_resources(self, mock_run_command: Mock) -> None:
-        """Test counting down CPU resources."""
+        """Test counting CPU resources for nodes in a down or drained state."""
 
         cluster = 'smp'
         partition = 'default'
