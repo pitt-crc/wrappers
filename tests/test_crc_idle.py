@@ -54,7 +54,7 @@ class GetClusterList(TestCase):
         """Test returned values when no clusters are specified."""
 
         app = CrcIdle()
-        args = Namespace(smp=False, gpu=False, mpi=False, invest=False, htc=False, partition=None)
+        args = Namespace(smp=False, gpu=False, mpi=False, htc=False, partition=None)
         result = app.get_cluster_list(args)
 
         expected = tuple(app.cluster_types.keys())
@@ -64,7 +64,7 @@ class GetClusterList(TestCase):
         """Test returned values when select clusters are specified."""
 
         app = CrcIdle()
-        args = Namespace(smp=True, gpu=False, mpi=True, invest=False, htc=False, partition=None)
+        args = Namespace(smp=True, gpu=False, mpi=True, htc=False, partition=None)
         result = app.get_cluster_list(args)
 
         self.assertEqual(('smp', 'mpi'), result)
