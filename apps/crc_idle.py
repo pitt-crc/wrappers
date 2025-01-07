@@ -71,14 +71,22 @@ class CrcIdle(BaseParser):
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        command = f'sinfo -h -M {cluster} -p {partition} -N -o %N,%C,%e'
+        command = f'sinfo -h -M {cluster} -p {partition} -N -o %N,%C,%e,%t'
         slurm_data = Shell.run_command(command).strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
         return_dict = dict()
         for node_info in slurm_data:
-            _, resource_data, free_mem = node_info.split(',')
-            allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
+            _, resource_data, free_mem, node_state = node_info.split(',')
+
+            # If the node is in a downed state, report 0 resource availability.
+            down_keys = ['down', 'drain']
+            if any(key in node_state for key in down_keys):
+                idle = 0
+                free_mem = 0
+            else:
+                allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
+
             if idle not in return_dict:
                 # Initialize a new entry for this idle count
                 return_dict[idle] = {

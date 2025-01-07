@@ -79,7 +79,7 @@ class CountIdleResources(TestCase):
 
         cluster = 'smp'
         partition = 'default'
-        mock_run_command.return_value = "node1,2/4/0/4,3500\nnode2,3/2/0/3,4000"
+        mock_run_command.return_value = "node1,2/4/0/4,3500,mix\nnode2,3/2/0/3,4000,mix"
 
         app = CrcIdle()
         result = app.count_idle_resources(cluster, partition)
@@ -87,6 +87,20 @@ class CountIdleResources(TestCase):
         expected = {4: {'count': 1, 'min_free_mem': 3500, 'max_free_mem': 3500},
                     2: {'count': 1, 'min_free_mem': 4000, 'max_free_mem': 4000}
                     }
+        self.assertEqual(expected, result)
+
+    @patch('apps.utils.Shell.run_command')
+    def test_count_down_cpu_resources(self, mock_run_command: Mock) -> None:
+        """Test counting CPU resources for nodes in a down or drained state."""
+
+        cluster = 'smp'
+        partition = 'default'
+        mock_run_command.return_value = "node1,2/4/0/4,3500,down*\nnode2,3/2/0/3,4000,drain*"
+
+        app = CrcIdle()
+        result = app.count_idle_resources(cluster, partition)
+
+        expected = {0: {'count': 2, 'min_free_mem': 0, 'max_free_mem': 0}}
         self.assertEqual(expected, result)
 
     @patch('apps.utils.Shell.run_command')
