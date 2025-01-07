@@ -100,14 +100,13 @@ class CrcUsage(BaseParser):
                                password=getpass("Please enter your CRCD login password:\n"))
 
         # Gather AllocationRequests from Keystone
-        group_id = get_team_id(keystone_session, args.account)
-        alloc_requests = get_active_requests(keystone_session, group_id)
+        alloc_requests = get_active_requests(keystone_session, args.account)
 
         if not alloc_requests:
             print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
             print("Attempting to show the most recently expired Resource Allocation Request info: \033[0m \n")
             try:
-                alloc_requests = [get_most_recent_expired_request(keystone_session, group_id)]
+                alloc_requests = [get_most_recent_expired_request(keystone_session, args.account)]
             except IndexError:
                 print("\033[91m\033[1mNo allocation information found. Either the group does not have any allocations, "
                       "or you do not have permissions to view them. If you believe this to be a mistake, please submit "
