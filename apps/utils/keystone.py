@@ -21,7 +21,7 @@ def get_request_allocations(session: KeystoneClient, request_pk: int) -> dict:
     return session.retrieve_allocation(filters={'request': request_pk})
 
 
-def get_active_requests(session: KeystoneClient, account_name: str) -> [dict]:
+def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict]:
     """Get all active AllocationRequest information from keystone for a given team"""
 
     today = date.today().isoformat()
@@ -42,7 +42,7 @@ def get_earliest_startdate(alloc_requests: [dict]) -> date:
     return max(earliest_date, RAWUSAGE_RESET_DATE)
 
 
-def get_most_recent_expired_request(session: KeystoneClient, account_name: str) -> [dict]:
+def get_most_recent_expired_request(session: KeystoneClient, account_name: str) -> list[dict]:
     """Get the single most recently expired AllocationRequest information from keystone for a given team"""
 
     today = date.today().isoformat()
@@ -61,11 +61,7 @@ def get_enabled_cluster_ids(session: KeystoneClient) -> dict:
     return clusters
 
 
-def get_per_cluster_totals(session: KeystoneClient,
-                           alloc_requests: [dict],
-                           clusters: dict,
-                           per_request: bool = False
-                           ) -> dict:
+def get_per_cluster_totals(session: KeystoneClient, alloc_requests: [dict], clusters: dict, per_request: bool = False) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
     per_cluster_totals = {}
