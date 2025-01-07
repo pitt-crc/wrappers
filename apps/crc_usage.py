@@ -11,7 +11,6 @@ from getpass import getpass
 
 from prettytable import PrettyTable
 
-from keystone_client import KeystoneClient
 from .utils.cli import BaseParser
 from .utils.keystone import *
 from .utils.system_info import Slurm
@@ -55,8 +54,7 @@ class CrcUsage(BaseParser):
 
     @staticmethod
     def print_usage_table(account_name: str, awarded_totals: dict, earliest_date: date) -> None:
-        """Build and print a human-readable usage table for the slurm account with info from Keystone and
-        sreport"""
+        """Build and print a human-readable usage table for the slurm account with info from Keystone and sreport"""
 
         # Initialize table for summary of usage
         usage_table = PrettyTable(header=False, padding_width=2, max_table_width=79, min_table_width=79)
@@ -98,7 +96,8 @@ class CrcUsage(BaseParser):
 
         Slurm.check_slurm_account_exists(account_name=args.account)
         keystone_session = KeystoneClient(url=KEYSTONE_URL)
-        keystone_session.login(username=os.environ["USER"], password=getpass("Please enter your CRC login password:\n"))
+        keystone_session.login(username=os.environ["USER"],
+                               password=getpass("Please enter your CRCD login password:\n"))
 
         # Gather AllocationRequests from Keystone
         group_id = get_team_id(keystone_session, args.account)
@@ -106,8 +105,14 @@ class CrcUsage(BaseParser):
 
         if not alloc_requests:
             print(f"\033[91m\033[1mNo active allocation information found in accounting system for '{args.account}'!\n")
-            print("Showing usage information for most recently expired Resource Allocation Request: \033[0m")
-            alloc_requests = [get_most_recent_expired_request(keystone_session, group_id)]
+            print("Attempting to show the most recently expired Resource Allocation Request info: \033[0m \n")
+            try:
+                alloc_requests = [get_most_recent_expired_request(keystone_session, group_id)]
+            except IndexError:
+                print("\033[91m\033[1mNo allocation information found. Either the group does not have any allocations, "
+                      "or you do not have permissions to view them. If you believe this to be a mistake, please submit "
+                      "a help ticket to the CRCD team. \033[0m \n")
+                exit()
 
         clusters = get_enabled_cluster_ids(keystone_session)
 

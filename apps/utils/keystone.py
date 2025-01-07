@@ -75,9 +75,10 @@ def get_enabled_cluster_ids(session: KeystoneClient) -> dict():
 
 
 def get_per_cluster_totals(session: KeystoneClient,
-                           alloc_requests: [dict],
-                           clusters: dict,
-                           per_request: bool = False) -> dict:
+    alloc_requests: [dict],
+    clusters: dict,
+    per_request: bool = False
+) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
     per_cluster_totals = {}
@@ -86,11 +87,12 @@ def get_per_cluster_totals(session: KeystoneClient,
             per_cluster_totals[request['id']] = {}
         for allocation in get_request_allocations(session, request['id']):
             cluster = clusters[allocation['cluster']]
+            awarded = allocation['awarded'] if allocation['awarded'] is not None else 0
             if per_request:
                 per_cluster_totals[request['id']].setdefault(cluster, 0)
-                per_cluster_totals[request['id']][cluster] += allocation['awarded']
+                per_cluster_totals[request['id']][cluster] += awarded
             else:
                 per_cluster_totals.setdefault(cluster, 0)
-                per_cluster_totals[cluster] += allocation['awarded']
+                per_cluster_totals[cluster] += awarded
 
     return per_cluster_totals
