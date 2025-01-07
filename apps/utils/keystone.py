@@ -61,7 +61,8 @@ def get_enabled_cluster_ids(session: KeystoneClient) -> dict:
     return clusters
 
 
-def get_per_cluster_totals(session: KeystoneClient, alloc_requests: [dict], clusters: dict, per_request: bool = False) -> dict:
+def get_per_cluster_totals(session: KeystoneClient, alloc_requests: [dict], clusters: dict,
+                           per_request: bool = False) -> dict:
     """Gather the awarded totals across the given requests on each cluster into a dictionary"""
 
     per_cluster_totals = {}
