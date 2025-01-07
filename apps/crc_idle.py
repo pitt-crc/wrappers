@@ -81,7 +81,7 @@ class CrcIdle(BaseParser):
 
             # If the node is in a downed state, report 0 resource availability.
             down_keys = ['down', 'drain']
-            if any(re.search(key, node_state) for key in down_keys):
+            if any(key in node_state for key in down_keys):
                 idle = 0
                 free_mem = 0
             else:
