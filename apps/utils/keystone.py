@@ -26,7 +26,10 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
 
     today = date.today().isoformat()
     return session.retrieve_request(
-        filters={'team__name': account_name, 'status': 'AP', 'active__lte': today, 'expire__gt': today})
+        filters={'team': session.retrieve_team(filters={'name': account_name})[0]['id'],
+                 'status': 'AP',
+                 'active__lte': today,
+                 'expire__gt': today})
 
 
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
@@ -48,7 +51,9 @@ def get_most_recent_expired_request(session: KeystoneClient, account_name: str) 
     today = date.today().isoformat()
     return session.retrieve_request(
         order='-expire',
-        filters={'team__name': account_name, 'status': 'AP', 'expire__lte': today})[0]
+        filters={'team': session.retrieve_team(filters={'name': account_name})[0]['id'],
+                 'status': 'AP',
+                 'expire__lte': today})[0]
 
 
 def get_enabled_cluster_ids(session: KeystoneClient) -> dict:
