@@ -54,7 +54,7 @@ class GetClusterList(TestCase):
         """Test returned values when no clusters are specified."""
 
         app = CrcIdle()
-        args = Namespace(smp=False, gpu=False, mpi=False, htc=False, partition=None)
+        args = Namespace(smp=False, gpu=False, mpi=False, htc=False, teach=fals, partition=None)
         result = app.get_cluster_list(args)
 
         expected = tuple(app.cluster_types.keys())
