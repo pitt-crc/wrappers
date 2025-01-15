@@ -24,7 +24,7 @@ class CrcIdle(BaseParser):
         gpu='GPUs',
         mpi='cores',
         htc='cores',
-        teach='cores'
+        teach='cores',
     )
 
     def __init__(self) -> None:
