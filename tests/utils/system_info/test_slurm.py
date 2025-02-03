@@ -1,11 +1,13 @@
 """ Tests for the `Slurm` class """
+from datetime import date
 from unittest import TestCase
 from unittest.mock import patch
-from datetime import date
+
 from apps.utils.system_info import Slurm
 
+
 class TestSlurm(TestCase):
-    """ Tests for the each function defined in the `Slurm` class """
+    """ Tests for each function defined in the `Slurm` class """
 
     @patch('apps.utils.system_info.Shell.run_command')
     def test_is_installed(self, mock_run_command):
