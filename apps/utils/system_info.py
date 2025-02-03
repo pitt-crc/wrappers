@@ -161,7 +161,7 @@ class Slurm:
         except ValueError:
             return None
 
-        if not data:
+        if not data or data[0] == '':
             return None
 
         out_data = dict()
