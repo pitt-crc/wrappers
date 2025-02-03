@@ -1,10 +1,11 @@
+""" Tests for the `Slurm` class """
 from unittest import TestCase
 from unittest.mock import patch
 from datetime import date
 from apps.utils.system_info import Slurm
 
 class TestSlurm(TestCase):
-    """ Tests for the `Slurm` class """
+    """ Tests for the each function defined in the `Slurm` class """
 
     @patch('apps.utils.system_info.Shell.run_command')
     def test_is_installed(self, mock_run_command):
@@ -87,4 +88,3 @@ class TestSlurm(TestCase):
         mock_run_command.side_effect = ValueError
         usage = Slurm.get_cluster_usage_by_user('account1', start_date, 'cluster1')
         self.assertIsNone(usage)
-
