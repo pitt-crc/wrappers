@@ -34,6 +34,7 @@ class ArgumentParsing(TestCase):
         self.assertTrue(args.mpi)
         self.assertFalse(args.htc)
         self.assertFalse(args.gpu)
+        self.assertFalse(args.teach)
 
     @patch('apps.utils.Slurm.get_cluster_names', new=lambda: tuple(CrcIdle.cluster_types.keys()))
     def test_clusters_default_to_false(self) -> None:
@@ -54,7 +55,7 @@ class GetClusterList(TestCase):
         """Test returned values when no clusters are specified."""
 
         app = CrcIdle()
-        args = Namespace(smp=False, gpu=False, mpi=False, htc=False, partition=None)
+        args = Namespace(smp=False, gpu=False, mpi=False, htc=False, teach=False, partition=None)
         result = app.get_cluster_list(args)
 
         expected = tuple(app.cluster_types.keys())
@@ -64,7 +65,7 @@ class GetClusterList(TestCase):
         """Test returned values when select clusters are specified."""
 
         app = CrcIdle()
-        args = Namespace(smp=True, gpu=False, mpi=True, htc=False, partition=None)
+        args = Namespace(smp=True, gpu=False, mpi=True, htc=False, teach=False, partition=None)
         result = app.get_cluster_list(args)
 
         self.assertEqual(('smp', 'mpi'), result)
