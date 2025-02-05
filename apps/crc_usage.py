@@ -70,7 +70,7 @@ class CrcUsage(BaseParser):
                 usage_table.add_row(["", "", "", ""], divider=True)
                 continue
 
-            total_used = int(usage_by_user.pop('total', 0))
+            total_used = int(usage_by_user.pop('total'))
             percent_used = int((total_used / total_awarded * 100) // 1)
             usage_table.add_row(
                 [f"{cluster}", f"TOTAL USED: {total_used}", f"AWARDED: {total_awarded}", f"% USED: {percent_used}"],
