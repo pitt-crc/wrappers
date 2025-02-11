@@ -72,7 +72,6 @@ class PrintSummaryTable(TestCase):
 
             # Capture the printed output
             printed_output = "\n".join([str(call[0][0]) for call in mock_print.call_args_list])
-            print("Printed output:", printed_output)
 
             # Verify the table headers
             self.assertIn("Resource Allocation Request Information for 'test_account'", printed_output)
@@ -115,8 +114,6 @@ class PrintUsageTable(TestCase):
             'user2': 200,
             'total': 300
         }
-
-        print("Mocked return value:", mock_get_usage.return_value)
 
         with mock.patch('builtins.print') as mock_print:
             CrcUsage.print_usage_table(self.account_name, self.awarded_totals, self.earliest_date)
