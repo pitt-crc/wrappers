@@ -125,14 +125,15 @@ class CrcInteractive(BaseParser):
 
         # Check the minimum number of nodes are requested for mpi
         if args.mpi and args.num_nodes < self.min_mpi_nodes:
-            self.error(f'You must use at least {self.min_mpi_nodes} nodes when using the MPI cluster.')
+            args.num_nodes = self.min_mpi_nodes
+            print(f'You requested less nodes than the minimum required on the MPI cluster. You have now been allocated the minimum of {self.min_mpi_nodes} nodes.')
 
         # Check the minimum number of cores are requested for mpi
         min_cores = self.min_mpi_cores[args.partition]
         if args.mpi and args.num_cores < min_cores:
-            self.error(
-                f'You must request at least {min_cores} cores per node when using the {args.partition} partition on the MPI cluster.'
-            )
+            args.num_cores = min_cores
+            print(f'You requested less cores than the required number on the MPI cluster. You have now been allocated {min_cores} cores per node on the {args.partition} partition on the MPI cluster.'
+            
 
         # Check a partition is specified if the user is requesting invest
         if args.invest and not args.partition:
