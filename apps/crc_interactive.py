@@ -132,7 +132,7 @@ class CrcInteractive(BaseParser):
         min_cores = self.min_mpi_cores[args.partition]
         if args.mpi and args.num_cores < min_cores:
             args.num_cores = min_cores
-            print(f'You requested less cores than the required number on the MPI cluster. You have now been allocated {min_cores} cores per node on the {args.partition} partition on the MPI cluster.'
+            print(f'You requested less cores than the required number on the MPI cluster. You have now been allocated {min_cores} cores per node on the {args.partition} partition on the MPI cluster.')
             
 
         # Check a partition is specified if the user is requesting invest
