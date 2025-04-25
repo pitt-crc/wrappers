@@ -54,12 +54,12 @@ class ArgumentParsing(TestCase):
         # Minimum values should parse without any errors
         self.app.parse_args(['--mpi', '--num-nodes', str(min_nodes), '--num-cores', str(min_cores)])
 
-        nodes_err_message = 'You must use at least .* nodes'
-        with self.assertRaisesRegex(SystemExit, nodes_err_message, msg='Minimum nodes not enforced.'):
+        nodes_err_message = 'Less than minimum required mpi nodes'
+        with self.assertRaisesRegex(Exception, nodes_err_message, msg='Minimum nodes not enforced.'):
             self.app.parse_args(['--mpi', '--num-nodes', str(min_nodes - 1), '--num-cores', str(min_cores)])
 
-        cores_error_message = 'You must request at least .* cores'
-        with self.assertRaisesRegex(SystemExit, cores_error_message, msg='Minimum cores not enforced.'):
+        cores_error_message = 'Less than minimum required mpi cores'
+        with self.assertRaisesRegex(Excpetion, cores_error_message, msg='Minimum cores not enforced.'):
             self.app.parse_args(['--mpi', '--num-nodes', str(min_nodes), '--num-cores', str(min_cores - 1)])
 
 
