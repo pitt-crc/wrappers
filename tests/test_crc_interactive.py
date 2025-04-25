@@ -44,7 +44,7 @@ class ArgumentParsing(TestCase):
         # Time too long
         with self.assertRaisesRegex(SystemExit, 'Requested time must be', msg='Maximum MPI time not enforced.'):
             self.app.parse_args(['--smp', '--time', '00:50:00'])
-    
+
     def test_mpi_minimums(self) -> None:
         """Test minimum usage limits on MPI."""
 
