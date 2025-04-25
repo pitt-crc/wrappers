@@ -25,8 +25,6 @@ class CrcInteractive(BaseParser):
     min_mpi_cores = defaultdict(lambda: 28, {'mpi': 48, 'opa-high-mem': 28})  # Minimum cores per MPI partition
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
-    mpi_min_padded = False
-    
     default_time = time(1)  # Default runtime
     default_nodes = 1  # Default number of nodes
     default_cores = 1  # Default number of requested cores
@@ -132,8 +130,7 @@ class CrcInteractive(BaseParser):
                  f"You requested less nodes than the minimum required on the MPI cluster. "
                  f"You have now been allocated the minimum of {self.min_mpi_nodes} nodes."
                 )
-            raise Exception("Less than minimum required mpi nodes specified!") 
-            
+            raise Exception("Less than minimum required mpi nodes specified!")
         # Check the minimum number of cores are requested for mpi
         min_cores = self.min_mpi_cores[args.partition]
         if args.mpi and args.num_cores < min_cores:
@@ -144,8 +141,7 @@ class CrcInteractive(BaseParser):
                   f"You have now been allocated {min_cores} cores per node on the "
                   f"{args.partition} partition on the MPI cluster."
                 )
-            raise Exception("Less than minimum required mpi cores specified!") 
-            
+            raise Exception("Less than minimum required mpi cores specified!")      
         # Check a partition is specified if the user is requesting invest
         if args.invest and not args.partition:
             self.error('You must specify a partition when using the invest cluster.')
