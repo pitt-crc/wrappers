@@ -24,6 +24,7 @@ class CrcIdle(BaseParser):
         gpu='GPUs',
         mpi='cores',
         htc='cores',
+        teach='cores',
     )
 
     def __init__(self) -> None:
@@ -34,6 +35,7 @@ class CrcIdle(BaseParser):
         self.add_argument('-g', '--gpu', action='store_true', help='list idle resources on the gpu cluster')
         self.add_argument('-m', '--mpi', action='store_true', help='list idle resources on the mpi cluster')
         self.add_argument('-d', '--htc', action='store_true', help='list idle resources on the htc cluster')
+        self.add_argument('-t', '--teach', action='store_true', help='list idle resources on the teach cluster')
         self.add_argument('-p', '--partition', nargs='+', help='only include information for specific partitions')
 
     def get_cluster_list(self, args: Namespace) -> tuple[str]:

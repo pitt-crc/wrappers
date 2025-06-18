@@ -157,17 +157,22 @@ class Slurm:
                f"Start={start} -T Billing Format=Proper,Used")
 
         try:
-            total, *data = Shell.run_command(cmd).split('\n')
+            data = Shell.run_command(cmd).split('\n')
         except ValueError:
             return None
 
-        if not data:
+        if not data or data[0] == '':
             return None
 
         out_data = dict()
-        out_data['total'] = total.strip('|')
         for line in data:
             user, usage = line.split('|')
+
+            # Slurm outputs the total as a value associated with no username
+            if user == '':
+                out_data['total'] = usage
+                continue
+
             usage = int(usage)
             out_data[user] = usage
 
