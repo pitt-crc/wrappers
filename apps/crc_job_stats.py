@@ -82,7 +82,7 @@ class CrcJobStats(BaseParser):
         print('')
 
         # Print metrics for running jobs
-        for item in ('JobId', 'SubmitTime', 'EndTime', 'RunTime', 'TRES', 'Partition', 'NodeList', 'Command'):
+        for item in ('JobId', 'SubmitTime', 'EndTime', 'RunTime', 'AllocTRES', 'Partition', 'NodeList', 'Command'):
             print(f'{item:>16s}: {job_info[item]}')
 
         # Add the more information section
