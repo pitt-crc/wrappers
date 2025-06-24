@@ -13,12 +13,13 @@ ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
+TIMEOUT= 90
 
 
 def get_request_allocations(session: KeystoneClient, request_pk: int) -> dict:
     """Get All Allocation information from keystone for a given request"""
 
-    return session.retrieve_allocation(filters={'request': request_pk})
+    return session.retrieve_allocation(timeout=TIMEOUT, filters={'request': request_pk})
 
 
 def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict]:
@@ -26,7 +27,8 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
 
     today = date.today().isoformat()
     return session.retrieve_request(
-        filters={'team': session.retrieve_team(filters={'name': account_name})[0]['id'],
+        timeout=TIMEOUT,
+        filters={'team': session.retrieve_team(timeout=TIMEOUT, filters={'name': account_name})[0]['id'],
                  'status': 'AP',
                  'active__lte': today,
                  'expire__gt': today})
@@ -50,8 +52,9 @@ def get_most_recent_expired_request(session: KeystoneClient, account_name: str) 
 
     today = date.today().isoformat()
     return session.retrieve_request(
+        timeout=TIMEOUT,
         order='-expire',
-        filters={'team': session.retrieve_team(filters={'name': account_name})[0]['id'],
+        filters={'team': session.retrieve_team(timeout=TIMEOUT, filters={'name': account_name})[0]['id'],
                  'status': 'AP',
                  'expire__lte': today})[0]
 
@@ -60,7 +63,7 @@ def get_enabled_cluster_ids(session: KeystoneClient) -> dict:
     """Get the list of enabled clusters defined in Keystone along with their IDs"""
 
     clusters = {}
-    for cluster in session.retrieve_cluster(filters={'enabled': True}):
+    for cluster in session.retrieve_cluster(timeout=TIMEOUT, filters={'enabled': True}):
         clusters[cluster['id']] = cluster['name']
 
     return clusters
