@@ -13,7 +13,7 @@ ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 KEYSTONE_URL = "https://keystone.crc.pitt.edu"
 KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
-TIMEOUT= 90
+TIMEOUT = 90
 
 
 def get_request_allocations(session: KeystoneClient, request_pk: int) -> dict:
