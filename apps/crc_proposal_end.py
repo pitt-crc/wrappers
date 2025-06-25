@@ -33,7 +33,7 @@ class CrcProposalEnd(BaseParser):
         """
 
         Slurm.check_slurm_account_exists(args.account)
-        keystone_session = KeystoneClient(url=KEYSTONE_URL)
+        keystone_session = KeystoneClient(base_url=KEYSTONE_URL)
         keystone_session.login(username=os.environ["USER"],
                                password=getpass("Please enter your CRCD login password:\n"))
 
