@@ -111,6 +111,7 @@ class GenericUsage(AbstractFilesystemUsage):
         result = quota_info_list[1].split()
         return cls(name, int(result[2]) * 1024, int(result[1]) * 1024)
 
+
 class IhomeUsage(AbstractFilesystemUsage):
     """Disk storage quota for the ihome file system"""
 
