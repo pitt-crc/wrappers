@@ -10,7 +10,8 @@ ResponseContentType = Literal['json', 'text', 'content']
 ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 
 # Default API configuratipn
-KEYSTONE_URL = "https://keystone.crc.pitt.edu"
+#KEYSTONE_URL = "https://keystone.crc.pitt.edu"
+KEYSTONE_URL="http://127.0.0.1:8000"
 KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
@@ -18,7 +19,7 @@ RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 def get_request_allocations(session: KeystoneClient, request_pk: int) -> dict:
     """Get All Allocation information from keystone for a given request"""
 
-    return session.retrieve_allocation(filters={'request': request_pk})
+    return session.retrieve_allocation(filters={'request': request_pk})['results']
 
 
 def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict]:
@@ -26,10 +27,10 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
 
     today = date.today().isoformat()
     return session.retrieve_request(
-        filters={'team': session.retrieve_team(filters={'name': account_name})[0]['id'],
+        filters={'team': session.retrieve_team(filters={'name': account_name})['results'][0]['id'],
                  'status': 'AP',
                  'active__lte': today,
-                 'expire__gt': today})
+                 'expire__gt': today})['results']
 
 
 def get_earliest_startdate(alloc_requests: [dict]) -> date:
@@ -51,16 +52,16 @@ def get_most_recent_expired_request(session: KeystoneClient, account_name: str) 
     today = date.today().isoformat()
     return session.retrieve_request(
         order='-expire',
-        filters={'team': session.retrieve_team(filters={'name': account_name})[0]['id'],
+        filters={'team': session.retrieve_team(filters={'name': account_name})['results'][0]['id'],
                  'status': 'AP',
-                 'expire__lte': today})[0]
+                 'expire__lte': today})['results'][0]
 
 
 def get_enabled_cluster_ids(session: KeystoneClient) -> dict:
     """Get the list of enabled clusters defined in Keystone along with their IDs"""
 
     clusters = {}
-    for cluster in session.retrieve_cluster(filters={'enabled': True}):
+    for cluster in session.retrieve_cluster(filters={'enabled': True})['results']:
         clusters[cluster['id']] = cluster['name']
 
     return clusters
