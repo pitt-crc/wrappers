@@ -10,7 +10,7 @@ ResponseContentType = Literal['json', 'text', 'content']
 ParsedResponseContent = Union[Dict[str, Any], str, bytes]
 
 # Default API configuratipn
-KEYSTONE_URL = "https://keystone.crc.pitt.edu"
+KEYSTONE_URL = "https://api.keystone.crcd.pitt.edu"
 KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
