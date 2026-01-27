@@ -112,54 +112,6 @@ class GenericUsage(AbstractFilesystemUsage):
         return cls(name, int(result[2]) * 1024, int(result[1]) * 1024)
 
 
-class BeegfsUsage(AbstractFilesystemUsage):
-    """Disk storage quota for a BeeGFS file system"""
-
-    def __init__(self, name: str, size_used: int, size_limit: int, chunk_used: str, chunk_limit: str) -> None:
-        """Create a new BeeGFS quota from known system metrics
-
-        Args:
-            name: Name of the file system (e.g., zfs, ix, home)
-            size_used: Disk space used by the user/group
-            size_limit: Maximum disk space allowed by the allocation
-            chunk_used: Data chunk files used by the user/group
-            chunk_limit: Maximum chunks allowed by the allocation
-        """
-
-        super(BeegfsUsage, self).__init__(name, size_used, size_limit)
-        self.chunk_used = chunk_used
-        self.chunk_limit = chunk_limit
-
-    def _verbose_string(self) -> str:
-        return "-> {}: Bytes Used: {}, Byte Limit: {}, Chunk Files Used: {}, Chunk File Limit: {}".format(
-            self.name,
-            self.size_used,
-            self.size_limit,
-            self.chunk_used,
-            self.chunk_limit)
-
-    @classmethod
-    def from_group(cls, name: str, group: str) -> Optional[BeegfsUsage]:
-        """Return a quota object for a given group name
-
-        Args:
-            name: Name of the file system (e.g., zfs, ix, home)
-            group: The group to create a quota for
-
-        Returns:
-            An instance of the parent class or None if the allocation does not exist
-        """
-
-        allocation_out = Shell.run_command(f"df /bgfs/{group}")
-        if len(allocation_out) == 0:
-            return None
-
-        quota_info_cmd = f"beegfs-ctl --getquota --gid {group} --csv --storagepoolid=1"
-        quota_out = Shell.run_command(quota_info_cmd)
-        result = quota_out.splitlines()[1].split(',')
-        return cls(name, int(result[2]), int(result[3]), result[4], result[5])
-
-
 class IhomeUsage(AbstractFilesystemUsage):
     """Disk storage quota for the ihome file system"""
 
@@ -253,12 +205,12 @@ class CrcQuota(BaseParser):
 
         zfs1_quota = GenericUsage.from_path('zfs1', f'/zfs1/{group}')
         zfs2_quota = GenericUsage.from_path('zfs2', f'/zfs2/{group}')
-        bgfs_quota = BeegfsUsage.from_group('beegfs', group)
         ix_quota = GenericUsage.from_path('ix', f'/ix/{group}')
         ix1_quota = GenericUsage.from_path('ix1', f'/ix1/{group}')
+        ix3_quota = GenericUsage.from_path('ix3', f'/ix3/{group}')
 
         # Only return quotas that exist for the given group (i.e., objects that are not None)
-        all_quotas = (zfs1_quota, zfs2_quota, bgfs_quota, ix_quota, ix1_quota)
+        all_quotas = (zfs1_quota, zfs2_quota, ix_quota, ix1_quota, ix3_quota)
         return tuple(filter(None, all_quotas))
 
     def app_logic(self, args: Namespace) -> None:
@@ -293,4 +245,4 @@ class CrcQuota(BaseParser):
         if not supp_quotas:
             print(
                 'If you need additional storage, you can request up to 5TB on '
-                'BGFS, ZFS or IX!. Contact CRC for more details.')
+                'IX!. Contact CRCD for more details.')
