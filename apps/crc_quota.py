@@ -12,6 +12,8 @@ To modify what file systems are examined by the application, see the
 from __future__ import annotations
 
 import math
+import os
+import pwd
 import sys
 from argparse import Namespace
 from typing import Optional, Tuple
@@ -22,6 +24,7 @@ from .utils.system_info import Shell
 
 # Threshold to detect if a quota is set (anything over 1 PB means no quota)
 ONE_PETABYTE = 1024 ** 5
+
 
 NO_QUOTA_MSG = "No Quota Found, Please contact the CRCD Team to fix this!"
 
@@ -195,42 +198,37 @@ class CrcQuota(BaseParser):
         self.add_argument('--verbose', action='store_true', help='use verbose output')
 
     @staticmethod
-    def get_user_info(username: Optional[str] = None) -> Tuple[str, int, str, int]:
+    def get_user_info(username: Optional[str] = None) -> Tuple[str, int, str, int, str]:
         """Return system IDs for the current user
 
         Args:
             username: The name of the user to get IDs for (defaults to current user)
 
         Returns:
-            Tuple with the user's name, user ID, group name, and group ID
+            Tuple with the user's name, user ID, group name, group ID, and home directory
         """
 
-        username = username or ''
-        check_user_cmd = f"id -un {username}"
-        user, err = Shell.run_command(check_user_cmd, include_err=True)
-
-        if err:
+        try:
+            if username:
+                pw_entry = pwd.getpwnam(username)
+            else:
+                pw_entry = pwd.getpwuid(os.getuid())
+        except KeyError:
             sys.exit(f"Could not find quota information for user {username}")
 
-        group = Shell.run_command(f"id -gn {username}")
-        uid = Shell.run_command(f"id -u {username}")
-        gid = Shell.run_command(f"id -g {username}")
+        user = pw_entry.pw_name
+        uid = pw_entry.pw_uid
+        gid = pw_entry.pw_gid
+        homedir = pw_entry.pw_dir
 
-        return user, int(uid), group, int(gid)
+        # Get group name from gid
+        import grp
+        try:
+            group = grp.getgrgid(gid).gr_name
+        except KeyError:
+            group = str(gid)
 
-    @staticmethod
-    def get_ihome_path(user: str, group: str) -> str:
-        """Construct the ihome path for a user.
-
-        Args:
-            user: The username
-            group: The user's primary group
-
-        Returns:
-            The path to the user's ihome directory
-        """
-
-        return f"/ihome/{group}/{user}"
+        return user, uid, group, gid, homedir
 
     @staticmethod
     def get_group_quotas(group: str) -> Tuple[GenericUsage, ...]:
@@ -261,11 +259,10 @@ class CrcQuota(BaseParser):
         """
 
         # Get disk usage information for the given user
-        user, uid, group, gid = self.get_user_info(args.user)
+        user, uid, group, gid, homedir = self.get_user_info(args.user)
 
-        # Get ihome quota using df against the user's home directory path
-        ihome_path = self.get_ihome_path(user, group)
-        ihome_quota = IhomeUsage.from_path('ihome', ihome_path)
+        # Get ihome quota using df against the user's actual home directory
+        ihome_quota = IhomeUsage.from_path('ihome', homedir)
 
         supp_quotas = self.get_group_quotas(group)
 
