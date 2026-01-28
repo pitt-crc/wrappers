@@ -150,10 +150,10 @@ class IhomeUsage(AbstractFilesystemUsage):
 
     @classmethod
     def from_path(cls, name: str, path: str) -> Optional[IhomeUsage]:
-        """Return a quota object for a given file path using df.
+        """Return a quota object for a given file path using os.statvfs.
 
         VAST reports the quota limit as the filesystem size when a quota is set.
-        If no quota is set, df reports the full filesystem size (multiple PB).
+        If no quota is set, it reports the full filesystem size (multiple PB).
 
         Args:
             name: Name of the file system (e.g., ihome)
@@ -163,23 +163,14 @@ class IhomeUsage(AbstractFilesystemUsage):
             An instance of IhomeUsage or None if the path does not exist
         """
 
-        # Use -B1 for byte output to avoid parsing human-readable units
-        df_command = f"df -B1 {path}"
-        result, err = Shell.run_command(df_command, include_err=True)
-
-        if err or not result:
+        try:
+            stat = os.statvfs(path)
+        except (OSError, FileNotFoundError):
             return None
 
-        lines = result.splitlines()
-        if len(lines) < 2:
-            return None
-
-        fields = lines[1].split()
-        if len(fields) < 4:
-            return None
-
-        size_limit = int(fields[1])
-        size_used = int(fields[2])
+        block_size = stat.f_frsize
+        size_limit = stat.f_blocks * block_size
+        size_used = (stat.f_blocks - stat.f_bavail) * block_size
 
         # Detect if quota is set (if size > 1 PB, no quota is configured)
         has_quota = size_limit < ONE_PETABYTE
