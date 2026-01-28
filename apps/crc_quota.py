@@ -21,11 +21,6 @@ from typing import Optional, Tuple
 from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
-
-# Threshold to detect if a quota is set (anything over 1 PB means no quota)
-ONE_PETABYTE = 1024 ** 5
-
-
 NO_QUOTA_MSG = "No Quota Found, Please contact the CRCD Team to fix this!"
 
 
@@ -153,7 +148,11 @@ class IhomeUsage(AbstractFilesystemUsage):
         """Return a quota object for a given file path using os.statvfs.
 
         VAST reports the quota limit as the filesystem size when a quota is set.
-        If no quota is set, it reports the full filesystem size (multiple PB).
+        If no quota is set, it reports the full filesystem size.
+
+        To detect if a quota is set, we compare the reported size of the user's
+        directory against the mount point. If they are within 1% of each other,
+        we assume no quota is configured.
 
         Args:
             name: Name of the file system (e.g., ihome)
@@ -165,6 +164,7 @@ class IhomeUsage(AbstractFilesystemUsage):
 
         try:
             stat = os.statvfs(path)
+            mount_stat = os.statvfs("/ihome")
         except (OSError, FileNotFoundError):
             return None
 
@@ -172,8 +172,16 @@ class IhomeUsage(AbstractFilesystemUsage):
         size_limit = stat.f_blocks * block_size
         size_used = (stat.f_blocks - stat.f_bavail) * block_size
 
-        # Detect if quota is set (if size > 1 PB, no quota is configured)
-        has_quota = size_limit < ONE_PETABYTE
+        # Compare against mount point to detect if quota is set
+        # If the user's directory reports a size within 1% of the mount point,
+        # we can assume no quota is configured for that directory
+        mount_size = mount_stat.f_blocks * mount_stat.f_frsize
+
+        if mount_size > 0:
+            size_ratio = size_limit / mount_size
+            has_quota = not (0.99 <= size_ratio <= 1.01)
+        else:
+            has_quota = False
 
         return cls(name, size_used, size_limit, has_quota)
 
