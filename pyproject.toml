@@ -45,7 +45,7 @@ crc-usage = "apps.crc_usage:CrcUsage.execute"
 python = "^3.9.0"
 requests = "^2.32.3"
 prettytable = "^3.10.0"
-keystone_api_client = "^0.8.3"
+keystone_api_client = "^0.8.5"
 
 [[tool.poetry.source]]
 name = "cloudsmith"

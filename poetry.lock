@@ -490,13 +490,13 @@ i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "keystone-api-client"
-version = "0.8.3"
+version = "0.8.5"
 description = "Python client for the Keystone API"
 optional = false
 python-versions = ">=3.9,<4.0"
 groups = ["main"]
 files = [
-    {file = "keystone_api_client-0.8.3.tar.gz", hash = "sha256:03370ce31c65612eb4c02afb038b9d97e7ef75ba512fbc0d8addf57ee8d3ff7f"},
+    {file = "keystone_api_client-0.8.5.tar.gz", hash = "sha256:6de507c0d33848b0f51a0ba5628ae1bfe4c9d6bbebb6aab4c4e8f4f0edf42063"},
 ]
 
 [package.dependencies]
@@ -1133,4 +1133,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9.0"
-content-hash = "4b17a565cd1b7ac1e06cdcdd4e84c122e76ebb8c814664d1af9d291380d2ad8e"
+content-hash = "0053b2eb1df9b311a4cf7f61f3b49a0860ce8d788935e2b8ab58dbd232c7de9d"
