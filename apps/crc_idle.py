@@ -135,9 +135,12 @@ class CrcIdle(BaseParser):
                 idle = 0
                 free_mem = 0
             else:
-                allocated = int(allocated[-1:])
-                total = int(total[-1:])
-                idle = total - allocated
+                total_match = re.search(r'(\d+)', total)
+                allocated_match = re.search(r'(\d+)', allocated)
+                total = int(total_match.group(1)) if total_match else 0
+                allocated = int(allocated_match.group(1)) if allocated_match else 0
+                # Ensure idle is never negative
+                idle = max(0, total - allocated)
 
             # Handle cases where sinfo reports 'N/A' for free memory
             try:
