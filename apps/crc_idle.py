@@ -88,18 +88,22 @@ class CrcIdle(BaseParser):
             else:
                 allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
 
+            # Handle cases where sinfo reports 'N/A' for free memory
+            try:
+                free_mem = int(free_mem)
+            except (ValueError, TypeError):
+                free_mem = 0
+
             if idle not in return_dict:
-                # Initialize a new entry for this idle count
                 return_dict[idle] = {
                     'count': 1,
-                    'min_free_mem': int(free_mem),
-                    'max_free_mem': int(free_mem)
+                    'min_free_mem': free_mem,
+                    'max_free_mem': free_mem
                 }
             else:
-                # Update the count and min/max free memory
                 return_dict[idle]['count'] += 1
-                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], int(free_mem))
-                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], int(free_mem))
+                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], free_mem)
+                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], free_mem)
 
         return return_dict
 
@@ -127,28 +131,30 @@ class CrcIdle(BaseParser):
         for node_info in slurm_data:
             _, total, allocated, state, free_mem = node_info.split('_')
 
-            # If the node is in a downed state, report 0 resource availability.
             if re.search("drain", state):
                 idle = 0
                 free_mem = 0
-
             else:
                 allocated = int(allocated[-1:])
                 total = int(total[-1:])
                 idle = total - allocated
 
+            # Handle cases where sinfo reports 'N/A' for free memory
+            try:
+                free_mem = int(free_mem)
+            except (ValueError, TypeError):
+                free_mem = 0
+
             if idle not in return_dict:
-                # Initialize a new entry for this idle count
                 return_dict[idle] = {
                     'count': 1,
-                    'min_free_mem': int(free_mem),
-                    'max_free_mem': int(free_mem)
+                    'min_free_mem': free_mem,
+                    'max_free_mem': free_mem
                 }
             else:
-                # Update the count and min/max free memory
                 return_dict[idle]['count'] += 1
-                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], int(free_mem))
-                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], int(free_mem))
+                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], free_mem)
+                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], free_mem)
 
         return return_dict
 
