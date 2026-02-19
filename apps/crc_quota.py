@@ -22,11 +22,6 @@ from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
 
-# Threshold to detect if a quota is set (anything over 1 PB means no quota)
-ONE_PETABYTE = 1024 ** 5
-IHOME_MOUNT = "/ihome"
-VAST_MOUNT= "/vast"
-
 NO_QUOTA_MSG = "No Quota Found, Please contact the CRCD Team to fix this!"
 
 
@@ -173,7 +168,7 @@ class IhomeUsage(AbstractFilesystemUsage):
 
         try:
             stat = os.statvfs(path)
-            mount_stat = os.statvfs(IHOME_MOUNT)
+            mount_stat = os.statvfs("/ihome")
         except (OSError, FileNotFoundError):
             return None
 
@@ -247,7 +242,7 @@ class VastUsage(AbstractFilesystemUsage):
 
         try:
             stat = os.statvfs(path)
-            mount_stat = os.statvfs(VAST_MOUNT)
+            mount_stat = os.statvfs("/vast")
         except (OSError, FileNotFoundError):
             return None
 
