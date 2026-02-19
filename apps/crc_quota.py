@@ -21,6 +21,7 @@ from typing import Optional, Tuple
 from .utils.cli import BaseParser
 from .utils.system_info import Shell
 
+
 NO_QUOTA_MSG = "No Quota Found, Please contact the CRCD Team to fix this!"
 
 
@@ -102,13 +103,16 @@ class GenericUsage(AbstractFilesystemUsage):
             An instance of the parent class or None if the allocation does not exist
         """
 
-        df_command = f"df {path}"
-        quota_info_list = Shell.run_command(df_command).splitlines()
-        if not quota_info_list:
+        try:
+            stat = os.statvfs(path)
+        except (OSError, FileNotFoundError):
             return None
 
-        result = quota_info_list[1].split()
-        return cls(name, int(result[2]) * 1024, int(result[1]) * 1024)
+        block_size = stat.f_frsize
+        size_limit = stat.f_blocks * block_size
+        size_used = (stat.f_blocks - stat.f_bavail) * block_size
+
+        return cls(name, size_used, size_limit)
 
 
 class IhomeUsage(AbstractFilesystemUsage):
@@ -168,13 +172,85 @@ class IhomeUsage(AbstractFilesystemUsage):
         except (OSError, FileNotFoundError):
             return None
 
+        # f_frsize = fragment size (fundamental block size)
+        # f_blocks = total blocks
+        # f_bavail = free blocks (for non-superuser)
         block_size = stat.f_frsize
         size_limit = stat.f_blocks * block_size
         size_used = (stat.f_blocks - stat.f_bavail) * block_size
 
         # Compare against mount point to detect if quota is set
         # If the user's directory reports a size within 1% of the mount point,
-        # we can assume no quota is configured for that directory
+        # assume no quota is configured for that directory
+        mount_size = mount_stat.f_blocks * mount_stat.f_frsize
+
+        if mount_size > 0:
+            size_ratio = size_limit / mount_size
+            has_quota = not (0.99 <= size_ratio <= 1.01)
+        else:
+            has_quota = False
+
+        return cls(name, size_used, size_limit, has_quota)
+
+
+class VastUsage(AbstractFilesystemUsage):
+    """Disk storage quota for VAST project storage (/vast)."""
+
+    def __init__(self, name: str, size_used: int, size_limit: int, has_quota: bool = True) -> None:
+        """Create a new VAST quota from known system metrics
+
+        Args:
+            name: Name of the file system (e.g., vast)
+            size_used: Disk space used
+            size_limit: Maximum disk space allowed by the allocation
+            has_quota: Whether a quota is actually set for this path
+        """
+
+        super(VastUsage, self).__init__(name, size_used, size_limit)
+        self.has_quota = has_quota
+
+    def _verbose_string(self) -> str:
+        used = self.convert_size(self.size_used)
+        if not self.has_quota:
+            return f"-> {self.name}: Bytes Used: {used} ({NO_QUOTA_MSG})"
+
+        limit = self.convert_size(self.size_limit)
+        return f"-> {self.name}: Bytes Used: {used}, Byte Limit: {limit}"
+
+    def _short_string(self) -> str:
+        used = self.convert_size(self.size_used)
+        if not self.has_quota:
+            return f"-> {self.name}: {used} / {NO_QUOTA_MSG}"
+
+        limit = self.convert_size(self.size_limit)
+        return f"-> {self.name}: {used} / {limit}"
+
+    @classmethod
+    def from_path(cls, name: str, path: str) -> Optional[VastUsage]:
+        """Return a quota object for a given file path using os.statvfs.
+
+        VAST reports the quota limit as the filesystem size when a quota is set.
+        If no quota is set, it reports the full filesystem size.
+
+        Args:
+            name: Name of the file system (e.g., vast)
+            path: The file path to check quota for
+
+        Returns:
+            An instance of VastUsage or None if the path does not exist
+        """
+
+        try:
+            stat = os.statvfs(path)
+            mount_stat = os.statvfs("/vast")
+        except (OSError, FileNotFoundError):
+            return None
+
+        block_size = stat.f_frsize
+        size_limit = stat.f_blocks * block_size
+        size_used = (stat.f_blocks - stat.f_bavail) * block_size
+
+        # Compare against mount point to detect if quota is set
         mount_size = mount_stat.f_blocks * mount_stat.f_frsize
 
         if mount_size > 0:
@@ -245,9 +321,10 @@ class CrcQuota(BaseParser):
         ix_quota = GenericUsage.from_path('ix', f'/ix/{group}')
         ix1_quota = GenericUsage.from_path('ix1', f'/ix1/{group}')
         ix3_quota = GenericUsage.from_path('ix3', f'/ix3/{group}')
+        vast_quota = VastUsage.from_path('vast', f'/vast/{group}')
 
         # Only return quotas that exist for the given group (i.e., objects that are not None)
-        all_quotas = (zfs1_quota, zfs2_quota, ix_quota, ix1_quota, ix3_quota)
+        all_quotas = (zfs1_quota, zfs2_quota, ix_quota, ix1_quota, ix3_quota, vast_quota)
         return tuple(filter(None, all_quotas))
 
     def app_logic(self, args: Namespace) -> None:
@@ -285,3 +362,4 @@ class CrcQuota(BaseParser):
             print(
                 'If you need additional storage, you can request up to 5TB on '
                 'IX!. Contact CRCD for more details.')
+
