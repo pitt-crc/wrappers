@@ -71,14 +71,14 @@ class CrcUsage(BaseParser):
                 continue
 
             total_used = int(usage_by_user.pop('total'))
-            percent_used = int((total_used / total_awarded * 100) // 1)
+            percent_used = int((total_used / total_awarded * 100) // 1) if total_awarded else 0
             usage_table.add_row(
                 [f"{cluster}", f"TOTAL USED: {total_used}", f"AWARDED: {total_awarded}", f"% USED: {percent_used}"],
                 divider=True)
             usage_table.add_row(["", "USER", "USED", "% USED"])
             usage_table.add_row(["", "----", "----", "----"])
             for user, usage in sorted(usage_by_user.items(), key=lambda item: item[1], reverse=True):
-                percent = int((usage / total_awarded * 100) // 1)
+                percent = int((usage / total_awarded * 100) // 1) if total_awarded else 0
                 if percent == 0:
                     percent = '<1'
                 usage_table.add_row(["", user, int(usage), percent])
