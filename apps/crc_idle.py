@@ -119,6 +119,7 @@ class CrcIdle(BaseParser):
             of nodes at that count along with minimum and maximum free memory in MB.
         """
 
+        # Use `sinfo` command to determine the status of each node in the given partition
         fmt = "NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:'_',FreeMem ' '"
         command = f"sinfo -h -M {cluster} -p {partition} -N --Format={fmt}"
         slurm_data = Shell.run_command(command).strip().split()
@@ -136,6 +137,8 @@ class CrcIdle(BaseParser):
                 allocated_match = re.search(r'(\d+)', allocated)
                 total_gpus = int(total_match.group(1)) if total_match else 0
                 allocated_gpus = int(allocated_match.group(1)) if allocated_match else 0
+
+                # Ensure idle value is never negative
                 idle = max(0, total_gpus - allocated_gpus)
 
             # Handle cases where sinfo reports 'N/A' for free memory

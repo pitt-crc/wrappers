@@ -57,7 +57,8 @@ class CrcScancel(BaseParser):
         # over the clusters until we find the right one.
 
         for cluster in Slurm.get_cluster_names(include_all_clusters=True):
-            if job_id in Shell.run_command(f'squeue -h -u {self.user} -j {job_id} -M {cluster}'):
+            user_job_ids = Shell.run_command(f'squeue -h -u {self.user} -j {job_id} -M {cluster}')
+            if job_id in user_job_ids:
                 return cluster
 
         return None

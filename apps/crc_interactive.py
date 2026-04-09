@@ -156,6 +156,7 @@ class CrcInteractive(BaseParser):
             RuntimeError: If no cluster is specified in the arguments.
         """
 
+        # Map arguments from the parent application to equivalent srun arguments
         srun_flags = {
             'partition': '--partition={}',
             'num_nodes': '--nodes={}',
@@ -175,6 +176,9 @@ class CrcInteractive(BaseParser):
             if value:
                 srun_args += ' ' + flag_template.format(value)
 
+        # --gres cannot use a simple key/value format because it requires a resource
+        # type prefix (e.g., `gpu:2` rather than just `2`), so it is built separately
+        # from the rest of the srun flags.
         if (args.gpu or args.invest or (args.teach and args.partition == 'gpu')) and args.num_gpus:
             srun_args += f' --gres=gpu:{args.num_gpus}'
 
