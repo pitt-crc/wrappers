@@ -49,11 +49,8 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
         """Handle errors and exit the application
 
         This method mimics the parent class behavior except error messages
-        are included in the raised ``SystemExit`` exception. This makes for
+        are included in the raised `SystemExit` exception. This makes for
         easier testing/debugging.
-
-        If the application was called without any commandline arguments, the
-        application help text is printed before exiting.
 
         Args:
             message: The error message
@@ -62,11 +59,15 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
             SystemExit: Every time the method is run
         """
 
-        # If no commandline arguments were given, print the help text
-        if len(sys.argv) == 1:
-            self.print_help()
-
         raise SystemExit(message)
+
+    def print_help_if_no_args(self) -> None:
+        """Print help text and exit if no arguments were provided but some are required."""
+
+        has_required_args = any(action.required for action in self._actions)
+        if len(sys.argv) == 1 and has_required_args:
+            self.print_help()
+            self.exit()
 
     @classmethod
     def execute(cls, args: Optional[List[str]] = None) -> None:
@@ -78,6 +79,7 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
 
         app = cls()
         args = app.parse_args(args)
+        app.print_help_if_no_args()
 
         try:
             app.app_logic(args)

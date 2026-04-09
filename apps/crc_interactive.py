@@ -15,7 +15,7 @@ from .utils.system_info import Slurm
 
 
 class CrcInteractive(BaseParser):
-    """Launch an interactive Slurm session on a user-selected cluster."""
+    """Launch an interactive Slurm session on a cluster."""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
     min_mpi_cores = defaultdict(lambda: 28, {'mpi': 48, 'opa-high-mem': 28})  # Minimum cores per MPI partition
