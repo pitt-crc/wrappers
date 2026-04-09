@@ -1,7 +1,7 @@
 """Command line application for reporting a user's disk quota usage.
 
 The `crc-quota` application prints disk usage across multiple CRC file systems
-for a given user. Quota limits are determined using ``os.statvfs``. On VAST
+for a given user. Quota limits are determined using `os.statvfs`. On VAST
 file systems, the quota limit is reported as the file system size, so a
 heuristic comparison against the mount point is used to detect whether a quota
 is actually configured.

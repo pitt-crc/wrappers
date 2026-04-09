@@ -1,7 +1,7 @@
 """Command line utility for printing statistics about a running Slurm job.
 
 The `crc-job-stats` application is intended to be called at the end of a Slurm
-job submission script. It uses ``scontrol`` to fetch job metadata and prints a
+job submission script. It uses `scontrol` to fetch job metadata and prints a
 formatted summary to the terminal.
 """
 
@@ -31,14 +31,14 @@ class CrcJobStats(BaseParser):
     def get_job_info(self) -> dict[str, str]:
         """Return metadata for the current job as a dictionary.
 
-        Parses ``scontrol`` output into key/value pairs, handling file paths
+        Parses `scontrol` output into key/value pairs, handling file paths
         that may contain whitespace.
 
         Returns:
-            A dictionary of Slurm job settings fetched from ``scontrol``.
+            A dictionary of Slurm job settings fetched from `scontrol`.
         """
 
-        # Get job information from the ``scontrol`` utility
+        # Get job information from the `scontrol` utility
         # Slurm settings are returned as "key=value" pairs seperated by whitespace
         output = Shell.run_command(f'scontrol -M {self.cluster} show job {self.job_id}')
         split_output = output.strip().split()
@@ -61,7 +61,7 @@ class CrcJobStats(BaseParser):
         """Print a formatted summary of job metadata to the terminal.
 
         Args:
-            job_info: A dictionary of Slurm job settings from ``scontrol``.
+            job_info: A dictionary of Slurm job settings from `scontrol`.
         """
 
         width = 78

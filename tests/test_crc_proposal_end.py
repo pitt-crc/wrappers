@@ -1,4 +1,4 @@
-"""Tests for the ``crc-proposal-end`` application."""
+"""Tests for the `crc-proposal-end` application."""
 
 from unittest import TestCase
 

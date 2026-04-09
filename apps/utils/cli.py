@@ -15,10 +15,10 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
 
     Child classes should implement the following:
 
-    1. The application commandline interface in the ``__init__`` method
-    2. The primary application logic in the ``app_logic`` method
+    1. The application commandline interface in the `__init__` method
+    2. The primary application logic in the `app_logic` method
 
-    Unless set explicitly, the application description (``self.description``)
+    Unless set explicitly, the application description (`self.description`)
     is pulled from the class docstring.
     """
 
@@ -49,7 +49,7 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
         """Handle errors and exit the application
 
         This method mimics the parent class behavior except error messages
-        are included in the raised ``SystemExit`` exception. This makes for
+        are included in the raised `SystemExit` exception. This makes for
         easier testing/debugging.
 
         If the application was called without any commandline arguments, the

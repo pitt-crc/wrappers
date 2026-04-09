@@ -1,6 +1,6 @@
 """Command line application for summarizing running Slurm jobs.
 
-The `crc-squeue` application wraps the Slurm ``squeue`` command with
+The `crc-squeue` application wraps the Slurm `squeue` command with
 opinionated output formatting. By default it shows only the current user's
 jobs, with an option to show all jobs across the cluster.
 """
@@ -37,7 +37,7 @@ class CrcSqueue(BaseParser):
             args: Parsed command line arguments.
 
         Returns:
-            A complete ``squeue`` command string.
+            A complete `squeue` command string.
         """
 
         parts = [f'squeue -M {args.cluster}']
