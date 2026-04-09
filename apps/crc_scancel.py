@@ -7,6 +7,7 @@ job before it is terminated.
 
 import getpass
 from argparse import Namespace
+from typing import Union
 
 from .utils.cli import BaseParser
 from .utils.system_info import Shell, Slurm
