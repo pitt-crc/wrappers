@@ -3,9 +3,9 @@
 import abc
 import os
 import sys
-from argparse import ArgumentParser, Namespace, HelpFormatter
+from argparse import ArgumentParser, HelpFormatter, Namespace
 from textwrap import dedent
-from typing import Optional, List
+from typing import List, Optional
 
 from .. import __version__
 
