@@ -1,12 +1,8 @@
-"""A simple wrapper around the Slurm `srun` command.
+"""Command line application for launching interactive Slurm sessions.
 
-The application launches users into an interactive Slurm session on a
-user-selected cluster and (if specified) partition. Dedicated command line
-options for selecting specific clusters.
-
-Each cluster is provided with predefined command line options. As a result,
-this application does support dynamic cluster discovery. New clusters need
-to be manually added (or removed) by updating the application CLI arguments.
+The `crc-interactive` application wraps the Slurm `srun` command and provides
+dedicated options for each supported cluster. Predefined limits on wall time,
+node count, and core count are enforced before the session is launched.
 """
 
 from argparse import ArgumentTypeError, Namespace
@@ -19,7 +15,7 @@ from .utils.system_info import Slurm
 
 
 class CrcInteractive(BaseParser):
-    """Launch an interactive Slurm session."""
+    """Launch an interactive Slurm session on a user-selected cluster."""
 
     min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
     min_mpi_cores = defaultdict(lambda: 28, {'mpi': 48, 'opa-high-mem': 28})  # Minimum cores per MPI partition
@@ -41,7 +37,7 @@ class CrcInteractive(BaseParser):
         'mpi': 'm',
         'invest': 'i',
         'htc': 'd',
-        'teach': 'e'
+        'teach': 'e',
     }
 
     def __init__(self) -> None:
@@ -50,13 +46,15 @@ class CrcInteractive(BaseParser):
         super(CrcInteractive, self).__init__()
         self.add_argument(
             '-z', '--print-command', action='store_true',
-            help='print the equivalent slurm command and exit')
+            help='print the equivalent Slurm command and exit')
 
         # Arguments for specifying what cluster to start an interactive session on
         cluster_args = self.add_argument_group('Cluster Arguments')
         cluster_args.add_argument('-p', '--partition', help='run the session on a specific partition')
         for cluster, abbrev in self.clusters.items():
-            cluster_args.add_argument(f'-{abbrev}', f'--{cluster}', action='store_true', help=f'launch a session on the {cluster} cluster')
+            cluster_args.add_argument(
+                f'-{abbrev}', f'--{cluster}', action='store_true',
+                help=f'launch a session on the {cluster} cluster')
 
         # Arguments for requesting additional hardware resources
         resource_args = self.add_argument_group('Arguments for Increased Resources')
@@ -82,46 +80,50 @@ class CrcInteractive(BaseParser):
         additional_args.add_argument('-a', '--account', help='specify a non-default account')
         additional_args.add_argument('-r', '--reservation', help='specify a reservation name')
         additional_args.add_argument('-l', '--license', help='specify a license')
-        additional_args.add_argument('-f', '--feature', help='specify a feature, e.g. `ti` for GPUs')
-        additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP style submission')
+        additional_args.add_argument('-f', '--feature', help='specify a node feature, e.g. `ti` for GPUs')
+        additional_args.add_argument('-o', '--openmp', action='store_true', help='run using OpenMP-style submission')
 
     @staticmethod
     def parse_time(time_str: str) -> time:
-        """Parse a string representation of time in 'HH:MM:SS' format and return a time object.
+        """Parse a time string in HH, HH:MM, or HH:MM:SS format.
 
         Args:
-            time_str: A string representing time in 'HH:MM:SS' format.
+            time_str: A string representing a wall time duration.
 
         Returns:
-            time: A time object representing the parsed time.
+            A `time` object representing the parsed duration.
 
         Raises:
-            ArgumentTypeError: If the input string is not in the correct format or cannot be parsed.
+            ArgumentTypeError: If the string cannot be parsed as a valid time.
         """
 
-        time_list = time_str.split(':')
-        if len(time_list) > 3:
+        parts = time_str.split(':')
+        if len(parts) > 3:
             raise ArgumentTypeError(f'Could not parse time value {time_str}')
 
         try:
-            return time(*map(int, time_list))
+            return time(*map(int, parts))
 
         except Exception:
             raise ArgumentTypeError(f'Could not parse time value {time_str}')
 
     def parse_args(self, args=None, namespace=None) -> Namespace:
-        """Parse command line arguments."""
+        """Parse and validate command line arguments.
+
+        Raises:
+            SystemExit: If any argument constraints are violated.
+        """
 
         args = super().parse_args(args, namespace)
 
         # Set defaults that need to be determined dynamically
         if not args.num_gpus:
-            args.num_gpus = 1 if (args.gpu or (args.teach and (args.partition == 'gpu'))) else 0
+            args.num_gpus = 1 if (args.gpu or (args.teach and args.partition == 'gpu')) else 0
 
         # Check wall time is between limits, enable both %H:%M format and integer hours
         check_time = args.time.hour + args.time.minute / 60 + args.time.second / 3600
         if not self.min_time <= check_time <= self.max_time:
-            self.error(f'Requested time must be between {self.min_time} and {self.max_time}.')
+            self.error(f'Requested time must be between {self.min_time} and {self.max_time} hours.')
 
         # Check the minimum number of nodes are requested for mpi
         if args.mpi and args.num_nodes < self.min_mpi_nodes:
@@ -131,7 +133,8 @@ class CrcInteractive(BaseParser):
         min_cores = self.min_mpi_cores[args.partition]
         if args.mpi and args.num_cores < min_cores:
             self.error(
-                f'You must request at least {min_cores} cores per node when using the {args.partition} partition on the MPI cluster.'
+                f'You must request at least {min_cores} cores per node '
+                f'when using the {args.partition} partition on the MPI cluster.'
             )
 
         # Check a partition is specified if the user is requesting invest
@@ -141,17 +144,19 @@ class CrcInteractive(BaseParser):
         return args
 
     def create_srun_command(self, args: Namespace) -> str:
-        """Create an `srun` command based on parsed command line arguments.
+        """Build an ``srun`` command string from parsed arguments.
 
         Args:
-            args: A dictionary of parsed command line parsed_args.
+            args: Parsed command line arguments.
 
-        Return:
-            The equivalent `srun` command as a string.
+        Returns:
+            A complete ``srun`` command string ready for execution.
+
+        Raises:
+            RuntimeError: If no cluster is specified in the arguments.
         """
 
-        # Map arguments from the parent application to equivalent srun arguments
-        srun_dict = {
+        srun_flags = {
             'partition': '--partition={}',
             'num_nodes': '--nodes={}',
             'time': '--time={}',
@@ -160,27 +165,26 @@ class CrcInteractive(BaseParser):
             'account': '--account={}',
             'license': '--licenses={}',
             'feature': '--constraint={}',
-            'num_cores': '--cpus-per-task={}' if getattr(args, 'openmp') else '--ntasks-per-node={}'
+            'num_cores': '--cpus-per-task={}' if getattr(args, 'openmp') else '--ntasks-per-node={}',
         }
 
         # Build a string of srun arguments
         srun_args = '--export=ALL'
-        for app_arg_name, srun_arg_name in srun_dict.items():
-            arg_value = getattr(args, app_arg_name)
-            if arg_value:
-                srun_args += ' ' + srun_arg_name.format(arg_value)
+        for arg_name, flag_template in srun_flags.items():
+            value = getattr(args, arg_name)
+            if value:
+                srun_args += ' ' + flag_template.format(value)
 
-        # The --gres argument in srun needs some special handling so is missing from the above dict
-        if (args.gpu or args.invest or (args.teach and (args.partition == 'gpu'))) and args.num_gpus:
-            srun_args += ' ' + f'--gres=gpu:{args.num_gpus}'
+        if (args.gpu or args.invest or (args.teach and args.partition == 'gpu')) and args.num_gpus:
+            srun_args += f' --gres=gpu:{args.num_gpus}'
 
         try:
-            cluster_to_run = next(cluster for cluster in self.clusters if getattr(args, cluster))
+            cluster = next(c for c in self.clusters if getattr(args, c))
 
         except StopIteration:
             raise RuntimeError('Please specify which cluster to run on.')
 
-        return f'srun -M {cluster_to_run} {srun_args} --pty bash'
+        return f'srun -M {cluster} {srun_args} --pty bash'
 
     def app_logic(self, args: Namespace) -> None:
         """Logic to evaluate when executing the application.
@@ -189,13 +193,11 @@ class CrcInteractive(BaseParser):
             args: Parsed command line arguments.
         """
 
-        if not any(getattr(args, cluster, False) for cluster in Slurm.get_cluster_names()):
+        if not any(getattr(args, c, False) for c in Slurm.get_cluster_names()):
             self.print_help()
             self.exit()
 
-        # Create the slurm command
         srun_command = self.create_srun_command(args)
-
         if args.print_command:
             print(srun_command)
 

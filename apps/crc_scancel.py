@@ -1,8 +1,8 @@
-"""A simple wrapper around the Slurm ``scancel`` command.
+"""Command line application for canceling a Slurm job with a confirmation prompt.
 
-This application allows users to cancel a Slurm job by providing a job ID.
-It differs from the default ``scancel`` command by adding a confirmation
-prompt to confirm users are canceling the correct job.
+The `crc-scancel` application wraps the Slurm ``scancel`` command and adds an
+interactive confirmation step so users can verify they are canceling the correct
+job before it is terminated.
 """
 
 import getpass
@@ -18,7 +18,7 @@ class CrcScancel(BaseParser):
     user = getpass.getuser()
 
     def __init__(self) -> None:
-        """Define arguments for the command line interface"""
+        """Define arguments for the command line interface."""
 
         super(CrcScancel, self).__init__()
 
@@ -27,26 +27,27 @@ class CrcScancel(BaseParser):
         self.add_argument('job_id', type=int_as_str, help='the job ID to cancel')
 
     @staticmethod
-    def cancel_job_on_cluster(cluster: str, job_id: int) -> None:
-        """Cancel a running slurm job
+    def cancel_job_on_cluster(cluster: str, job_id: str) -> None:
+        """Cancel a Slurm job on the given cluster.
 
         Args:
-            cluster: The name of the cluster the job is running on
-            job_id: The ID of the slurm job to cancel
+            cluster: The name of the cluster the job is running on.
+            job_id: The ID of the Slurm job to cancel.
         """
 
         Shell.run_command(f'scancel -M {cluster} {job_id}')
 
-    def get_cluster_for_job_id(self, job_id: int) -> str:
-        """Return the name of the cluster a slurm job is running on
+    def get_cluster_for_job_id(self, job_id: str) -> Union[str, None]:
+        """Return the name of the cluster a given Slurm job is running on.
 
-        Exits the application with an error
+        Iterates over all known clusters because fetching the cluster directly
+        via ``squeue`` fails for scavenger jobs.
 
         Args:
-            job_id: The ID of th slurm job
+            job_id: The ID of the Slurm job to locate.
 
         Returns:
-            The name of the cluster as a string
+            The cluster name, or None if the job is not found on any cluster.
         """
 
         # In principle the cluster name can be fetched by running
@@ -55,23 +56,23 @@ class CrcScancel(BaseParser):
         # over the clusters until we find the right one.
 
         for cluster in Slurm.get_cluster_names(include_all_clusters=True):
-            # Fetch a list of running slurm jobs matching the username and job id
-            command = f'squeue -h -u {self.user} -j {job_id} -M {cluster}'
-            if job_id in Shell.run_command(command):
+            if job_id in Shell.run_command(f'squeue -h -u {self.user} -j {job_id} -M {cluster}'):
                 return cluster
 
+        return None
+
     def app_logic(self, args: Namespace) -> None:
-        """Logic to evaluate when executing the application
+        """Logic to evaluate when executing the application.
 
         Args:
-            args: Namespace of parsed arguments from the command line
+            args: Parsed command line arguments.
         """
 
         cluster = self.get_cluster_for_job_id(args.job_id)
         if not cluster:
-            self.error(f'Could not find job {args.job_id} running on known clusters')
+            self.error(f'Could not find job {args.job_id} running on any known cluster.')
 
-        print(f"Would you like to cancel job {args.job_id} on cluster {cluster}? (y/N): ")
+        print(f'Would you like to cancel job {args.job_id} on cluster {cluster}? (y/N): ')
         if Shell.readchar().lower() == 'y':
             self.cancel_job_on_cluster(cluster, args.job_id)
-            print(f'Force Terminated job {args.job_id}')
+            print(f'Force terminated job {args.job_id}.')
