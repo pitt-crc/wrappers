@@ -9,10 +9,8 @@ import os
 from argparse import Namespace
 from getpass import getpass
 
-from keystone_client import KeystoneClient
-
 from .utils.cli import BaseParser
-from .utils.keystone import (get_active_requests, get_most_recent_expired_request, KEYSTONE_URL)
+from .utils.keystone import (authenticate_keystone_session, get_active_requests, get_most_recent_expired_request)
 from .utils.system_info import Slurm
 
 
@@ -39,8 +37,7 @@ class CrcProposalEnd(BaseParser):
 
         Slurm.check_slurm_account_exists(args.account)
 
-        keystone_session = KeystoneClient(base_url=KEYSTONE_URL)
-        keystone_session.login(
+        keystone_session = authenticate_keystone_session(
             username=os.environ["USER"],
             password=getpass("Please enter your CRCD login password:\n")
         )
