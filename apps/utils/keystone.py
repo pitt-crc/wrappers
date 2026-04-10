@@ -16,6 +16,31 @@ KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
 
 
+def authenticate_keystone_session(username: str, password: str) -> KeystoneClient:
+    """Create and return an authenticated Keystone client session.
+
+    Args:
+        username: The username to authenticate with.
+        password: The password to authenticate with.
+
+    Returns:
+        An authenticated Keystone client session.
+    """
+
+    session = KeystoneClient(base_url=KEYSTONE_URL)
+
+    try:
+        session.login(username=username, password=password)
+
+    except Exception:
+        raise ValueError(
+            'ERROR: authentication failed. '
+            'Please check your username and password and try again.'
+        )
+
+    return session
+
+
 def get_account_id(session: KeystoneClient, account_name: str) -> int:
     """Return the account ID associated with a given account name.
 
