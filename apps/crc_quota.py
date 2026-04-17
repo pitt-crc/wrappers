@@ -1,12 +1,10 @@
-"""Command line utility for checking a user's disk usage.
+"""Command line application for reporting a user's disk quota usage.
 
-This application prints a user's disk usage on multiple CRC file systems.
-Disk usage is determined using the ``df`` command line utility, which reports
-quota limits as the filesystem size when quotas are set on VAST.
-
-The file system paths (and types) are hard coded in this application.
-To modify what file systems are examined by the application, see the
-``CrcQuota.app_logic`` method.
+The `crc-quota` application prints disk usage across multiple CRC file systems
+for a given user. Quota limits are determined using ``os.statvfs``. On VAST
+file systems, the quota limit is reported as the file system size, so a
+heuristic comparison against the mount point is used to detect whether a quota
+is actually configured.
 """
 
 from __future__ import annotations
@@ -16,25 +14,22 @@ import os
 import pwd
 import sys
 from argparse import Namespace
-from typing import Optional, Tuple
 
 from .utils.cli import BaseParser
-from .utils.system_info import Shell
 
-
-NO_QUOTA_MSG = "No Quota Found, Please contact the CRCD Team to fix this!"
+NO_QUOTA_MSG = 'No Quota Found, Please contact the CRCD Team to fix this!'
 
 
 class AbstractFilesystemUsage:
-    """Base class for building object-oriented representations of file system quotas."""
+    """Base class for representing disk quota usage on a single file system."""
 
     def __init__(self, name: str, size_used: int, size_limit: int) -> None:
-        """Create a new quota from known system metrics
+        """Create a new quota object from known system metrics.
 
         Args:
-            name: Name of the file system (e.g., zfs, ix, home)
-            size_used: Disk space used by the user/group
-            size_limit: Maximum disk space allowed by the allocation
+            name: The name of the file system (e.g., zfs1, ihome).
+            size_used: Bytes consumed by the user or group.
+            size_limit: Maximum bytes allowed by the allocation.
         """
 
         self.name = name
@@ -42,13 +37,13 @@ class AbstractFilesystemUsage:
         self.size_limit = size_limit
 
     def to_string(self, verbose: bool = False) -> str:
-        """Return a string representation of the quota usage
+        """Return a human-readable representation of the quota usage.
 
         Args:
-            verbose: Return a more detailed representation
+            verbose: Whether to use the verbose format with labeled fields.
 
         Returns:
-            Human readable quota usage information
+            A formatted string describing current usage and the quota limit.
         """
 
         if verbose:
@@ -59,48 +54,48 @@ class AbstractFilesystemUsage:
     def _verbose_string(self) -> str:
         used = self.convert_size(self.size_used)
         limit = self.convert_size(self.size_limit)
-        return f"-> {self.name}: Bytes Used: {used}, Byte Limit: {limit}"
+        return f'-> {self.name}: Bytes Used: {used}, Byte Limit: {limit}'
 
     def _short_string(self) -> str:
         used = self.convert_size(self.size_used)
         limit = self.convert_size(self.size_limit)
-        return f"-> {self.name}: {used} / {limit}"
+        return f'-> {self.name}: {used} / {limit}'
 
     @staticmethod
     def convert_size(size: int) -> str:
-        """Convert the given number of bytes to a human-readable string
+        """Convert a byte count to a human-readable string with units.
 
         Args:
-            size: An integer number of bytes
+            size: A number of bytes.
 
         Returns:
-             A string representation of the given size with units
+            A string representation of the size with appropriate units.
         """
 
         if size == 0:
             return '0.0 B'
 
-        size_units = ('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB')
-
         base_2_power = int(math.floor(math.log(size, 1024)))
         conversion_factor = math.pow(1024, base_2_power)
         final_size = round(size / conversion_factor, 2)
+
+        size_units = ('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB')
         return f'{final_size} {size_units[base_2_power]}'
 
 
 class GenericUsage(AbstractFilesystemUsage):
-    """Disk storage quota for a generic file system"""
+    """Disk quota for a generic (non-VAST) file system."""
 
     @classmethod
-    def from_path(cls, name: str, path: str) -> Optional[GenericUsage]:
-        """Return a quota object for a given file path
+    def from_path(cls, name: str, path: str) -> GenericUsage | None:
+        """Return a quota object for the given file path.
 
         Args:
-            name: Name of the file system (e.g., zfs, ix, home)
-            path: The file path for create a quota for
+            name: The name of the file system.
+            path: The file system path to measure.
 
         Returns:
-            An instance of the parent class or None if the allocation does not exist
+            A `GenericUsage` instance, or None if the path does not exist.
         """
 
         try:
@@ -116,59 +111,58 @@ class GenericUsage(AbstractFilesystemUsage):
 
 
 class IhomeUsage(AbstractFilesystemUsage):
-    """Disk storage quota for the ihome file system on VAST."""
+    """Disk quota for the ihome file system on VAST."""
 
     def __init__(self, name: str, size_used: int, size_limit: int, has_quota: bool = True) -> None:
-        """Create a new ihome quota from known system metrics
+        """Create a new ihome quota object.
 
         Args:
-            name: Name of the file system (e.g., ihome)
-            size_used: Disk space used by the user
-            size_limit: Maximum disk space allowed by the allocation
-            has_quota: Whether a quota is actually set for this path
+            name: The name of the file system.
+            size_used: Bytes consumed by the user.
+            size_limit: Maximum bytes allowed by the allocation.
+            has_quota: Whether a quota is actually configured for this path.
         """
 
-        super(IhomeUsage, self).__init__(name, size_used, size_limit)
+        super().__init__(name, size_used, size_limit)
         self.has_quota = has_quota
 
     def _verbose_string(self) -> str:
         used = self.convert_size(self.size_used)
         if not self.has_quota:
-            return f"-> {self.name}: Bytes Used: {used} ({NO_QUOTA_MSG})"
+            return f'-> {self.name}: Bytes Used: {used} ({NO_QUOTA_MSG})'
 
         limit = self.convert_size(self.size_limit)
-        return f"-> {self.name}: Bytes Used: {used}, Byte Limit: {limit}"
+        return f'-> {self.name}: Bytes Used: {used}, Byte Limit: {limit}'
 
     def _short_string(self) -> str:
         used = self.convert_size(self.size_used)
         if not self.has_quota:
-            return f"-> {self.name}: {used} / {NO_QUOTA_MSG}"
+            return f'-> {self.name}: {used} / {NO_QUOTA_MSG}'
 
         limit = self.convert_size(self.size_limit)
-        return f"-> {self.name}: {used} / {limit}"
+        return f'-> {self.name}: {used} / {limit}'
 
     @classmethod
-    def from_path(cls, name: str, path: str) -> Optional[IhomeUsage]:
-        """Return a quota object for a given file path using os.statvfs.
+    def from_path(cls, name: str, path: str) -> IhomeUsage | None:
+        """Return a quota object for the given ihome path.
 
-        VAST reports the quota limit as the filesystem size when a quota is set.
-        If no quota is set, it reports the full filesystem size.
-
-        To detect if a quota is set, we compare the reported size of the user's
-        directory against the mount point. If they are within 1% of each other,
-        we assume no quota is configured.
+        VAST reports the quota limit as the file system size when a quota is set.
+        To detect whether a quota is configured, the reported directory size is
+        compared against the /ihome mount point. If they are within 1%, no quota
+        is assumed.
 
         Args:
-            name: Name of the file system (e.g., ihome)
-            path: The file path to check quota for
+            name: The name of the file system.
+            path: The user's ihome directory path.
 
         Returns:
-            An instance of IhomeUsage or None if the path does not exist
+            An `IhomeUsage` instance, or None if the path does not exist.
         """
 
         try:
             stat = os.statvfs(path)
-            mount_stat = os.statvfs("/ihome")
+            mount_stat = os.statvfs('/ihome')
+
         except (OSError, FileNotFoundError):
             return None
 
@@ -187,6 +181,7 @@ class IhomeUsage(AbstractFilesystemUsage):
         if mount_size > 0:
             size_ratio = size_limit / mount_size
             has_quota = not (0.99 <= size_ratio <= 1.01)
+
         else:
             has_quota = False
 
@@ -194,55 +189,56 @@ class IhomeUsage(AbstractFilesystemUsage):
 
 
 class VastUsage(AbstractFilesystemUsage):
-    """Disk storage quota for VAST project storage (/vast)."""
+    """Disk quota for VAST project storage (/vast)."""
 
     def __init__(self, name: str, size_used: int, size_limit: int, has_quota: bool = True) -> None:
-        """Create a new VAST quota from known system metrics
+        """Create a new VAST quota object.
 
         Args:
-            name: Name of the file system (e.g., vast)
-            size_used: Disk space used
-            size_limit: Maximum disk space allowed by the allocation
-            has_quota: Whether a quota is actually set for this path
+            name: The name of the file system.
+            size_used: Bytes consumed.
+            size_limit: Maximum bytes allowed by the allocation.
+            has_quota: Whether a quota is actually configured for this path.
         """
 
-        super(VastUsage, self).__init__(name, size_used, size_limit)
+        super().__init__(name, size_used, size_limit)
         self.has_quota = has_quota
 
     def _verbose_string(self) -> str:
         used = self.convert_size(self.size_used)
         if not self.has_quota:
-            return f"-> {self.name}: Bytes Used: {used} ({NO_QUOTA_MSG})"
+            return f'-> {self.name}: Bytes Used: {used} ({NO_QUOTA_MSG})'
 
         limit = self.convert_size(self.size_limit)
-        return f"-> {self.name}: Bytes Used: {used}, Byte Limit: {limit}"
+        return f'-> {self.name}: Bytes Used: {used}, Byte Limit: {limit}'
 
     def _short_string(self) -> str:
         used = self.convert_size(self.size_used)
         if not self.has_quota:
-            return f"-> {self.name}: {used} / {NO_QUOTA_MSG}"
+            return f'-> {self.name}: {used} / {NO_QUOTA_MSG}'
 
         limit = self.convert_size(self.size_limit)
-        return f"-> {self.name}: {used} / {limit}"
+        return f'-> {self.name}: {used} / {limit}'
 
     @classmethod
-    def from_path(cls, name: str, path: str) -> Optional[VastUsage]:
-        """Return a quota object for a given file path using os.statvfs.
+    def from_path(cls, name: str, path: str) -> VastUsage | None:
+        """Return a quota object for the given VAST path.
 
-        VAST reports the quota limit as the filesystem size when a quota is set.
-        If no quota is set, it reports the full filesystem size.
+        Uses the same heuristic as `IhomeUsage.from_path` to detect whether a
+        quota is configured by comparing against the /vast mount point.
 
         Args:
-            name: Name of the file system (e.g., vast)
-            path: The file path to check quota for
+            name: The name of the file system.
+            path: The group's VAST directory path.
 
         Returns:
-            An instance of VastUsage or None if the path does not exist
+            A `VastUsage` instance, or None if the path does not exist.
         """
 
         try:
             stat = os.statvfs(path)
-            mount_stat = os.statvfs("/vast")
+            mount_stat = os.statvfs('/vast')
+
         except (OSError, FileNotFoundError):
             return None
 
@@ -256,6 +252,7 @@ class VastUsage(AbstractFilesystemUsage):
         if mount_size > 0:
             size_ratio = size_limit / mount_size
             has_quota = not (0.99 <= size_ratio <= 1.01)
+
         else:
             has_quota = False
 
@@ -263,33 +260,35 @@ class VastUsage(AbstractFilesystemUsage):
 
 
 class CrcQuota(BaseParser):
-    """Display a user's disk quota."""
+    """Display disk quota usage for a user across CRC file systems."""
 
     def __init__(self) -> None:
-        """Define arguments for the command line interface"""
+        """Define arguments for the command line interface."""
 
         super(CrcQuota, self).__init__()
         self.add_argument('user', default=None, nargs='?', help='username to query disk usage for')
         self.add_argument('--verbose', action='store_true', help='use verbose output')
 
     @staticmethod
-    def get_user_info(username: Optional[str] = None) -> Tuple[str, int, str, int, str]:
-        """Return system IDs for the current user
+    def get_user_info(username: str | None = None) -> tuple[str, int, str, int, str]:
+        """Return system identity information for a user.
 
         Args:
-            username: The name of the user to get IDs for (defaults to current user)
+            username: The name of the user to look up (defaults to the current user).
 
         Returns:
-            Tuple with the user's name, user ID, group name, group ID, and home directory
+            A tuple of (username, uid, group name, gid, home directory).
         """
 
         try:
             if username:
                 pw_entry = pwd.getpwnam(username)
+
             else:
                 pw_entry = pwd.getpwuid(os.getuid())
+
         except KeyError:
-            sys.exit(f"Could not find quota information for user {username}")
+            sys.exit(f'Could not find quota information for user {username}')
 
         user = pw_entry.pw_name
         uid = pw_entry.pw_uid
@@ -300,47 +299,49 @@ class CrcQuota(BaseParser):
         import grp
         try:
             group = grp.getgrgid(gid).gr_name
+
         except KeyError:
             group = str(gid)
 
         return user, uid, group, gid, homedir
 
     @staticmethod
-    def get_group_quotas(group: str) -> Tuple[GenericUsage, ...]:
-        """Return quota information for the given group
+    def get_group_quotas(group: str) -> tuple[GenericUsage | VastUsage, ...]:
+        """Return quota objects for all group-level storage paths that exist.
 
         Args:
-            group: The name of the group
+            group: The name of the group to check quotas for.
 
         Returns:
-            A tuple of ``Quota`` objects
+            A tuple of quota objects for each storage path that exists.
         """
 
-        zfs1_quota = GenericUsage.from_path('zfs1', f'/zfs1/{group}')
-        zfs2_quota = GenericUsage.from_path('zfs2', f'/zfs2/{group}')
-        ix_quota = GenericUsage.from_path('ix', f'/ix/{group}')
-        ix1_quota = GenericUsage.from_path('ix1', f'/ix1/{group}')
-        ix3_quota = GenericUsage.from_path('ix3', f'/ix3/{group}')
-        vast_quota = VastUsage.from_path('vast', f'/vast/{group}')
+        all_quotas = (
+            GenericUsage.from_path('zfs1', f'/zfs1/{group}'),
+            GenericUsage.from_path('zfs2', f'/zfs2/{group}'),
+            GenericUsage.from_path('ix', f'/ix/{group}'),
+            GenericUsage.from_path('ix1', f'/ix1/{group}'),
+            GenericUsage.from_path('ix3', f'/ix3/{group}'),
+            VastUsage.from_path('vast', f'/vast/{group}'),
+        )
 
-        # Only return quotas that exist for the given group (i.e., objects that are not None)
-        all_quotas = (zfs1_quota, zfs2_quota, ix_quota, ix1_quota, ix3_quota, vast_quota)
-        return tuple(filter(None, all_quotas))
+        return tuple(q for q in all_quotas if q is not None)
 
     def app_logic(self, args: Namespace) -> None:
-        """Logic to evaluate when executing the application
+        """Logic to evaluate when executing the application.
 
         Args:
-            args: Parsed command line arguments
+            args: Parsed command line arguments.
         """
 
         # Get disk usage information for the given user
         user, uid, group, gid, homedir = self.get_user_info(args.user)
 
-        # Get ihome quota using df against the user's actual home directory
+        # Get quota for the user's home directory
         ihome_quota = IhomeUsage.from_path('ihome', homedir)
 
-        supp_quotas = self.get_group_quotas(group)
+        # Get quotas for any of the user's shared groups
+        group_quotas = self.get_group_quotas(group)
 
         print(f"User: '{user}'")
         if args.verbose:
@@ -348,6 +349,7 @@ class CrcQuota(BaseParser):
 
         if ihome_quota:
             print(ihome_quota.to_string(args.verbose))
+
         else:
             print('-> ihome: Unable to retrieve quota information')
 
@@ -355,11 +357,10 @@ class CrcQuota(BaseParser):
         if args.verbose:
             print(f'Group ID: {gid}')
 
-        for quota in supp_quotas:
+        for quota in group_quotas:
             print(quota.to_string(args.verbose))
 
-        if not supp_quotas:
+        if not group_quotas:
             print(
                 'If you need additional storage, you can request up to 5TB on '
                 'IX!. Contact CRCD for more details.')
-

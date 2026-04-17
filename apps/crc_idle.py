@@ -1,8 +1,8 @@
 """Command line application for listing idle Slurm resources.
 
-The application relies on the info command to identify idle resources and
-summarize how many resources are available on each cluster partition.
-Resource summaries are provided for GPU and CPU partitions.
+The `crc-idle` application queries each cluster partition and summarizes
+how many CPU cores or GPUs are currently available. Drained or downed nodes
+are reported as having zero available resources.
 """
 
 import re
@@ -14,7 +14,7 @@ from .utils.cli import BaseParser
 
 
 class CrcIdle(BaseParser):
-    """Display idle Slurm resources."""
+    """Display idle Slurm resources across cluster partitions."""
 
     # Specify the type of resource available on each cluster
     # Either `cores` or `GPUs` depending on the cluster type
@@ -38,37 +38,36 @@ class CrcIdle(BaseParser):
         self.add_argument('-t', '--teach', action='store_true', help='list idle resources on the teach cluster')
         self.add_argument('-p', '--partition', nargs='+', help='only include information for specific partitions')
 
-    def get_cluster_list(self, args: Namespace) -> tuple[str]:
-        """Return a list of clusters specified by command line arguments.
+    def get_cluster_list(self, args: Namespace) -> tuple[str, ...]:
+        """Return which clusters to report on based on command line arguments.
 
-        Returns a tuple of clusters specified by command line arguments. If no
-        clusters were specified, then return a tuple of all cluster names.
+        Defaults to all known clusters if none are explicitly specified.
 
         Args:
-            args: Parsed command line arguments
+            args: Parsed command line arguments.
 
         Returns:
-            A tuple of cluster names
+            A tuple of cluster names as strings.
         """
 
-        # Select only the specified clusters
-        argument_clusters = tuple(self.cluster_types.keys())
-        specified_clusters = tuple(filter(lambda cluster: getattr(args, cluster), argument_clusters))
-
-        # Default to returning all clusters
-        return specified_clusters or argument_clusters
+        all_clusters = tuple(self.cluster_types.keys())
+        specified = tuple(c for c in all_clusters if getattr(args, c))
+        return specified or all_clusters
 
     @staticmethod
     def _count_idle_cpu_resources(cluster: str, partition: str) -> dict[int, dict[str, int]]:
-        """Return the idle CPU resources on a given cluster partition.
+        """Return idle CPU core counts and free memory statistics per node group.
+
+        Nodes in a downed or drained state are reported as having zero idle cores
+        and zero free memory.
 
         Args:
-            cluster: The cluster to print a summary for.
-            partition: The partition in the parent cluster.
+            cluster: The name of the cluster to query.
+            partition: The name of the partition within the cluster.
 
         Returns:
-            A dictionary mapping the number of idle resources to a dictionary with the number of nodes with that many
-            idle resources, minimum free memory, and maximum free memory on these nodes.
+            A dictionary mapping idle core count to a record containing the number
+            of nodes at that count along with minimum and maximum free memory in MB.
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
@@ -76,121 +75,121 @@ class CrcIdle(BaseParser):
         slurm_data = Shell.run_command(command).strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
-        return_dict = dict()
+        result: dict[int, dict[str, int]] = {}
         for node_info in slurm_data:
             _, resource_data, free_mem, node_state = node_info.split(',')
 
             # If the node is in a downed state, report 0 resource availability.
-            down_keys = ['down', 'drain']
-            if any(key in node_state for key in down_keys):
-                idle = 0
-                free_mem = 0
+            if any(key in node_state for key in ('down', 'drain')):
+                idle, free_mem = 0, 0
+
             else:
-                allocated, idle, other, total = [int(x) for x in resource_data.split('/')]
+                _, idle, _, _ = (int(x) for x in resource_data.split('/'))
 
             # Handle cases where sinfo reports 'N/A' for free memory
             try:
                 free_mem = int(free_mem)
+
             except (ValueError, TypeError):
                 free_mem = 0
 
-            if idle not in return_dict:
-                return_dict[idle] = {
-                    'count': 1,
-                    'min_free_mem': free_mem,
-                    'max_free_mem': free_mem
-                }
-            else:
-                return_dict[idle]['count'] += 1
-                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], free_mem)
-                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], free_mem)
+            if idle not in result:
+                result[idle] = {'count': 1, 'min_free_mem': free_mem, 'max_free_mem': free_mem}
 
-        return return_dict
+            else:
+                result[idle]['count'] += 1
+                result[idle]['min_free_mem'] = min(result[idle]['min_free_mem'], free_mem)
+                result[idle]['max_free_mem'] = max(result[idle]['max_free_mem'], free_mem)
+
+        return result
 
     @staticmethod
     def _count_idle_gpu_resources(cluster: str, partition: str) -> dict[int, dict[str, int]]:
-        """Return idle GPU resources on a given cluster partition.
+        """Return idle GPU counts and free memory statistics per node group.
 
-        If the host node is in a `drain` state, the GPUs are reported as unavailable.
+        Nodes in a drained state are reported as having zero idle GPUs and zero
+        free memory.
 
         Args:
-            cluster: The cluster to print a summary for.
-            partition: The partition in the parent cluster.
+            cluster: The name of the cluster to query.
+            partition: The name of the partition within the cluster.
 
         Returns:
-            A dictionary mapping the number of idle resources to the number of nodes with that many idle resources.
+            A dictionary mapping idle GPU count to a record containing the number
+            of nodes at that count along with minimum and maximum free memory in MB.
         """
 
         # Use `sinfo` command to determine the status of each node in the given partition
-        slurm_output_format = "NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:'_',FreeMem ' '"
-        command = f"sinfo -h -M {cluster} -p {partition} -N --Format={slurm_output_format}"
+        fmt = "NodeList:'_',gres:5'_',gresUsed:12'_',StateCompact:'_',FreeMem ' '"
+        command = f"sinfo -h -M {cluster} -p {partition} -N --Format={fmt}"
         slurm_data = Shell.run_command(command).strip().split()
 
         # Count the number of nodes having a given number of idle cores/GPUs
-        return_dict = dict()
+        result: dict[int, dict[str, int]] = {}
         for node_info in slurm_data:
             _, total, allocated, state, free_mem = node_info.split('_')
 
-            if re.search("drain", state):
-                idle = 0
-                free_mem = 0
+            if re.search('drain', state):
+                idle, free_mem = 0, 0
+
             else:
                 total_match = re.search(r'(\d+)', total)
                 allocated_match = re.search(r'(\d+)', allocated)
-                total = int(total_match.group(1)) if total_match else 0
-                allocated = int(allocated_match.group(1)) if allocated_match else 0
-                # Ensure idle is never negative
-                idle = max(0, total - allocated)
+                total_gpus = int(total_match.group(1)) if total_match else 0
+                allocated_gpus = int(allocated_match.group(1)) if allocated_match else 0
+
+                # Ensure idle value is never negative
+                idle = max(0, total_gpus - allocated_gpus)
 
             # Handle cases where sinfo reports 'N/A' for free memory
             try:
                 free_mem = int(free_mem)
+
             except (ValueError, TypeError):
                 free_mem = 0
 
-            if idle not in return_dict:
-                return_dict[idle] = {
-                    'count': 1,
-                    'min_free_mem': free_mem,
-                    'max_free_mem': free_mem
-                }
-            else:
-                return_dict[idle]['count'] += 1
-                return_dict[idle]['min_free_mem'] = min(return_dict[idle]['min_free_mem'], free_mem)
-                return_dict[idle]['max_free_mem'] = max(return_dict[idle]['max_free_mem'], free_mem)
+            if idle not in result:
+                result[idle] = {'count': 1, 'min_free_mem': free_mem, 'max_free_mem': free_mem}
 
-        return return_dict
+            else:
+                result[idle]['count'] += 1
+                result[idle]['min_free_mem'] = min(result[idle]['min_free_mem'], free_mem)
+                result[idle]['max_free_mem'] = max(result[idle]['max_free_mem'], free_mem)
+
+        return result
 
     def count_idle_resources(self, cluster: str, partition: str) -> dict[int, dict[str, int]]:
-        """Determine the number of idle resources on a given cluster partition.
+        """Return idle resource counts for a given cluster partition.
 
-        The returned dictionary maps the number of idle resources (e.g., cores)
-        to the number of nodes in the partition having that many resources idle.
+        Dispatches to the appropriate method based on the cluster type (CPU or GPU).
 
         Args:
-            cluster: The cluster to print a summary for.
-            partition: The partition in the parent cluster.
+            cluster: The name of the cluster to query.
+            partition: The name of the partition within the cluster.
 
         Returns:
-            A dictionary mapping idle resources to number of nodes.
+            A dictionary mapping idle resource count to node statistics.
+
+        Raises:
+            ValueError: If the cluster type is not recognized.
         """
 
         cluster_type = self.cluster_types[cluster]
         if cluster_type == 'GPUs':
             return self._count_idle_gpu_resources(cluster, partition)
 
-        elif cluster_type == 'cores':
+        if cluster_type == 'cores':
             return self._count_idle_cpu_resources(cluster, partition)
 
-        raise ValueError(f'Unknown cluster type: {cluster}')
+        raise ValueError(f'Unknown cluster type: {cluster_type}')
 
     def print_partition_summary(self, cluster: str, partition: str, idle_resources: dict) -> None:
-        """Print a summary of idle resources in a single partition
+        """Print a summary of idle resources for a single partition.
 
         Args:
-            cluster: The cluster to print a summary for
-            partition: The partition in the parent cluster
-            idle_resources: Dictionary mapping idle resources to number of nodes
+            cluster: The name of the cluster.
+            partition: The name of the partition within the cluster.
+            idle_resources: A dictionary mapping idle resource count to node statistics.
         """
 
         output_width = 70
@@ -199,9 +198,11 @@ class CrcIdle(BaseParser):
 
         print(header)
         print('=' * output_width)
+
         for idle, nodes in sorted(idle_resources.items()):
-            print(f'{nodes["count"]:4d} nodes w/ {idle:3d} idle {unit} {(nodes["min_free_mem"]/1024):,.2f}G - '
-                  f'{(nodes["max_free_mem"]/1024):,.2f}G min-max free memory')
+            min_mem = nodes['min_free_mem'] / 1024
+            max_mem = nodes['max_free_mem'] / 1024
+            print(f'{nodes["count"]:4d} nodes w/ {idle:3d} idle {unit} {min_mem:,.2f}G - {max_mem:,.2f}G min-max free memory')
 
         if not idle_resources:
             print(' No idle resources')
@@ -217,6 +218,7 @@ class CrcIdle(BaseParser):
 
         for cluster in self.get_cluster_list(args):
             partitions_to_print = args.partition or Slurm.get_partition_names(cluster)
+
             for partition in partitions_to_print:
                 idle_resources = self.count_idle_resources(cluster, partition)
                 self.print_partition_summary(cluster, partition, idle_resources)
