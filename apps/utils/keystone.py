@@ -183,7 +183,9 @@ def get_per_cluster_totals(
             per_cluster_totals[request['id']] = {}
 
         for allocation in get_request_allocations(session, request['id']):
-            cluster = clusters[allocation['cluster']]
+            cluster = clusters.get(allocation['cluster'])
+            if cluster is None:
+                continue
             awarded = allocation['awarded'] if allocation['awarded'] is not None else 0
 
             if per_request:
