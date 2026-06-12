@@ -15,7 +15,6 @@ from .utils.keystone import (
     authenticate_keystone_session,
     get_active_requests,
     get_earliest_startdate,
-    get_enabled_cluster_ids,
     get_most_recent_expired_request,
     get_per_cluster_totals)
 from .utils.system_info import Slurm
@@ -91,7 +90,7 @@ class CrcSus(BaseParser):
 
                 exit()
 
-        per_cluster_totals = get_per_cluster_totals(session, alloc_requests, get_enabled_cluster_ids(session))
+        per_cluster_totals = get_per_cluster_totals(session, alloc_requests)
         earliest_date = get_earliest_startdate(alloc_requests)
 
         for cluster, total in per_cluster_totals.items():
