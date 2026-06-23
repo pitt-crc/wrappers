@@ -17,10 +17,8 @@ from .utils.keystone import (
     authenticate_keystone_session,
     get_active_requests,
     get_earliest_startdate,
-    get_enabled_cluster_ids,
     get_most_recent_expired_request,
-    get_per_cluster_totals,
-    KEYSTONE_URL)
+    get_per_cluster_totals)
 from .utils.system_info import Slurm
 
 
@@ -137,13 +135,11 @@ class CrcUsage(BaseParser):
 
                 exit()
 
-        clusters = get_enabled_cluster_ids(session)
-
         self.print_summary_table(
             alloc_requests, args.account,
-            get_per_cluster_totals(session, alloc_requests, clusters, per_request=True))
+            get_per_cluster_totals(session, alloc_requests, per_request=True))
 
         self.print_usage_table(
             args.account,
-            get_per_cluster_totals(session, alloc_requests, clusters),
+            get_per_cluster_totals(session, alloc_requests),
             get_earliest_startdate(alloc_requests))
