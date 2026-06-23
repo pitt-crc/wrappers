@@ -17,7 +17,9 @@ jobs:
           - 22.05.11
           - 23.02.5
         python_version:
-          - 3.9
+          - "3.11"
+          - "3.12"
+          - "3.13"
 
     container:
       image: ghcr.io/pitt-crc/test-env:${{ matrix.slurm_version }}
