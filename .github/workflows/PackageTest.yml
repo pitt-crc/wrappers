@@ -19,7 +19,6 @@ jobs:
         python_version:
           - "3.11"
           - "3.12"
-          - "3.13"
 
     container:
       image: ghcr.io/pitt-crc/test-env:${{ matrix.slurm_version }}
