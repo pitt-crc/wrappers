@@ -139,26 +139,9 @@ def get_most_recent_expired_request(session: KeystoneClient, account_name: str) 
     )['results'][0]
 
 
-def get_enabled_cluster_ids(session: KeystoneClient) -> dict[int, str]:
-    """Return a mapping of cluster IDs to cluster names for all enabled clusters.
-
-    Args:
-        session: An authenticated Keystone client session.
-
-    Returns:
-        A dictionary mapping cluster ID to cluster name.
-    """
-
-    return {
-        cluster['id']: cluster['name']
-        for cluster in session.retrieve_cluster(filters={'enabled': True})['results']
-    }
-
-
 def get_per_cluster_totals(
     session: KeystoneClient,
     alloc_requests: list[dict],
-    clusters: dict[int, str],
     per_request: bool = False,
 ) -> dict[str, Any]:
     """Return the total awarded service units per cluster across a set of allocation requests.
@@ -169,7 +152,6 @@ def get_per_cluster_totals(
     Args:
         session: An authenticated Keystone client session.
         alloc_requests: A list of allocation request records.
-        clusters: A mapping of cluster ID to cluster name.
         per_request: Whether to return totals broken out by request ID.
 
     Returns:
@@ -178,12 +160,13 @@ def get_per_cluster_totals(
     """
 
     per_cluster_totals: dict[str, Any] = {}
+
     for request in alloc_requests:
         if per_request:
             per_cluster_totals[request['id']] = {}
 
         for allocation in get_request_allocations(session, request['id']):
-            cluster = clusters[allocation['cluster']]
+            cluster = allocation['_cluster']['name']
             awarded = allocation['awarded'] if allocation['awarded'] is not None else 0
 
             if per_request:
