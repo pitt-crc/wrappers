@@ -1,6 +1,6 @@
 """Command line application for canceling a Slurm job with a confirmation prompt.
 
-The `crc-scancel` application wraps the Slurm ``scancel`` command and adds an
+The `crc-scancel` application wraps the Slurm `scancel` command and adds an
 interactive confirmation step so users can verify they are canceling the correct
 job before it is terminated.
 """
@@ -42,7 +42,7 @@ class CrcScancel(BaseParser):
         """Return the name of the cluster a given Slurm job is running on.
 
         Iterates over all known clusters because fetching the cluster directly
-        via ``squeue`` fails for scavenger jobs.
+        via `squeue` fails for scavenger jobs.
 
         Args:
             job_id: The ID of the Slurm job to locate.

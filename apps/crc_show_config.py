@@ -1,6 +1,6 @@
 """Command line application for displaying Slurm partition and node configuration.
 
-The `crc-show-config` application wraps ``scontrol`` to display partition and
+The `crc-show-config` application wraps `scontrol` to display partition and
 node-level Slurm settings for a given cluster. When a partition is specified,
 configuration for a representative node in that partition is shown.
 """
@@ -31,7 +31,7 @@ class CrcShowConfig(BaseParser):
             partition: The name of the partition within the cluster.
 
         Returns:
-            A dictionary of Slurm partition settings from ``scontrol``.
+            A dictionary of Slurm partition settings from `scontrol`.
         """
 
         output = Shell.run_command(f'scontrol -M {cluster} show partition {partition}').split()
