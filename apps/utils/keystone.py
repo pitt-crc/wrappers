@@ -41,7 +41,7 @@ def authenticate_keystone_session(username: str, password: str) -> KeystoneClien
     return session
 
 
-def get_account_id(session: KeystoneClient, account_name: str) -> int:
+def get_team_id(session: KeystoneClient, account_name: str) -> int:
     """Return the account ID associated with a given account name.
 
     Args:
@@ -52,7 +52,10 @@ def get_account_id(session: KeystoneClient, account_name: str) -> int:
         The unique ID value for the given account.
     """
 
-    return session.retrieve_team(filters={'name': account_name})['results'][0]['id']
+    request = session.http_get('/users/teams/', params={'name': account_name})
+    request.raise_for_status()
+
+    return request.json()['results'][0]['id']
 
 
 def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict]:
@@ -67,30 +70,45 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
     """
 
     today = date.today().isoformat()
-    team_id = get_account_id(session, account_name)
+    team_id = get_team_id(session, account_name)
 
-    return session.retrieve_request(
-        filters={
+    request = session.http_get(
+        '/allocations/requests/',
+        params={
             'team': team_id,
             'status': 'AP',
             'active__lte': today,
             'expire__gt': today,
-        }
-    )['results']
+        })
+
+    request.raise_for_status()
+    return request.json()['results']
 
 
-def get_request_allocations(session: KeystoneClient, request_pk: int) -> list[dict]:
-    """Return all allocations associated with a given allocation request.
+def get_most_recent_expired_request(session: KeystoneClient, account_name: str) -> dict:
+    """Return the single most recently expired allocation request for a given account.
 
     Args:
         session: An authenticated Keystone client session.
-        request_pk: The primary key of the allocation request.
+        account_name: The name of the Slurm account to query.
 
     Returns:
-        A list of allocation records for the given request.
+        The most recently expired allocation request record.
     """
 
-    return session.retrieve_allocation(filters={'request': request_pk})['results']
+    today = date.today().isoformat()
+    team_id = get_team_id(session, account_name)
+
+    request = session.http_get(
+        '/allocations/requests/',
+        params={
+            'team': team_id,
+            'status': 'AP',
+            'expire__lte': today,
+        })
+
+    request.raise_for_status()
+    return request.json()['results'][0]
 
 
 def get_earliest_startdate(alloc_requests: list[dict]) -> date:
@@ -115,35 +133,7 @@ def get_earliest_startdate(alloc_requests: list[dict]) -> date:
     return max(earliest_date, RAWUSAGE_RESET_DATE)
 
 
-def get_most_recent_expired_request(session: KeystoneClient, account_name: str) -> dict:
-    """Return the single most recently expired allocation request for a given account.
-
-    Args:
-        session: An authenticated Keystone client session.
-        account_name: The name of the Slurm account to query.
-
-    Returns:
-        The most recently expired allocation request record.
-    """
-
-    today = date.today().isoformat()
-    team_id = get_account_id(session, account_name)
-
-    return session.retrieve_request(
-        order='-expire',
-        filters={
-            'team': team_id,
-            'status': 'AP',
-            'expire__lte': today,
-        }
-    )['results'][0]
-
-
-def get_per_cluster_totals(
-    session: KeystoneClient,
-    alloc_requests: list[dict],
-    per_request: bool = False,
-) -> dict[str, Any]:
+def get_per_cluster_totals(alloc_requests: list[dict], per_request: bool = False) -> dict[str, Any]:
     """Return the total awarded service units per cluster across a set of allocation requests.
 
     When `per_request` is True, totals are nested under each request ID. Otherwise,
@@ -165,7 +155,7 @@ def get_per_cluster_totals(
         if per_request:
             per_cluster_totals[request['id']] = {}
 
-        for allocation in get_request_allocations(session, request['id']):
+        for allocation in request['_allocations']:
             cluster = allocation['_cluster']['name']
             awarded = allocation['awarded'] if allocation['awarded'] is not None else 0
 
