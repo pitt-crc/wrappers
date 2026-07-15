@@ -10,7 +10,7 @@ from typing import Any
 
 from keystone_client import KeystoneClient
 
-# Default API configuratipn
+# Default API configuration
 KEYSTONE_URL = "https://api.keystone.crcd.pitt.edu"
 KEYSTONE_AUTH_ENDPOINT = 'authentication/new/'
 RAWUSAGE_RESET_DATE = date.fromisoformat('2024-05-07')
