@@ -57,12 +57,3 @@ optional = true
 
 [tool.poetry.group.tests.dependencies]
 coverage = "*"
-
-[tool.poetry.group.docs]
-optional = true
-
-[tool.poetry.group.docs.dependencies]
-sphinx = "9.0.4"
-sphinx-autoapi = "3.8.0"
-sphinx-copybutton = "0.5.2"
-sphinx-rtd-theme = "3.1.0"

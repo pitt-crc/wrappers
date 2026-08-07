@@ -79,10 +79,10 @@ class Slurm:
 
     @staticmethod
     def is_installed() -> bool:
-        """Return whether the Slurm ``sacctmgr`` command is available on the host.
+        """Return whether the Slurm `sacctmgr` command is available on the host.
 
         Returns:
-            True if ``sacctmgr`` is installed, False otherwise.
+            True if `sacctmgr` is installed, False otherwise.
         """
 
         try:

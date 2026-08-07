@@ -15,10 +15,10 @@ class BaseParser(ArgumentParser, metaclass=abc.ABCMeta):
 
     Child classes should implement the following:
 
-    1. The application commandline interface in the ``__init__`` method
-    2. The primary application logic in the ``app_logic`` method
+    1. The application commandline interface in the `__init__` method
+    2. The primary application logic in the `app_logic` method
 
-    Unless set explicitly, the application description (``self.description``)
+    Unless set explicitly, the application description (`self.description`)
     is pulled from the class docstring.
     """
 

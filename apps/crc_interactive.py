@@ -144,13 +144,13 @@ class CrcInteractive(BaseParser):
         return args
 
     def create_srun_command(self, args: Namespace) -> str:
-        """Build an ``srun`` command string from parsed arguments.
+        """Build an `srun` command string from parsed arguments.
 
         Args:
             args: Parsed command line arguments.
 
         Returns:
-            A complete ``srun`` command string ready for execution.
+            A complete `srun` command string ready for execution.
 
         Raises:
             RuntimeError: If no cluster is specified in the arguments.
