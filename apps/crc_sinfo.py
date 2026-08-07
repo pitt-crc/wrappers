@@ -1,6 +1,6 @@
 """Command line application for displaying Slurm cluster status.
 
-The `crc-sinfo` application wraps the Slurm ``sinfo -M all`` command and
+The `crc-sinfo` application wraps the Slurm `sinfo -M all` command and
 optionally restricts output to a single cluster.
 """
 
