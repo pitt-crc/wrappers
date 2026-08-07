@@ -41,6 +41,23 @@ def authenticate_keystone_session(username: str, password: str) -> KeystoneClien
     return session
 
 
+def _get_results(session: KeystoneClient, endpoint: str, params: dict) -> list[dict]:
+    """Issue a GET request against the given endpoint and return the parsed results list.
+
+    Args:
+        session: An authenticated Keystone client session.
+        endpoint: The API endpoint to query.
+        params: Query parameters to include in the request.
+
+    Returns:
+        The `results` list from the endpoint's JSON response.
+    """
+
+    request = session.http_get(endpoint, params=params)
+    request.raise_for_status()
+    return request.json()['results']
+
+
 def get_team_id(session: KeystoneClient, account_name: str) -> int:
     """Return the account ID associated with a given account name.
 
@@ -52,10 +69,8 @@ def get_team_id(session: KeystoneClient, account_name: str) -> int:
         The unique ID value for the given account.
     """
 
-    request = session.http_get('/users/teams/', params={'name': account_name})
-    request.raise_for_status()
-
-    return request.json()['results'][0]['id']
+    results = _get_results(session, '/users/teams/', params={'name': account_name})
+    return results[0]['id']
 
 
 def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict]:
@@ -72,7 +87,8 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
     today = date.today().isoformat()
     team_id = get_team_id(session, account_name)
 
-    request = session.http_get(
+    return _get_results(
+        session,
         '/allocations/requests/',
         params={
             'team': team_id,
@@ -80,9 +96,6 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
             'active__lte': today,
             'expire__gt': today,
         })
-
-    request.raise_for_status()
-    return request.json()['results']
 
 
 def get_most_recent_expired_request(session: KeystoneClient, account_name: str) -> dict:
@@ -99,16 +112,17 @@ def get_most_recent_expired_request(session: KeystoneClient, account_name: str) 
     today = date.today().isoformat()
     team_id = get_team_id(session, account_name)
 
-    request = session.http_get(
+    results = _get_results(
+        session,
         '/allocations/requests/',
         params={
             'team': team_id,
             'status': 'AP',
             'expire__lte': today,
+            'order': '-expire',
         })
 
-    request.raise_for_status()
-    return request.json()['results'][0]
+    return results[0]
 
 
 def get_earliest_startdate(alloc_requests: list[dict]) -> date:
@@ -140,7 +154,6 @@ def get_per_cluster_totals(alloc_requests: list[dict], per_request: bool = False
     totals are aggregated across all requests.
 
     Args:
-        session: An authenticated Keystone client session.
         alloc_requests: A list of allocation request records.
         per_request: Whether to return totals broken out by request ID.
 
