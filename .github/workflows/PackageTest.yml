@@ -13,9 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         slurm_version:
-          - 20.11.9
-          - 22.05.11
-          - 23.02.5
+          - 25.05.7
         python_version:
           - "3.11"
           - "3.12"
