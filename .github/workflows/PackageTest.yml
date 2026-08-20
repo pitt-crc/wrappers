@@ -38,8 +38,8 @@ jobs:
 
       - name: Install Poetry
         run: |
-          pip${{ matrix.slurm_version }} install poetry
-          poetry use python${{ matrix.slurm_version }}
+          pip${{ matrix.python_version }} install poetry
+          poetry use python${{ matrix.python_version }}
 
       - name: Install dependencies
         run: poetry install --with tests
