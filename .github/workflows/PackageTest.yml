@@ -50,6 +50,16 @@ jobs:
           poetry run coverage report --omit="tests/*"
           poetry run coverage xml --omit="tests/*" -o coverage.xml
 
+      - name: Upload Poetry logs on failure
+        uses: actions/upload-artifact@v4
+        with:
+          name: poetry-installer-logs-${{ matrix.python_version }}
+          path: |
+            /**/poetry-installer-error-*.log
+            ~/.cache/pypoetry/
+          retention-days: 1
+
+
       # Report partial coverage results to codacy for the current python version
       - name: Report partial coverage results
         if: github.event_name != 'release'
