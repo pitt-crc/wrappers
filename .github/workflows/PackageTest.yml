@@ -25,7 +25,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-      options: --security-opt seccomp=unconfined
 
     steps:
       - name: Setup environment
@@ -49,16 +48,26 @@ jobs:
           poetry run coverage report --omit="tests/*"
           poetry run coverage xml --omit="tests/*" -o coverage.xml
 
-      - name: Upload Poetry logs on failure
+      - name: Echo Poetry logs on failure
         if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: poetry-installer-logs-${{ matrix.python_version }}
-          path: |
-            /**/poetry-installer-error-*.log
-            ~/.cache/pypoetry/
-          retention-days: 1
+        run: |
+          echo "::group::Poetry installer error logs"
+          find "$GITHUB_WORKSPACE" "$HOME" -maxdepth 3 -name 'poetry-installer-error-*.log' 2>/dev/null | while read -r log; do
+            echo "----- $log -----"
+            cat "$log" || true
+          done
+          echo "::endgroup::"
 
+          echo "::group::Interpreter details"
+          command -v python3 || echo "python3 not on PATH"
+          python3 --version 2>&1 || true
+          python3 -c 'import sys; print(sys.executable)' 2>&1 || true
+          ls -l /usr/bin/python3* || true
+          echo "::endgroup::"
+
+          echo "::group::Poetry cache directory"
+          ls -laR "$HOME/.cache/pypoetry" 2>/dev/null || echo "no pypoetry cache"
+          echo "::endgroup::"
 
       # Report partial coverage results to codacy for the current python version
       - name: Report partial coverage results
