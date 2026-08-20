@@ -90,7 +90,7 @@ class CrcSus(BaseParser):
 
                 exit()
 
-        per_cluster_totals = get_per_cluster_totals(session, alloc_requests)
+        per_cluster_totals = get_per_cluster_totals(alloc_requests)
         earliest_date = get_earliest_startdate(alloc_requests)
 
         for cluster, total in per_cluster_totals.items():
