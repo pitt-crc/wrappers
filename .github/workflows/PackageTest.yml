@@ -39,7 +39,7 @@ jobs:
       - name: Install Poetry
         run: |
           pip${{ matrix.python_version }} install poetry
-          poetry use python${{ matrix.python_version }}
+          poetry env use python${{ matrix.python_version }}
 
       - name: Install dependencies
         run: poetry install --with tests
