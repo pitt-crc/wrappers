@@ -317,8 +317,6 @@ class CrcQuota(BaseParser):
         """
 
         all_quotas = (
-            GenericUsage.from_path('zfs1', f'/zfs1/{group}'),
-            GenericUsage.from_path('zfs2', f'/zfs2/{group}'),
             GenericUsage.from_path('ix', f'/ix/{group}'),
             GenericUsage.from_path('ix1', f'/ix1/{group}'),
             GenericUsage.from_path('ix3', f'/ix3/{group}'),
