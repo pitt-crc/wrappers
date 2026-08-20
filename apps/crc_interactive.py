@@ -17,7 +17,7 @@ from .utils.system_info import Slurm
 class CrcInteractive(BaseParser):
     """Launch an interactive Slurm session on a cluster."""
 
-    min_mpi_nodes = 2  # Minimum limit on requested MPI nodes
+    min_mpi_nodes = 1 # Minimum limit on requested MPI nodes
     min_mpi_cores = defaultdict(lambda: 28, {'mpi': 48})  # Minimum cores per MPI partition
     min_time = 1  # Minimum limit on requested time in hours
     max_time = 12  # Maximum limit on requested time in hours
