@@ -51,6 +51,7 @@ jobs:
           poetry run coverage xml --omit="tests/*" -o coverage.xml
 
       - name: Upload Poetry logs on failure
+        if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: poetry-installer-logs-${{ matrix.python_version }}
