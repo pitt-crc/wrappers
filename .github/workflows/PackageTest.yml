@@ -31,13 +31,15 @@ jobs:
         run: /usr/local/bin/entrypoint.sh
 
       - name: Set Up Bank DB Location
-        run: mkdir -p /ihome/crc/bank 
+        run: mkdir -p /ihome/crc/bank
 
       - name: Checkout repository
         uses: actions/checkout@v7
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1
+        run: |
+          pip${{ matrix.slurm_version }} install poetry
+          poetry use python${{ matrix.slurm_version }}
 
       - name: Install dependencies
         run: poetry install --with tests
@@ -47,27 +49,6 @@ jobs:
           poetry run coverage run -m unittest discover 
           poetry run coverage report --omit="tests/*"
           poetry run coverage xml --omit="tests/*" -o coverage.xml
-
-      - name: Echo Poetry logs on failure
-        if: failure()
-        run: |
-          echo "::group::Poetry installer error logs"
-          find "$GITHUB_WORKSPACE" "$HOME" -maxdepth 3 -name 'poetry-installer-error-*.log' 2>/dev/null | while read -r log; do
-            echo "----- $log -----"
-            cat "$log" || true
-          done
-          echo "::endgroup::"
-
-          echo "::group::Interpreter details"
-          command -v python3 || echo "python3 not on PATH"
-          python3 --version 2>&1 || true
-          python3 -c 'import sys; print(sys.executable)' 2>&1 || true
-          ls -l /usr/bin/python3* || true
-          echo "::endgroup::"
-
-          echo "::group::Poetry cache directory"
-          ls -laR "$HOME/.cache/pypoetry" 2>/dev/null || echo "no pypoetry cache"
-          echo "::endgroup::"
 
       # Report partial coverage results to codacy for the current python version
       - name: Report partial coverage results
