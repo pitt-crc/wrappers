@@ -104,7 +104,7 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
             'team': team_id,
             'status': 'AP',
             'active__lte': today,
-            'expire__isnull': true,
+            'expire__isnull': True,
         })
 
     return active_with_expiration + active_without_expiration
