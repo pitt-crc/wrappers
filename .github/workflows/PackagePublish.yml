@@ -16,15 +16,9 @@ jobs:
     uses: ./.github/workflows/PackageTest.yml
     secrets: inherit
 
-  build-docs:
-    name: Docs
-    needs: run-tests
-    uses: ./.github/workflows/DocumentationBuild.yml
-    secrets: inherit
-
   publish-package:
     name: Publish Distribution
-    needs: build-docs
+    needs: run-tests
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 
