@@ -16,9 +16,6 @@ jobs:
           - 25.05.7
           - 25.11.7
         python_version:
-          - "3.11"
-          - "3.12"
-          - "3.13"
           - "3.14"
 
     container:
@@ -30,9 +27,6 @@ jobs:
     steps:
       - name: Setup environment
         run: /usr/local/bin/entrypoint.sh
-
-      - name: Set Up Bank DB Location
-        run: mkdir -p /ihome/crc/bank
 
       - name: Checkout repository
         uses: actions/checkout@v7
