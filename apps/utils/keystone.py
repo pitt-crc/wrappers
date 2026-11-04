@@ -87,7 +87,7 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
     today = date.today().isoformat()
     team_id = get_team_id(session, account_name)
 
-    return _get_results(
+    active_with_expiration = _get_results(
         session,
         '/allocations/requests/',
         params={
@@ -96,6 +96,18 @@ def get_active_requests(session: KeystoneClient, account_name: str) -> list[dict
             'active__lte': today,
             'expire__gt': today,
         })
+
+    active_without_expiration = _get_results(
+        session,
+        '/allocations/requests/',
+        params={
+            'team': team_id,
+            'status': 'AP',
+            'active__lte': today,
+            'expire__isnull': True,
+        })
+
+    return active_with_expiration + active_without_expiration
 
 
 def get_most_recent_expired_request(session: KeystoneClient, account_name: str) -> dict:
